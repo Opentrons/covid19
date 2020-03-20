@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': 'BP Genomics Station C',
+    'protocolName': 'BP Genomics Station C: 20200319 qPCR Test 1',
     'author': 'Chaz <chaz@opentrons.com; Anton <acjs@stanford.edu>',
     'source': 'COVID-19 Project',
     'apiLevel': '2.2'
@@ -34,25 +34,25 @@ NUM_SAMPLES = 8
 SAMPLE_TIP_LOCATIONS = ['2', '3']
 
 MASTER_MIX_MAP = '''
-Endogenous	Reaction	Reaction	Reaction	Endogenous	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Endogenous	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Standard	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Standard	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
+Endogenous	Reaction	Reaction	Endogenous	Reaction	Reaction		Endogenous				Standard
+Endogenous	Reaction	Reaction	Endogenous	Reaction	Reaction		Endogenous				Standard
+Endogenous	Reaction	Reaction	Endogenous	Reaction	Reaction		Reaction				Standard
+Endogenous	Reaction	Reaction	Endogenous	Reaction	Reaction		Reaction				Standard
+Endogenous	Reaction	Reaction	Endogenous	Reaction	Reaction						Standard
+Endogenous	Reaction	Reaction	Endogenous	Reaction	Reaction						Standard
+Endogenous	Reaction	Reaction	Endogenous	Reaction	Reaction		Standard				Standard
+Endogenous	Reaction	Reaction	Endogenous	Reaction	Reaction		Reaction				Standard
 '''
 
 SAMPLE_MAP = '''
-Sample 1	Sample 1	Sample 1	Sample 1	Control RNA	Water	PCD 1	Water	PCD 1	Water	PCD 1	Water
-Sample 2	Sample 2	Sample 2	Sample 2	Control RNA 2	Water	PCD 2	Water	PCD 2	Water	PCD 2	Water
-Sample 3	Sample 3	Sample 3	Sample 3	Control RNA	Water	PCD 3	Water	PCD 3	Water	PCD 3	Water
-Sample 4	Sample 4	Sample 4	Sample 4	Control RNA 2	Water	PCD 4	Water	PCD 4	Water	PCD 4	Water
-Sample 5	Sample 5	Sample 5	Sample 5	Control RNA	Water	PCD 5	Water	PCD 5	Water	PCD 5	Water
-Sample 6	Sample 6	Sample 6	Sample 6	Control RNA 2	Water	PCD 6	Water	PCD 6	Water	PCD 6	Water
-Sample 7	Sample 7	Sample 7	Sample 7	Control RNA	Water	PCD 7	Water	PCD 7	Water	PCD 7	Water
-Sample 8	Sample 8	Sample 8	Sample 8	Control RNA 2	Water	PCD 8	Water	PCD 8	Water	PCD 8	Water
+Sample 1	Sample 1	Sample 1	Sample 9	Sample 9	Sample 9		Control RNA				PCD 1
+Sample 2	Sample 2	Sample 2	Sample 10	Sample 10	Sample 10		Control RNA				PCD 2
+Sample 3	Sample 3	Sample 3	Sample 11	Sample 11	Sample 11		Control RNA				PCD 3
+Sample 4	Sample 4	Sample 4	Sample 12	Sample 12	Sample 12		Control RNA				PCD 4
+Sample 5	Sample 5	Sample 5	Sample 13	Sample 13	Sample 13						PCD 5
+Sample 6	Sample 6	Sample 6	Sample 14	Sample 14	Sample 14						PCD 6
+Sample 7	Sample 7	Sample 7	Sample 15	Sample 15	Sample 15		Water				PCD 7
+Sample 8	Sample 8	Sample 8	Sample 16	Sample 16	Sample 16		Water				PCD 8
 '''
 
 import re
@@ -96,7 +96,8 @@ def run(protocol):
 
     # Distribute Master Mixes
     # Split up the master mix map into a list
-    master_mix_labels = re.split(r'[\n\t]+', MASTER_MIX_MAP.strip())
+    master_mix_labels = re.split(r'[\n\t]', MASTER_MIX_MAP.strip())
+    print(master_mix_labels)
     master_mix_wells = dict()
 
     # Figure out unique master mixes on the map, so we can use a single
@@ -124,7 +125,7 @@ def run(protocol):
     # which makes it easier because we don't bother optimizing for tip use.
     # Transfers are made row by row, left to right.
 
-    sample_labels =  re.split(r'[\n\t]+', SAMPLE_MAP.strip())
+    sample_labels =  re.split(r'[\n\t]', SAMPLE_MAP.strip())
     sample_wells = zip(sample_labels, tempplate_wells_by_row)
     for sample, dest_well in sample_wells:
         # Determine whether we are dealing with an actual sample, which we
