@@ -1,2 +1,10 @@
 # OT-2 COVID-19 protocols
-We don't know if we'll want to use this repository, but it's here in case we do.
+
+This is the development repository for running a COVID-19 diagnostic protocol on Opentrons OT-2s.
+
+# Directory structure
+
+* `/experiments` contains the exact Python scripts that were used for certain validation experiments, so we don't get confused about which experimental results correspond to which versions of our Python code.
+* `/labware` contains the custom labware definitions necessary to run these protocols.  After cloning this repository, you should configure the Opentrons App to look in this directory. (Go to **More** > **Custom Labware** > **Labware Management** > **Custom Labware Definitions Folder**.)
+* `/notebooks` is for stashing random Jupyter Notebooks that we're using for developing and debugging.
+* `/protocols` is for the uploadable protocols themselves.
