@@ -123,7 +123,9 @@
     ],
     "brand": {
         "brand": "Applied Biosystems",
-        "brandId": []
+        "brandId": [
+            "4483354"
+        ]
     },
     "metadata": {
         "displayName": "Applied Biosystems 96 Aluminum Block 200 µL",
@@ -1011,7 +1013,9 @@
             },
             "brand": {
                 "brand": "Applied Biosystems",
-                "brandId": []
+                "brandId": [
+                    "4483354"
+                ]
             },
             "wells": [
                 "A1",
