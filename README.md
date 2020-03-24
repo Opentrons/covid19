@@ -2,6 +2,10 @@
 
 This is the development repository for running a COVID-19 diagnostic protocol on Opentrons OT-2s.
 
+# Instructions for humans
+
+Instructions for the manual part of this protocol (how to prepare reagents, how to set up labware, and so on) are coming soon.
+
 # Directory structure
 
 * `/experiments` contains the exact Python scripts that were used for certain validation experiments, so we don't get confused about which experimental results correspond to which versions of our Python code.
