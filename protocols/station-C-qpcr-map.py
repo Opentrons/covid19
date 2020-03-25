@@ -124,7 +124,7 @@ def run(protocol):
     # which makes it easier because we don't bother optimizing for tip use.
     # Transfers are made row by row, left to right.
 
-    sample_labels =  re.split(r'[\n\t]+', SAMPLE_MAP.strip())
+    sample_labels = re.split(r'[\n\t]+', SAMPLE_MAP.strip())
     sample_wells = zip(sample_labels, tempplate_wells_by_row)
     for sample, dest_well in sample_wells:
         # Determine whether we are dealing with an actual sample, which we
