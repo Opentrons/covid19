@@ -80,7 +80,7 @@ def run(protocol):
     tempdeck.set_temperature(4)
 
     tempplate = tempdeck.load_labware(
-        'opentrons_96_aluminumblock_nest_wellplate_100ul')
+        'ab_96_aluminumblock')
 
     tempplate_wells_by_row = list(itertools.chain(*tempplate.rows()))
 
