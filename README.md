@@ -1,16 +1,18 @@
 # OT-2 COVID-19 protocols
 
-This is the development repository for running a COVID-19 diagnostic protocol on Opentrons OT-2s.
+This is the development repository for running COVID-19 diagnostic protocols on Opentrons OT-2s.
+
+We are actively developing and testing these protocols.
+
+# Instructions for humans
+
+Instructions for the manual part of this protocol (how to prepare reagents, how to set up labware, and so on) are hosted [on protocols.io](https://www.protocols.io/groups/opentrons-covid19-testing/publications).
 
 # Questions?
 
 If you have a question about what you see in this repository, please [post it as a GitHub issue](https://github.com/Opentrons/covid19/issues/new).
 
 If you have a more general question about using OT-2s for COVID-19 protocols, please email covid-19@opentrons.com.
-
-# Instructions for humans
-
-Instructions for the manual part of this protocol (how to prepare reagents, how to set up labware, and so on) are coming soon.
 
 # Directory structure
 
