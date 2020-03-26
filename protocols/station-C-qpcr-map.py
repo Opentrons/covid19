@@ -25,11 +25,6 @@ REAGENT_LOCATIONS = {
     'PCD 1': 'D6'
 }
 
-# Number of samples
-# We expect that inbound samples are ordered numerically in well order
-# Sample 1 in well 1, sample 2 in well 2, etc.
-NUM_SAMPLES = 8
-
 # Tip locations
 SAMPLE_TIP_LOCATIONS = ['2', '3']
 
@@ -67,6 +62,7 @@ def transfer_with_primitives(p, source, dest, volume=5, mix=19):
         p.dispense(mix, dest)
     p.dispense(1, dest)
     p.blow_out(dest.top())
+    p.air_gap(3, -1)
     p.drop_tip()
 
 def run(protocol):
@@ -80,7 +76,7 @@ def run(protocol):
     tempdeck.set_temperature(4)
 
     tempplate = tempdeck.load_labware(
-        'opentrons_96_aluminumblock_nest_wellplate_100ul')
+        'ab_96_aluminumblock')
 
     tempplate_wells_by_row = list(itertools.chain(*tempplate.rows()))
 
@@ -96,7 +92,7 @@ def run(protocol):
 
     # Distribute Master Mixes
     # Split up the master mix map into a list
-    master_mix_labels = re.split(r'[\n\t]+', MASTER_MIX_MAP.strip())
+    master_mix_labels = re.split(r'[\n\t]', MASTER_MIX_MAP.strip('\n '))
     master_mix_wells = dict()
 
     # Figure out unique master mixes on the map, so we can use a single
@@ -124,7 +120,7 @@ def run(protocol):
     # which makes it easier because we don't bother optimizing for tip use.
     # Transfers are made row by row, left to right.
 
-    sample_labels =  re.split(r'[\n\t]+', SAMPLE_MAP.strip())
+    sample_labels =  re.split(r'[\n\t]', SAMPLE_MAP.strip('\n '))
     sample_wells = zip(sample_labels, tempplate_wells_by_row)
     for sample, dest_well in sample_wells:
         # Determine whether we are dealing with an actual sample, which we
