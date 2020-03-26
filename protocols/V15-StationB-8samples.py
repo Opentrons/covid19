@@ -11,6 +11,11 @@ metadata = {
 def run(protocol):
 
     # load labware and pipettes
+
+    # We're physically using 200 µL filter tips, but we load them as
+    # 300 µL tips, so we can aspirate more than we'd normally be allowed.
+    # In our testing, this seems okay, but we have to be careful reagent
+    # getting wicked into the filter.
     tips200 = protocol.load_labware('opentrons_96_tiprack_300ul', '6')
 
     p300 = protocol.load_instrument(
