@@ -55,11 +55,19 @@ import itertools
 
 def transfer_with_primitives(p, source, dest, volume=5, mix=19):
     p.pick_up_tip()
-    p.aspirate(volume, source)
+
+    p.aspirate(1, source)
+    for _ in range(2):
+        p.aspirate(mix, source)
+        p.dispense(mix, source)
+
+    p.aspirate(volume - 1, source)
     p.dispense(volume - 1, dest)
-    for _ in range(4):
+
+    for _ in range(2):
         p.aspirate(mix, dest)
         p.dispense(mix, dest)
+
     p.dispense(1, dest)
     p.blow_out(dest.top())
     p.air_gap(3, -1)
@@ -92,7 +100,11 @@ def run(protocol):
 
     # Distribute Master Mixes
     # Split up the master mix map into a list
-    master_mix_labels = re.split(r'[\n\t]', MASTER_MIX_MAP.strip('\n '))
+    master_mix_labels = [""] *  12*8
+    for i, row in enumerate(MASTER_MIX_MAP.strip('\n ').split('\n')):
+        for j, label in enumerate(row.split('\t')):
+            master_mix_labels[i*12+j] = label
+
     master_mix_wells = dict()
 
     # Figure out unique master mixes on the map, so we can use a single
@@ -120,7 +132,11 @@ def run(protocol):
     # which makes it easier because we don't bother optimizing for tip use.
     # Transfers are made row by row, left to right.
 
-    sample_labels =  re.split(r'[\n\t]', SAMPLE_MAP.strip('\n '))
+    sample_labels = [""] *  12*8
+    for i, row in enumerate(SAMPLE_MAP.strip('\n ').split('\n')):
+        for j, label in enumerate(row.split('\t')):
+            sample_labels[i*12+j] = label
+
     sample_wells = zip(sample_labels, tempplate_wells_by_row)
     for sample, dest_well in sample_wells:
         # Determine whether we are dealing with an actual sample, which we
