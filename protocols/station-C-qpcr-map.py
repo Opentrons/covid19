@@ -6,6 +6,29 @@ metadata = {
 }
 
 # Protocol constants
+QPCR_LABWARE = 'ab_96_aluminumblock'
+
+MASTER_MIX_MAP = '''
+Reaction	Reaction	Reaction			Reaction				Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction			Reaction				Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction			Reaction				Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction							Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction							Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction			Reaction				Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction			Reaction				Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction			Reaction				Reaction	Reaction	Reaction
+'''
+
+SAMPLE_MAP = '''
+Sample 1	Sample 9	Sample 17			Water				PCD 1	PCD 1	PCD 1
+Sample 2	Sample 10	Sample 18			Water				PCD 2	PCD 2	PCD 2
+Sample 3	Sample 11	Sample 19			Water				PCD 3	PCD 3	PCD 3
+Sample 4	Sample 12	Sample 20							PCD 4	PCD 4	PCD 4
+Sample 5	Sample 13	Sample 21							PCD 5	PCD 5	PCD 5
+Sample 6	Sample 14	Sample 22			IEC RNA				PCD 6	PCD 6	PCD 6
+Sample 7	Sample 15	Sample 23			IEC RNA				PCD 7	PCD 7	PCD 7
+Sample 8	Sample 16	Sample 24			IEC RNA				PCD 8	PCD 8	PCD 8
+'''
 
 # Master mix locations on the eppendorf tube holder
 REAGENT_LOCATIONS = {
@@ -13,8 +36,8 @@ REAGENT_LOCATIONS = {
     'Reaction': 'A2',
     'Standard': 'A3',
     'Water': 'A4',
-    'Control RNA': 'C1',
-    'Control RNA 2': 'C2',
+    'Negative': 'A4', # Synonym for water
+    'IEC RNA': 'C1',
     'PCD 8': 'C5',
     'PCD 7': 'C6',
     'PCD 6': 'D1',
@@ -27,28 +50,6 @@ REAGENT_LOCATIONS = {
 
 # Tip locations
 SAMPLE_TIP_LOCATIONS = ['2', '3']
-
-MASTER_MIX_MAP = '''
-Endogenous	Reaction	Reaction	Reaction	Endogenous	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Endogenous	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Standard	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Standard	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-Endogenous	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Standard	Standard	Standard	Standard	Standard
-'''
-
-SAMPLE_MAP = '''
-Sample 1	Sample 1	Sample 1	Sample 1	Control RNA	Water	PCD 1	Water	PCD 1	Water	PCD 1	Water
-Sample 2	Sample 2	Sample 2	Sample 2	Control RNA 2	Water	PCD 2	Water	PCD 2	Water	PCD 2	Water
-Sample 3	Sample 3	Sample 3	Sample 3	Control RNA	Water	PCD 3	Water	PCD 3	Water	PCD 3	Water
-Sample 4	Sample 4	Sample 4	Sample 4	Control RNA 2	Water	PCD 4	Water	PCD 4	Water	PCD 4	Water
-Sample 5	Sample 5	Sample 5	Sample 5	Control RNA	Water	PCD 5	Water	PCD 5	Water	PCD 5	Water
-Sample 6	Sample 6	Sample 6	Sample 6	Control RNA 2	Water	PCD 6	Water	PCD 6	Water	PCD 6	Water
-Sample 7	Sample 7	Sample 7	Sample 7	Control RNA	Water	PCD 7	Water	PCD 7	Water	PCD 7	Water
-Sample 8	Sample 8	Sample 8	Sample 8	Control RNA 2	Water	PCD 8	Water	PCD 8	Water	PCD 8	Water
-'''
 
 import re
 import itertools
@@ -84,7 +85,7 @@ def run(protocol):
     tempdeck.set_temperature(4)
 
     tempplate = tempdeck.load_labware(
-        'ab_96_aluminumblock')
+        QPCR_LABWARE)
 
     tempplate_wells_by_row = list(itertools.chain(*tempplate.rows()))
 
