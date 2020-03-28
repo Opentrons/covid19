@@ -42,7 +42,7 @@
         "brandId": []
     },
     "metadata": {
-        "displayName": "BPG Tubes in Opentrons Tuberack",
+        "displayName": "Opentrons 24 Tube Rack with BPG 2 mL Collection Tubes",
         "displayCategory": "tubeRack",
         "displayVolumeUnits": "µL",
         "tags": []
@@ -273,7 +273,7 @@
     "groups": [
         {
             "metadata": {
-                "displayName": "BPG Tubes in Opentrons Tuberack",
+                "displayName": "Opentrons 24 Tube Rack with BPG 2 mL Collection Tubes",
                 "displayCategory": "tubeRack",
                 "wellBottomShape": "v"
             },
