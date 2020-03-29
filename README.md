@@ -12,7 +12,7 @@ We're actively developing and testing these protocols, so things might be a litt
 
 # How it works
 
-We're automating a protocol based on [BP Genomics'](https://www.bpgenomics.com/) kits.  It's split into 3 parts, intended to be run on 3 separate robots:
+We're automating a RT-qPCR based diagnostic protocol.  We split it into 3 parts, intended to be run on 3 separate robots:
 
 * **Station A:** Sample intake
 * **Station B:** RNA extraction
