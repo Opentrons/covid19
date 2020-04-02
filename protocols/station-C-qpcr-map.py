@@ -32,11 +32,11 @@ Sample 8	Sample 16	Sample 24			IEC RNA				PCD 8	PCD 8	PCD 8
 
 # Master mix locations on the eppendorf tube holder
 REAGENT_LOCATIONS = {
-    'Endogenous': 'A1',
-    'Reaction': 'A2',
-    'Standard': 'A3',
-    'Water': 'A4',
-    'Negative': 'A4', # Synonym for water
+    'Reaction': 'A1',
+    'Endogenous': 'B1',
+    'Standard': 'B2',
+    'Water': 'B3',
+    'Negative': 'B3', # Synonym for water
     'IEC RNA': 'C1',
     'PCD 8': 'C5',
     'PCD 7': 'C6',
@@ -48,13 +48,17 @@ REAGENT_LOCATIONS = {
     'PCD 1': 'D6'
 }
 
+# Transfer volumes
+MIX_VOLUME = 15
+SAMPLE_VOLUME = 5
+
 # Tip locations
 SAMPLE_TIP_LOCATIONS = ['2', '3']
 
 import re
 import itertools
 
-def transfer_with_primitives(p, source, dest, volume=5, mix=19):
+def transfer_with_primitives(p, source, dest, volume=SAMPLE_VOLUME, mix=19):
     p.pick_up_tip()
 
     p.aspirate(1, source)
@@ -124,7 +128,7 @@ def run(protocol):
     for mix, wells in master_mix_wells.items():
         p20.pick_up_tip()
         for well in wells:
-            p20.transfer(15, reagent_rack[REAGENT_LOCATIONS[mix]], well, new_tip='never')
+            p20.transfer(MIX_VOLUME, reagent_rack[REAGENT_LOCATIONS[mix]], well, new_tip='never')
             p20.blow_out(well.top())
         p20.drop_tip()
 
