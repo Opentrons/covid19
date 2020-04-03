@@ -14,20 +14,20 @@ Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endo
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
-Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
-Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction	Reaction	Reaction	Reaction				Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Reaction
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
 '''
 
 SAMPLE_MAP = '''
-Sample 1	Sample 9	Sample 17	Sample 1	Sample 9	Sample 17	Sample 1	Sample 9	Sample 17	PCD 1	PCD 1	PCD 1
-Sample 2	Sample 10	Sample 18	Sample 2	Sample 10	Sample 18	Sample 2	Sample 10	Sample 18	PCD 2	PCD 2	PCD 2
-Sample 3	Sample 11	Sample 19	Sample 3	Sample 11	Sample 19	Sample 3	Sample 11	Sample 19	PCD 3	PCD 3	PCD 3
-Sample 4	Sample 12	Sample 20	Sample 4	Sample 12	Sample 20	Sample 4	Sample 12	Sample 20	PCD 4	PCD 4	PCD 4
-Sample 5	Sample 13	Sample 21	Sample 5	Sample 13	Sample 21	Sample 5	Sample 13	Sample 21	PCD 5	PCD 5	PCD 5
-Sample 6	Sample 14	Sample 22	Sample 6	Sample 14	Sample 22	Sample 6	Sample 14	Sample 22	PCD 6	PCD 6	PCD 6
-Sample 7	Sample 15	Sample 23	Sample 7	Sample 15	Sample 23	Sample 7	Sample 15	Sample 23	PCD 7	PCD 7	PCD 7
-Sample 8	Sample 16	Sample 24	Sample 8	Sample 16	Sample 24	Sample 8	Sample 16	Sample 24	Water	Water	Water
+Sample 1	Sample 9	Sample 17	Sample 25	Sample 33	Sample 41	Sample 1	Sample 6	Sample 44	PCD 1	PCD 1	PCD 1
+Sample 2	Sample 10	Sample 18	Sample 26	Sample 34	Sample 42	Sample 2	Sample 7	Sample 45	PCD 2	PCD 2	PCD 2
+Sample 3	Sample 11	Sample 19	Sample 27	Sample 35	Sample 43	Sample 3	Sample 8	Sample 46	PCD 3	PCD 3	PCD 3
+Sample 4	Sample 12	Sample 20	Sample 28	Sample 36	Sample 44	Sample 4	Sample 9	Sample 47	PCD 4	PCD 4	PCD 4
+Sample 5	Sample 13	Sample 21	Sample 29	Sample 37	Sample 45	Sample 5	Sample 10	Sample 48	PCD 5	PCD 5	PCD 5
+Sample 6	Sample 14	Sample 22	Sample 30	Sample 38	Sample 46				PCD 6	PCD 6	PCD 6
+Sample 7	Sample 15	Sample 23	Sample 31	Sample 39	Sample 47	Water	Water	Water	PCD 7	PCD 7	PCD 7
+Sample 8	Sample 16	Sample 24	Sample 32	Sample 40	Sample 48	Water	Water	Water	PCD 8	PCD 8	PCD 8
 '''
 
 # Master mix locations on the eppendorf tube holder
