@@ -66,7 +66,7 @@ def transfer_with_primitives(p, source, dest, volume=5, mix=19):
     for _ in range(4):
         p.aspirate(mix, dest)
         p.dispense(mix, dest)
-        
+
     p.dispense(1, dest)
     p.blow_out(dest.top())
     p.air_gap(3, -1)
