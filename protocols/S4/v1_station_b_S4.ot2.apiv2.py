@@ -25,7 +25,7 @@ REAGENT SETUP:
 
 """
 
-NUM_SAMPLES = 96
+NUM_SAMPLES = 30
 
 
 def run(ctx: protocol_api.ProtocolContext):
