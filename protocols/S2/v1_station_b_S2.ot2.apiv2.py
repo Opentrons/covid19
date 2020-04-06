@@ -38,7 +38,8 @@ def run(ctx: protocol_api.ProtocolContext):
     reagent_res1 = ctx.load_labware(
         'nest_12_reservoir_15ml', '2', 'reagent reservoir 1')
     magdeck = ctx.load_module('magdeck', '4')
-    magplate = magdeck.load_labware('usascientific_96_wellplate_2.4ml_deep')
+    magplate = magdeck.load_labware(
+        'usascientific_96_wellplate_2.4ml_deep', '96-deepwell sample plate')
     reagent_res2 = ctx.load_labware(
         'nest_12_reservoir_15ml', '5', 'reagent reservoir 2')
     waste = ctx.load_labware(
