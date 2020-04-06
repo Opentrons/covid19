@@ -23,16 +23,18 @@ NUM_MASTERMIX = 3  # should be 2 or 3
 
 def run(ctx: protocol_api.ProtocolContext):
     source_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '1',
+        'opentrons_96_aluminumblock_nest_wellplate_100ul', '1',
         'RNA elution plate from station B')
-    pcr_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'PCR plate')
+    tempdeck = ctx.load_module('tempdeck', '4')
+    pcr_plate = tempdeck.load_labware(
+        'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
+    tempdeck.set_temperature(4)
     tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '5',
-        '2ml Eppendorf tuberack')
+        'opentrons_24_aluminumblock_generic_2ml_screwcap', '7',
+        '2ml screw tuberack for mastermix')
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['3', '6', '9']
+        for slot in ['2', '5', '8']
     ]
 
     # pipette

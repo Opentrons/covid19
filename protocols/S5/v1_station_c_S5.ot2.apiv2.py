@@ -2,7 +2,7 @@ from opentrons import protocol_api
 
 # metadata
 metadata = {
-    'protocolName': 'S2 Station C Version 1',
+    'protocolName': 'S5 Station C Version 1',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -12,12 +12,13 @@ metadata = {
 REAGENT SETUP:
 
 - slot 5 2ml tuberack:
-    - mastermixes: tubes A1-A3
+    - mastermixes: tubes A1-A3 for 3 mastermixes, A1-A2 for 2 mastermixes
     - positive control: tube B1
     - negative control: tube B2
 """
 
 NUM_SAMPLES = 30
+NUM_MASTERMIX = 3  # should be 2 or 3
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -42,20 +43,20 @@ def run(ctx: protocol_api.ProtocolContext):
     # setup up sample sources and destinations
     samples = source_plate.wells()[:NUM_SAMPLES]
     sample_dest_sets = [
-        row[i*3:(i+1)*3]
-        for i in range(12//3)
+        row[i*NUM_MASTERMIX:(i+1)*NUM_MASTERMIX]
+        for i in range(12//NUM_MASTERMIX)
         for row in pcr_plate.rows()
     ][:NUM_SAMPLES]
-    mm = tuberack.rows()[0][:3]
+    mm = tuberack.rows()[0][:NUM_MASTERMIX]
     mm_dests = [
-        [well for col in pcr_plate.columns()[j::3]
+        [well for col in pcr_plate.columns()[j::NUM_MASTERMIX]
             for well in col][:NUM_SAMPLES] + pcr_plate.columns()[9+j][-2:]
-        for j in range(3)
+        for j in range(NUM_MASTERMIX)
     ]
     pos_control = tuberack.rows()[1][0]
-    pos_control_dests = pcr_plate.rows()[-2][-1*3:]
+    pos_control_dests = pcr_plate.rows()[-2][-1*NUM_MASTERMIX:]
     neg_control = tuberack.rows()[1][1]
-    neg_control_dests = tuberack.rows()[-1][-1*3:]
+    neg_control_dests = tuberack.rows()[-1][-1*NUM_MASTERMIX:]
 
     # transfer mastermixes
     for s, d_set in zip(mm, mm_dests):
