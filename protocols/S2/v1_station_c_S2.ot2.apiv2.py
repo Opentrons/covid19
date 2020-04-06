@@ -23,14 +23,14 @@ NUM_SAMPLES = 30
 def run(ctx: protocol_api.ProtocolContext):
     source_plate = ctx.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul', '1',
-        'RNA elution plate from station B')
+        'chilled RNA elution plate from station B')
     tempdeck = ctx.load_module('tempdeck', '4')
     pcr_plate = tempdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
     tempdeck.set_temperature(4)
     tuberack = ctx.load_labware(
         'opentrons_24_aluminumblock_generic_2ml_screwcap', '7',
-        '2ml screw tuberack for mastermix')
+        'chilled 2ml screw tube block for mastermix')
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['2', '5', '8']
