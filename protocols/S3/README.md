@@ -15,5 +15,11 @@ Reservoir 2 layout (slot 5):
 ## Station C
 This protocol plates elution output from station B to a new PCR plate, along with up to 3 probes (loaded in separate mastermix tubes).  
 
-2ml Eppendorf tuberack layout (slot 5):
-![tuberack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/station_c_tuberack.png)
+Transfer scheme if using 4x tuberacks:  
+![tubes transfer scheme](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/S5/C_transfer_scheme.png)
+
+Transfer scheme if using PCR strips:  
+![strips transfer scheme](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/S5/C_strips_transfer_scheme.png)
+
+Mastermix aluminum block map (slot 11):  
+![mastermix map](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/S5/mastermix_map.png)

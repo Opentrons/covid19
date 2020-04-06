@@ -57,8 +57,8 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
         'opentrons_96_aluminumblock_biorad_wellplate_200ul', 'PCR plate')
     tempdeck.set_temperature(4)
     mm_rack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '11',
-        '2ml Eppendorf tuberack')
+        'opentrons_24_aluminumblock_generic_2ml_screwcap', '11',
+        '2ml screw tube aluminum block for mastermix')
 
     # pipette
     p20 = ctx.load_instrument('p20_single_gen2', 'right', tip_racks=tips20)

@@ -8,21 +8,6 @@ metadata = {
     'apiLevel': '2.0'
 }
 
-"""
-REAGENT SETUP:
-
-- slot 2 12-channel reservoir:
-    - viral DNA/RNA buffer: channels 1-3
-    - magbeads: channel 4
-    - wash 1: channels 5-8
-    - wash 2: channels 9-12
-
-- slot 5 12-channel reservoir:
-    - EtOH: channels 1-8
-    - water: channel 12
-
-"""
-
 NUM_SAMPLES = 30
 SAMPLE_VOLUME = 400
 
