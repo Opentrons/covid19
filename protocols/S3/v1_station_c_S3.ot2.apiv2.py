@@ -5,83 +5,129 @@ metadata = {
     'protocolName': 'S3 Station C Version 1',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.1'
 }
 
 """
-REAGENT SETUP:
+ElUTION_LABWARE must be one of the following:
+    large strips
+    short strips
+    1.5ml tubes
+    2ml tubes
 
-- slot 5 2ml tuberack:
-    - mastermixes: tubes A1-A3
-    - positive control: tube B1
-    - negative control: tube B2
+MM_TYPE must be one of the following:
+    MM1
+    MM2
+    MM3
 """
 
-NUM_SAMPLES = 30
+NUM_SAMPLES = 96
+VOLUME_MMIX = 20
+ELUTION_LABWARE = '2ml tubes'
+PREPARE_MASTERMIX = True
+MM_TYPE = 'MM1'
+
+EL_LW_DICT = {
+    'large strips': 'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
+    'short strips': 'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
+    '2ml tubes': 'opentrons_24_aluminumblock_generic_2ml_screwcap',
+    '1.5ml tubes': 'opentrons_24_aluminumblock_nest_1.5ml_screwcap'
+}
 
 
 def run(ctx: protocol_api.ProtocolContext):
-    source_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '1',
-        'RNA elution plate from station B')
-    pcr_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'PCR plate')
-    tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '5',
-        '2ml Eppendorf tuberack')
+
+    # check source (elution) labware type
+    if ELUTION_LABWARE not in EL_LW_DICT:
+        raise Exception('Invalid ELUTION_LABWARE. Must be one of the \
+following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
+
+    source_racks = [
+        ctx.load_labware(EL_LW_DICT[ELUTION_LABWARE], slot,
+                         'RNA elution labware ' + str(i+1))
+        for i, slot in enumerate(['4', '5', '1', '2'])
+    ]
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['3', '6', '9']
+        for slot in ['6', '9', '8', '7']
     ]
+    tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')]
+    tempdeck = ctx.load_module('tempdeck', '10')
+    pcr_plate = tempdeck.load_labware(
+        'opentrons_96_aluminumblock_biorad_wellplate_200ul', 'PCR plate')
+    tempdeck.set_temperature(4)
+    mm_rack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '11',
+        '2ml Eppendorf tuberack')
 
     # pipette
     p20 = ctx.load_instrument('p20_single_gen2', 'right', tip_racks=tips20)
+    p300 = ctx.load_instrument('p300_single_gen2', 'left', tip_racks=tips300)
 
     # setup up sample sources and destinations
-    samples = source_plate.wells()[:NUM_SAMPLES]
-    sample_dest_sets = [
-        row[i*3:(i+1)*3]
-        for i in range(12//3)
-        for row in pcr_plate.rows()
-    ][:NUM_SAMPLES]
-    mm = tuberack.rows()[0][:3]
-    mm_dests = [
-        [well for col in pcr_plate.columns()[j::3]
-            for well in col][:NUM_SAMPLES] + pcr_plate.columns()[9+j][-2:]
-        for j in range(3)
-    ]
-    pos_control = tuberack.rows()[1][0]
-    pos_control_dests = pcr_plate.rows()[-2][-1*3:]
-    neg_control = tuberack.rows()[1][1]
-    neg_control_dests = tuberack.rows()[-1][-1*3:]
+    if 'strips' in ELUTION_LABWARE:
+        sources = [
+            tube
+            for i, rack in enumerate(source_racks)
+            for col in [
+                rack.columns()[c] if i % 2 == 0 else rack.columns()[c+1]
+                for c in [0, 5, 10]
+            ]
+            for tube in col
+        ][:NUM_SAMPLES]
+        dests = pcr_plate.wells()[:NUM_SAMPLES]
+    else:
+        sources = [
+            tube
+            for rack in source_racks for tube in rack.wells()][:NUM_SAMPLES]
+        dests = [
+            well
+            for h_block in range(2)
+            for v_block in range(2)
+            for col in pcr_plate.columns()[6*v_block:6*(v_block+1)]
+            for well in col[4*h_block:4*(h_block+1)][:NUM_SAMPLES]]
 
-    # transfer mastermixes
-    for s, d_set in zip(mm, mm_dests):
-        p20.transfer(15, s, d_set)
+    if PREPARE_MASTERMIX:
+        """ mastermix component maps """
+        mm1 = {
+            tube: vol
+            for tube, vol in zip(
+                [well for col in mm_rack.columns()[2:5] for well in col][:10],
+                [2.85, 12.5, 0.4, 1, 1, 0.25, 0.25, 0.5, 0.25, 1]
+            )
+        }
+        mm2 = {
+            tube: vol
+            for tube, vol in zip(
+                [mm_rack.wells_by_name()[well] for well in ['A3', 'C5', 'D5']],
+                [10, 4, 1]
+            )
+        }
+        mm3 = {
+            tube: vol
+            for tube, vol in zip(
+                [mm_rack.wells_by_name()[well] for well in ['A6', 'B6']],
+                [13, 2]
+            )
+        }
+        mm_dict = {'MM1': mm1, 'MM2': mm2, 'MM3': mm3}
+
+        # create mastermix
+        mm_tube = mm_rack.wells()[0]
+        for tube, vol in mm_dict[MM_TYPE].items():
+            mm_vol = vol*(NUM_SAMPLES+5)
+            disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
+            pip = p300 if mm_vol > 20 else p20
+            pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='once')
+
+    # transfer mastermix
+    p20.transfer(VOLUME_MMIX, mm_tube, [d.bottom(2) for d in dests])
 
     # transfer samples to corresponding locations
-    for s, d_set in zip(samples, sample_dest_sets):
-        for d in d_set:
-            p20.pick_up_tip()
-            p20.transfer(5, s, d, new_tip='never')
-            p20.mix(1, 10, d)
-            p20.blow_out(d.top(-2))
-            p20.aspirate(5, d.top(2))
-            p20.drop_tip()
-
-    # transfer controls
-    for d in pos_control_dests:
+    for s, d in zip(sources, dests):
         p20.pick_up_tip()
-        p20.transfer(5, pos_control, d, new_tip='never')
-        p20.mix(1, 10, d)
-        p20.blow_out(d.top(-2))
-        p20.aspirate(5, d.top(2))
-        p20.drop_tip()
-
-    for d in neg_control_dests:
-        p20.pick_up_tip()
-        p20.transfer(5, neg_control, d, new_tip='never')
-        p20.mix(1, 10, d)
+        p20.transfer(5, s.bottom(2), d.bottom(2), new_tip='never')
+        p20.mix(1, 10, d.bottom(2))
         p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()
