@@ -39,7 +39,7 @@ def run(protocol):
                 'nest_1_reservoir_195ml', '11', 'Liquid Waste')
     waste2 = liqwaste2['A1'].top()
     trough = protocol.load_labware(
-                    'nest_12_reservoir_15ml', '5', 'Trough with Reagents')
+                    'nest_12_reservoir_15ml', '2', 'Trough with Reagents')
     buffer = [trough[xx] for xx in ['A1', 'A1', 'A2']]
     wb1 = trough['A4']
     wb2 = trough['A6']
