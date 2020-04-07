@@ -85,7 +85,7 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
             for h_block in range(2)
             for v_block in range(2)
             for col in pcr_plate.columns()[6*v_block:6*(v_block+1)]
-            for well in col[4*h_block:4*(h_block+1)][:NUM_SAMPLES]]
+            for well in col[4*h_block:4*(h_block+1)]][:NUM_SAMPLES]
 
     mm_tube = mm_rack.wells()[0]
 
