@@ -26,7 +26,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # check source (elution) labware type
     source_plate = ctx.load_labware(
-        'opentrons_96_aluminumblock_nest_wellplate_100ul', '1',
+        'opentrons_96_aluminumblock_biorad_wellplate_200ul', '1',
         'chilled elution plate on block from Station B')
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
