@@ -85,7 +85,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def remove_supernatant(vol):
         m300.flow_rate.aspirate = 30
-        num_trans = math.ceil(vol/270)
+        num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, m in enumerate(mag_samples_m):
             side = -1 if i < 6 == 0 else 1
