@@ -59,7 +59,7 @@ def run(ctx: protocol_api.ProtocolContext):
         elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
 
     beads = reagent_res1.wells()[:2]
-    wash = reagent_res1.wells()[4:10]
+    wash = reagent_res1.wells()[3:9]
     water = reagent_res1.wells()[-1]
 
     # pipettes
@@ -100,11 +100,11 @@ def run(ctx: protocol_api.ProtocolContext):
     # premix, transfer, and mix magnetic beads with sample
     for i, m in enumerate(mag_samples_m):
         pick_up(m300)
-        if i == 0:
+        if i == 0 or i == 8:
             for _ in range(20):
-                m300.aspirate(200, beads.bottom(3))
-                m300.dispense(200, beads.bottom(20))
-        m300.transfer(205, beads, m, new_tip='never')
+                m300.aspirate(200, beads[i//8].bottom(3))
+                m300.dispense(200, beads[i//8].bottom(20))
+        m300.transfer(205, beads[i//8], m, new_tip='never')
         m300.mix(10, 200, m)
         m300.blow_out(m.top(-2))
         m300.aspirate(20, m.top(-2))
@@ -128,7 +128,7 @@ def run(ctx: protocol_api.ProtocolContext):
             pick_up(m300)
             side = 1 if i < 6 == 0 else -1
             loc = m.bottom(0.5).move(Point(x=side*2))
-            m300.transfer(400, [wash_loc//4], m.top(), new_tip='never')
+            m300.transfer(400, wash[wash_loc//4], m.top(), new_tip='never')
             m300.mix(10, 200, loc)
             m300.blow_out(m.top(-2))
             m300.aspirate(20, m.top(-2))
