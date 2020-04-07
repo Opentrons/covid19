@@ -8,7 +8,7 @@ In all three versions, the following labware layout remains constant:
 - Slot 5: Opentrons 24 Tube Rack + 1.5mL tube with master mix in A1
 
 `StationC-Randox-24.py`
-This protocol takes 24 samples a single elution plate (in slot 1, columns 1/2/3) and transfers the samples to the PCR plate on the temperature module (columns 1/2/3) containing master mix
+This protocol takes 24 samples from a single elution plate (in slot 1, columns 1/2/3) and transfers the samples to the PCR plate on the temperature module (columns 1/2/3) containing master mix
 
 `StationC-Randox-48-one-input.py`
 This protocol takes 48 samples from a single elution plate (in slot 1, columns 1/2/3/4/5/6) and transfers the samples to the PCR plate on the temperature module (columns 1/2/3/4/5/6) containing master mix
