@@ -122,13 +122,16 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
             pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='once')
 
     # transfer mastermix
-    p20.transfer(VOLUME_MMIX, mm_tube, [d.bottom(2) for d in dests])
+    for d in dests:
+        p20.pick_up_tip()
+        p20.transfer(VOLUME_MMIX, mm_tube, d.bottom(2), new_tip='never')
+        p20.blow_out(d.bottom(5))
+        p20.drop_tip()
 
     # transfer samples to corresponding locations
     for s, d in zip(sources, dests):
         p20.pick_up_tip()
         p20.transfer(5, s.bottom(2), d.bottom(2), new_tip='never')
         p20.mix(1, 10, d.bottom(2))
-        p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()

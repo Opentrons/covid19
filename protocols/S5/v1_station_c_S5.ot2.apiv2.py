@@ -103,7 +103,11 @@ def run(ctx: protocol_api.ProtocolContext):
     # transfer mastermix
     mm_vol = mm_dict[MM_TYPE]['volume']
     mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[-2:]]
-    p20.transfer(mm_vol, mm_tube, mm_dests)
+    p20.pick_up_tip()
+    for d in mm_dests:
+        p20.transfer(mm_vol, mm_tube, d, new_tip='never')
+        p20.blow_out(d.bottom(5))
+    p20.drop_tip()
 
     # transfer samples to corresponding locations
     sample_vol = 25 - mm_vol
@@ -111,7 +115,6 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.pick_up_tip()
         p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
         p20.mix(1, 10, d.bottom(2))
-        p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()
 
@@ -120,6 +123,5 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.pick_up_tip()
         p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
         p20.mix(1, 10, d.bottom(2))
-        p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()

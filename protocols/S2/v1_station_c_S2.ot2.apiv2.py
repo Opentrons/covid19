@@ -59,7 +59,11 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # transfer mastermixes
     for s, d_set in zip(mm, mm_dests):
-        p20.transfer(20, s, d_set)
+        p20.pick_up_tip()
+        for d in d_set:
+            p20.transfer(20, s, d, new_tip='never')
+            p20.blow_out(d.bottom(5))
+        p20.drop_tip()
 
     # transfer samples to corresponding locations
     for s, d_set in zip(samples, sample_dest_sets):
@@ -67,7 +71,6 @@ def run(ctx: protocol_api.ProtocolContext):
             p20.pick_up_tip()
             p20.transfer(5, s, d, new_tip='never')
             p20.mix(1, 10, d)
-            p20.blow_out(d.top(-2))
             p20.aspirate(5, d.top(2))
             p20.drop_tip()
 
@@ -76,7 +79,6 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.pick_up_tip()
         p20.transfer(5, pos_control, d, new_tip='never')
         p20.mix(1, 10, d)
-        p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()
 
@@ -84,6 +86,5 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.pick_up_tip()
         p20.transfer(5, neg_control, d, new_tip='never')
         p20.mix(1, 10, d)
-        p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()
