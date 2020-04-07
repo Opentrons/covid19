@@ -87,6 +87,8 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
             for col in pcr_plate.columns()[6*v_block:6*(v_block+1)]
             for well in col[4*h_block:4*(h_block+1)][:NUM_SAMPLES]]
 
+    mm_tube = mm_rack.wells()[0]
+
     if PREPARE_MASTERMIX:
         """ mastermix component maps """
         mm1 = {
@@ -113,7 +115,6 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
         mm_dict = {'MM1': mm1, 'MM2': mm2, 'MM3': mm3}
 
         # create mastermix
-        mm_tube = mm_rack.wells()[0]
         for tube, vol in mm_dict[MM_TYPE].items():
             mm_vol = vol*(NUM_SAMPLES+5)
             disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
