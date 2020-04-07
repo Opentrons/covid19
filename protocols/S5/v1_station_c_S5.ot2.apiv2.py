@@ -5,86 +5,121 @@ metadata = {
     'protocolName': 'S5 Station C Version 1',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.1'
 }
 
 """
-REAGENT SETUP:
-
-- slot 5 2ml tuberack:
-    - mastermixes: tubes A1-A3 for 3 mastermixes, A1-A2 for 2 mastermixes
-    - positive control: tube B1
-    - negative control: tube B2
+MM_TYPE must be one of the following:
+    Seegene
+    E gene
+    S gene
+    human RNA genes
 """
 
-NUM_SAMPLES = 30
-NUM_MASTERMIX = 3  # should be 2 or 3
+NUM_SAMPLES = 94
+PREPARE_MASTERMIX = True
+MM_TYPE = 'Seegene'
 
 
 def run(ctx: protocol_api.ProtocolContext):
+    global MM_TYPE
+
+    # check source (elution) labware type
     source_plate = ctx.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul', '1',
-        'RNA elution plate from station B')
-    tempdeck = ctx.load_module('tempdeck', '4')
-    pcr_plate = tempdeck.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', 'PCR plate')
-    tempdeck.set_temperature(4)
-    tuberack = ctx.load_labware(
-        'opentrons_24_aluminumblock_generic_2ml_screwcap', '7',
-        '2ml screw tuberack for mastermix')
+        'chilled elution plate on block from Station B')
     tips20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['2', '5', '8']
+        for slot in ['3', '6', '9']
     ]
+    tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '2')]
+    tempdeck = ctx.load_module('tempdeck', '4')
+    pcr_plate = tempdeck.load_labware(
+        'opentrons_96_aluminumblock_biorad_wellplate_200ul', 'PCR plate')
+    tempdeck.set_temperature(4)
+    tube_block = ctx.load_labware(
+        'opentrons_24_aluminumblock_generic_2ml_screwcap', '5',
+        '2ml screw tube aluminum block for mastermix + controls')
 
     # pipette
     p20 = ctx.load_instrument('p20_single_gen2', 'right', tip_racks=tips20)
+    p300 = ctx.load_instrument('p300_single_gen2', 'left', tip_racks=tips300)
 
     # setup up sample sources and destinations
-    samples = source_plate.wells()[:NUM_SAMPLES]
-    sample_dest_sets = [
-        row[i*NUM_MASTERMIX:(i+1)*NUM_MASTERMIX]
-        for i in range(12//NUM_MASTERMIX)
-        for row in pcr_plate.rows()
-    ][:NUM_SAMPLES]
-    mm = tuberack.rows()[0][:NUM_MASTERMIX]
-    mm_dests = [
-        [well for col in pcr_plate.columns()[j::NUM_MASTERMIX]
-            for well in col][:NUM_SAMPLES] + pcr_plate.columns()[9+j][-2:]
-        for j in range(NUM_MASTERMIX)
-    ]
-    pos_control = tuberack.rows()[1][0]
-    pos_control_dests = pcr_plate.rows()[-2][-1*NUM_MASTERMIX:]
-    neg_control = tuberack.rows()[1][1]
-    neg_control_dests = tuberack.rows()[-1][-1*NUM_MASTERMIX:]
+    sources = source_plate.wells()[:NUM_SAMPLES]
+    sample_dests = pcr_plate.wells()[:NUM_SAMPLES]
 
-    # transfer mastermixes
-    for s, d_set in zip(mm, mm_dests):
-        p20.transfer(20, s, d_set)
+    """ mastermix component maps """
+    MM_TYPE = MM_TYPE.lower().strip()
+    mm_tube = tube_block.wells()[0]
+    mm1 = {
+        'volume': 17,
+        'components': {
+            tube: vol
+            for tube, vol in zip(tube_block.wells()[8:12], [5, 5, 5, 2])
+        }
+    }
+    mm2 = {
+        'volume': 20,
+        'components': {
+            tube: vol
+            for tube, vol in zip(
+                tube_block.wells()[8:15], [5, 1, 2, 2, 1, 8, 1])
+        }
+    }
+    mm3 = {
+        'volume': 17,
+        'components': {
+            tube: vol
+            for tube, vol in zip(
+                tube_block.wells()[8:14], [5, 1, 2, 2, 1, 9])
+        }
+    }
+    mm4 = {
+        'volume': 17,
+        'components': {
+
+            tube: vol
+            for tube, vol in zip(
+                tube_block.wells()[8:15], [5, 1, 2, 2, 1, 8, 1])
+        }
+    }
+
+    if PREPARE_MASTERMIX:
+        mm_dict = {
+            'seegene': mm1,
+            'e gene': mm2,
+            's gene': mm3,
+            'human RNA genes': mm4
+        }
+
+        # create mastermix
+        for tube, vol in mm_dict[MM_TYPE]['components'].items():
+            mm_vol = vol*(NUM_SAMPLES+5)
+            disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
+            pip = p300 if mm_vol > 20 else p20
+            pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='once')
+
+    # transfer mastermix
+    mm_vol = mm_dict[MM_TYPE]['volume']
+    mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[-2:]]
+    p20.transfer(mm_vol, mm_tube, mm_dests)
 
     # transfer samples to corresponding locations
-    for s, d_set in zip(samples, sample_dest_sets):
-        for d in d_set:
-            p20.pick_up_tip()
-            p20.transfer(5, s, d, new_tip='never')
-            p20.mix(1, 10, d)
-            p20.blow_out(d.top(-2))
-            p20.aspirate(5, d.top(2))
-            p20.drop_tip()
-
-    # transfer controls
-    for d in pos_control_dests:
+    sample_vol = 25 - mm_vol
+    for s, d in zip(sources, sample_dests):
         p20.pick_up_tip()
-        p20.transfer(5, pos_control, d, new_tip='never')
-        p20.mix(1, 10, d)
+        p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
+        p20.mix(1, 10, d.bottom(2))
         p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()
 
-    for d in neg_control_dests:
+    # transfer positive and negative controls
+    for s, d in zip(tube_block.wells()[1:3], pcr_plate.wells()[-2:]):
         p20.pick_up_tip()
-        p20.transfer(5, neg_control, d, new_tip='never')
-        p20.mix(1, 10, d)
+        p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
+        p20.mix(1, 10, d.bottom(2))
         p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()

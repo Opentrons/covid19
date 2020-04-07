@@ -15,5 +15,35 @@ Reservoir 2 layout (slot 5):
 ## Station C
 This protocol plates elution output from station B to a new PCR plate, along with up to 3 probes (loaded in separate mastermix tubes).  
 
-2ml Eppendorf tuberack layout (slot 5):
-![tuberack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/station_c_tuberack.png)
+The components for the following reagent map correspond to 1 of 4 possible mastermix formulas:
+  1. Seegene (17µl mix, 8µl sample)
+    * component 1: nCov MOM
+    * component 2: RNase-free H2O
+    * component 3: 5x real time one-step buffer
+    * component 4: real time one-step enzyme
+  2. E gene (20µl, 5µl sample)
+    * component 1: Rxn buffer 5x
+    * component 2: dNTPs mix
+    * component 3: Primer F
+    * component 4: Primer R
+    * component 5: Enzyme Mix
+    * component 6: H20
+    * component 7: sonda/probe
+  3. S gene (20µl, 5µl sample)
+    * component 1: Rxn buffer 5x
+    * component 2: dNTPs mix
+    * component 3: Primer F
+    * component 4: Primer R
+    * component 5: Enzyme Mix
+    * component 6: H20
+  4. human RNA genes (20µl, 5µl sample)
+    * component 1: Rxn buffer 5x
+    * component 2: dNTPs mix
+    * component 3: Primer F
+    * component 4: Primer R
+    * component 5: Enzyme Mix
+    * component 6: H20
+    * component 7: sonda/probe
+
+Reagent 2ml screw tubes aluminum block map (slot 5):  
+![reagent map](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/S5/valldhebron_mastermix_map.png)
