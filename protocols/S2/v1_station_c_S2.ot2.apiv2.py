@@ -17,7 +17,7 @@ REAGENT SETUP:
     - negative control: tube B2
 """
 
-NUM_SAMPLES = 30
+NUM_SAMPLES = 8
 
 
 def run(ctx: protocol_api.ProtocolContext):
