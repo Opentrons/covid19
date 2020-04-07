@@ -34,7 +34,7 @@ def run(protocol):
     magheight = 13.7
     magplate = magdeck.load_labware('nest_96_deepwell_2ml')
     tempdeck = protocol.load_module('tempdeck', '1')
-    tempdeck.set_temperature(4)
+    tempdeck.set_temperature(6)
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
     liqwaste2 = protocol.load_labware(
