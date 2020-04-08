@@ -1,3 +1,4 @@
+import math
 from opentrons import protocol_api
 
 # metadata
@@ -119,19 +120,28 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
             mm_vol = vol*(NUM_SAMPLES+5)
             disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
             pip = p300 if mm_vol > 20 else p20
-            pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='once')
+            pip.transfer(
+                mm_vol, tube.bottom(2), disp_loc, air_gap=5, new_tip='never')
+            pip.blow_out(tube.bottom(5))
+            pip.aspirate(5, tube.top(2))
 
     # transfer mastermix
-    for d in dests:
-        p20.pick_up_tip()
-        p20.transfer(VOLUME_MMIX, mm_tube, d.bottom(2), new_tip='never')
-        p20.blow_out(d.bottom(5))
-        p20.drop_tip()
+    max_trans_per_asp = 230//(VOLUME_MMIX+5)
+    split_ind = [ind for ind in range(0, NUM_SAMPLES, max_trans_per_asp)]
+    dest_sets = [dests[split_ind[i]:split_ind[i+1]]
+                 for i in range(len(split_ind)-1)] + [dests[split_ind[-1]:]]
+
+    p20.pick_up_tip()
+    for set in dest_sets:
+        p20.distribute(VOLUME_MMIX, mm_tube, [d.bottom(2) for d in set],
+                       air_gap=5, disposal_volume=0, new_tip='never')
+    p20.drop_tip()
 
     # transfer samples to corresponding locations
     for s, d in zip(sources, dests):
         p20.pick_up_tip()
-        p20.transfer(5, s.bottom(2), d.bottom(2), new_tip='never')
-        p20.mix(1, 10, d.bottom(2))
+        p20.transfer(5, s.bottom(2), d.bottom(2), air_gap=5, new_tip='never')
+        # p20.mix(1, 10, d.bottom(2))
+        # p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()
