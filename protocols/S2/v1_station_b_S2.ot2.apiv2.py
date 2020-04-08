@@ -35,13 +35,13 @@ def run(ctx: protocol_api.ProtocolContext):
     elution_plate = tempdeck.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul',
         'cooled elution plate')
-    reagent_res1 = ctx.load_labware(
-        'nest_12_reservoir_15ml', '2', 'reagent reservoir 1')
+    reagent_res1 = ctx.load_labware('nunc_96_wellplate_2000ul', '2',
+                                    'reagent deepwell plate 1')
     magdeck = ctx.load_module('magdeck', '4')
     magplate = magdeck.load_labware(
         'usascientific_96_wellplate_2.4ml_deep', '96-deepwell sample plate')
-    reagent_res2 = ctx.load_labware(
-        'nest_12_reservoir_15ml', '5', 'reagent reservoir 2')
+    reagent_res2 = ctx.load_labware('nunc_96_wellplate_2000ul', '5',
+                                    'reagent deepwell plate 2')
     waste = ctx.load_labware(
         'nest_1_reservoir_195ml', '7', 'waste reservoir').wells()[0].top()
     tips300 = [
@@ -59,12 +59,12 @@ def run(ctx: protocol_api.ProtocolContext):
         well for well in
         elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
 
-    viral_dna_rna_buff = reagent_res1.wells()[:3]
-    beads = reagent_res1.wells()[3]
-    wash_1 = reagent_res1.wells()[4:8]
-    wash_2 = reagent_res1.wells()[8:]
-    etoh = reagent_res2.wells()[:8]
-    water = reagent_res2.wells()[-1]
+    viral_dna_rna_buff = reagent_res1.rows()[0][:3]
+    beads = reagent_res1.rows()[0][3]
+    wash_1 = reagent_res1.rows()[0][4:8]
+    wash_2 = reagent_res1.rows()[0][8:]
+    etoh = reagent_res2.rows()[0][:8]
+    water = reagent_res2.rows()[0][-1]
 
     # pipettes
     m300 = ctx.load_instrument('p300_multi', 'left', tip_racks=tips300)
