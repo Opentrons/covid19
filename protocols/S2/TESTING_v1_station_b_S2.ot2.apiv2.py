@@ -35,12 +35,13 @@ def run(ctx: protocol_api.ProtocolContext):
     elution_plate = tempdeck.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul',
         'cooled elution plate')
-    reagent_res1 = ctx.load_labware(
-        'nest_12_reservoir_15ml', '2', 'reagent reservoir 1')
+    reagent_res1 = ctx.load_labware('nunc_96_wellplate_2000ul', '2',
+                                    'reagent deepwell plate 1')
     magdeck = ctx.load_module('magdeck', '4')
-    magplate = magdeck.load_labware('usascientific_96_wellplate_2.4ml_deep')
-    reagent_res2 = ctx.load_labware(
-        'nest_12_reservoir_15ml', '5', 'reagent reservoir 2')
+    magplate = magdeck.load_labware(
+        'usascientific_96_wellplate_2.4ml_deep', '96-deepwell sample plate')
+    reagent_res2 = ctx.load_labware('nunc_96_wellplate_2000ul', '5',
+                                    'reagent deepwell plate 2')
     waste = ctx.load_labware(
         'nest_1_reservoir_195ml', '7', 'waste reservoir').wells()[0].top()
     tips300 = [
@@ -58,12 +59,12 @@ def run(ctx: protocol_api.ProtocolContext):
         well for well in
         elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
 
-    viral_dna_rna_buff = reagent_res1.wells()[:3]
-    beads = reagent_res1.wells()[3]
-    wash_1 = reagent_res1.wells()[4:8]
-    wash_2 = reagent_res1.wells()[8:]
-    etoh = reagent_res2.wells()[:8]
-    water = reagent_res2.wells()[-1]
+    viral_dna_rna_buff = reagent_res1.rows()[0][:3]
+    beads = reagent_res1.rows()[0][3]
+    wash_1 = reagent_res1.rows()[0][4:8]
+    wash_2 = reagent_res1.rows()[0][8:]
+    etoh = reagent_res2.rows()[0][:8]
+    water = reagent_res2.rows()[0][-1]
 
     # pipettes
     m300 = ctx.load_instrument('p300_multi', 'left', tip_racks=tips300)
@@ -76,7 +77,7 @@ def run(ctx: protocol_api.ProtocolContext):
     def pick_up(pip):
         nonlocal tip_counts
         if tip_counts[pip] == tip_maxes[pip]:
-            ctx.comment('Replace ' + str(pip.max_volume) + 'µl tipracks before \
+            ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
     resuming.')
             pip.reset_tipracks()
             tip_counts[pip] = 0
@@ -85,7 +86,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def remove_supernatant(vol):
         m300.flow_rate.aspirate = 30
-        num_trans = math.ceil(vol/270)
+        num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, m in enumerate(mag_samples_m):
             side = -1 if i < 6 == 0 else 1
@@ -122,7 +123,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # incubate on magnet
     magdeck.engage()
-    ctx.comment('Incubating on magnet for 3 minutes.')
+    # ctx.delay(minutes=3, msg='Incubating on magnet for 3 minutes.')
 
     # remove supernatant
     remove_supernatant(630)
@@ -142,7 +143,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
         # incubate on magnet
         magdeck.engage()
-        ctx.comment(minutes=3, msg='Incubating on magnet for 3 minutes.')
+        # ctx.delay(minutes=3, msg='Incubating on magnet for 3 minutes.')
 
         # remove supernatant
         remove_supernatant(510)
@@ -157,13 +158,13 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.transfer(
             500, etoh_set[i//3], [m.top(3) for m in mag_samples_m],
             new_tip='never')
-        ctx.comment(seconds=30, msg='Incubating in EtOH for 30 seconds.')
+        # ctx.delay(seconds=30, msg='Incubating in EtOH for 30 seconds.')
 
         # remove supernatant
         remove_supernatant(510)
 
-        if wash == 1:
-            ctx.comment(minutes=10, msg='Airdrying on magnet for 10 minutes.')
+        # if wash == 1:
+        #     ctx.delay(minutes=10, msg='Airdrying on magnet for 10 minutes.')
 
         magdeck.disengage()
 
@@ -179,7 +180,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # incubate on magnet
     magdeck.engage()
-    ctx.comment(minutes=3, msg='Incubating on magnet for 3 minutes.')
+    # ctx.delay(minutes=3, msg='Incubating on magnet for 3 minutes.')
 
     # transfer elution to clean plate
     m300.flow_rate.aspirate = 30

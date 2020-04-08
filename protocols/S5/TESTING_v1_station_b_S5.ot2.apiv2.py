@@ -14,14 +14,9 @@ metadata = {
 REAGENT SETUP:
 
 - slot 2 12-channel reservoir:
-    - viral DNA/RNA buffer: channels 1-3
-    - magbeads: channel 4
-    - wash 1: channels 5-8
-    - wash 2: channels 9-12
-
-- slot 5 12-channel reservoir:
-    - EtOH: channels 1-8
-    - water: channel 12
+    - Bind BBD/isopropanol: channels 1-2
+    - wash WBE: channels 4-9
+    - nuclease-free water: channel 12
 
 """
 
@@ -39,8 +34,8 @@ def run(ctx: protocol_api.ProtocolContext):
         'nest_12_reservoir_15ml', '2', 'reagent reservoir 1')
     magdeck = ctx.load_module('magdeck', '4')
     magplate = magdeck.load_labware('usascientific_96_wellplate_2.4ml_deep')
-    reagent_res2 = ctx.load_labware(
-        'nest_12_reservoir_15ml', '5', 'reagent reservoir 2')
+    etoh = ctx.load_labware(
+        'nest_1_reservoir_195ml', '5', 'reservoir for EtOH').wells()[0]
     waste = ctx.load_labware(
         'nest_1_reservoir_195ml', '7', 'waste reservoir').wells()[0].top()
     tips300 = [
@@ -58,12 +53,9 @@ def run(ctx: protocol_api.ProtocolContext):
         well for well in
         elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
 
-    viral_dna_rna_buff = reagent_res1.wells()[:3]
-    beads = reagent_res1.wells()[3]
-    wash_1 = reagent_res1.wells()[4:8]
-    wash_2 = reagent_res1.wells()[8:]
-    etoh = reagent_res2.wells()[:8]
-    water = reagent_res2.wells()[-1]
+    beads = reagent_res1.wells()[:2]
+    wash = reagent_res1.wells()[3:9]
+    water = reagent_res1.wells()[-1]
 
     # pipettes
     m300 = ctx.load_instrument('p300_multi', 'left', tip_racks=tips300)
@@ -76,7 +68,7 @@ def run(ctx: protocol_api.ProtocolContext):
     def pick_up(pip):
         nonlocal tip_counts
         if tip_counts[pip] == tip_maxes[pip]:
-            ctx.comment('Replace ' + str(pip.max_volume) + 'µl tipracks before \
+            ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
     resuming.')
             pip.reset_tipracks()
             tip_counts[pip] = 0
@@ -85,7 +77,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def remove_supernatant(vol):
         m300.flow_rate.aspirate = 30
-        num_trans = math.ceil(vol/270)
+        num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, m in enumerate(mag_samples_m):
             side = -1 if i < 6 == 0 else 1
@@ -100,70 +92,60 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.drop_tip()
         m300.flow_rate.aspirate = 150
 
-    # transfer viral DNA/RNA buffer
-    for i, m in enumerate(mag_samples_m):
-        pick_up(m300)
-        m300.transfer(400, viral_dna_rna_buff[i//4], m.top(), new_tip='never')
-        m300.mix(10, 200, m)
-        m300.blow_out(m.top(-2))
-        m300.drop_tip()
-
     # premix, transfer, and mix magnetic beads with sample
     for i, m in enumerate(mag_samples_m):
         pick_up(m300)
-        if i == 0:
+        if i == 0 or i == 8:
             for _ in range(20):
-                m300.aspirate(200, beads.bottom(3))
-                m300.dispense(200, beads.bottom(20))
-        m300.transfer(20, beads, m, new_tip='never')
+                m300.aspirate(200, beads[i//8].bottom(3))
+                m300.dispense(200, beads[i//8].bottom(20))
+        m300.transfer(205, beads[i//8], m, new_tip='never')
         m300.mix(10, 200, m)
         m300.blow_out(m.top(-2))
+        m300.aspirate(20, m.top(-2))
         m300.drop_tip()
 
-    # incubate on magnet
+    # incubate off and on magnet
+    # ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
     magdeck.engage()
-    ctx.comment('Incubating on magnet for 3 minutes.')
+    # ctx.delay(minutes=10, msg='Incubating on magnet for 10 minutes.')
 
     # remove supernatant
-    remove_supernatant(630)
+    remove_supernatant(575)
 
     magdeck.disengage()
 
-    for wash in [wash_1, wash_2]:
+    # 2x washes
+    for wash_ind in range(2):
         # transfer and mix wash
         for i, m in enumerate(mag_samples_m):
+            wash_loc = i + wash_ind*len(mag_samples_m)
             pick_up(m300)
             side = 1 if i < 6 == 0 else -1
             loc = m.bottom(0.5).move(Point(x=side*2))
-            m300.transfer(500, wash[i//3], m.top(), new_tip='never')
+            m300.transfer(400, wash[wash_loc//4], m.top(), new_tip='never')
             m300.mix(10, 200, loc)
             m300.blow_out(m.top(-2))
+            m300.aspirate(20, m.top(-2))
             m300.drop_tip()
 
         # incubate on magnet
         magdeck.engage()
-        ctx.comment(minutes=3, msg='Incubating on magnet for 3 minutes.')
+        # ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
 
         # remove supernatant
-        remove_supernatant(510)
+        remove_supernatant(410)
 
-        magdeck.disengage()
-
-    # EtOH washes
-    for wash in range(2):
         # transfer and mix wash
-        etoh_set = etoh[wash*4:wash*4+4]
         pick_up(m300)
         m300.transfer(
-            500, etoh_set[i//3], [m.top(3) for m in mag_samples_m],
-            new_tip='never')
-        ctx.comment(seconds=30, msg='Incubating in EtOH for 30 seconds.')
+            400, etoh, [m.top(3) for m in mag_samples_m], new_tip='never')
+        # ctx.delay(minutes=2, msg='Incubating in EtOH for 2 minutes.')
 
         # remove supernatant
-        remove_supernatant(510)
+        remove_supernatant(410)
 
-        if wash == 1:
-            ctx.comment(minutes=10, msg='Airdrying on magnet for 10 minutes.')
+        # ctx.delay(minutes=1, msg='Airdrying for 1 minute.')
 
         magdeck.disengage()
 
@@ -172,14 +154,15 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(m300)
         side = 1 if i < 6 == 0 else -1
         loc = m.bottom(0.5).move(Point(x=side*2))
-        m300.transfer(50, water, m.top(), new_tip='never')
+        m300.transfer(40, water, m.top(), new_tip='never')
         m300.mix(10, 30, loc)
         m300.blow_out(m.top(-2))
         m300.drop_tip()
 
-    # incubate on magnet
+    # incubate off and on magnet
+    # ctx.delay(minutes=2, msg='Incubating off magnet for 2 minutes.')
     magdeck.engage()
-    ctx.comment(minutes=3, msg='Incubating on magnet for 3 minutes.')
+    # ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
 
     # transfer elution to clean plate
     m300.flow_rate.aspirate = 30
@@ -187,7 +170,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(m300)
         side = -1 if i < 6 == 0 else 1
         loc = s.bottom(0.5).move(Point(x=side*2))
-        m300.transfer(50, loc, d, new_tip='never')
+        m300.transfer(40, loc, d, new_tip='never')
         m300.blow_out(d.top(-2))
         m300.drop_tip()
     m300.flow_rate.aspirate = 150
