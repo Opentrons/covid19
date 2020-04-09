@@ -27,7 +27,7 @@ Sample 4	Sample 4	Sample 4	Sample 12	Sample 12	Sample 12	Sample 20	Sample 20	Sam
 Sample 5	Sample 5	Sample 5	Sample 13	Sample 13	Sample 13	Sample 21	Sample 21	Sample 21
 Sample 6	Sample 6	Sample 6	Sample 14	Sample 14	Sample 14	Sample 22	Sample 22	Sample 22	PCD 4	Negative	Negative
 Sample 7	Sample 7	Sample 7	Sample 15	Sample 15	Sample 15	Sample 23	Sample 23	Sample 23
-Sample 8	Sample 8	Sample 8	Sample 16	Sample 16	Sample 16	Sample 24	Sample 24	Sample 24			
+Sample 8	Sample 8	Sample 8	Sample 16	Sample 16	Sample 16	Sample 24	Sample 24	Sample 24
 '''
 
 # Master mix locations on the eppendorf tube holder
@@ -53,7 +53,7 @@ MIX_VOLUME = 15
 SAMPLE_VOLUME = 5
 
 # Tip locations
-SAMPLE_TIP_LOCATIONS = ['2', '3']
+SAMPLE_TIP_LOCATIONS = ['3', '6']
 
 import re
 import itertools
