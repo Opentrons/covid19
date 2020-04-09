@@ -2,7 +2,7 @@ from opentrons import protocol_api
 
 # metadata
 metadata = {
-    'protocolName': 'S2 Station A Version 1',
+    'protocolName': 'S2 Station A Version 2',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -23,8 +23,8 @@ REAGENT SETUP:
 
 """
 
-NUM_SAMPLES = 30
-SAMPLE_VOLUME = 400
+NUM_SAMPLES = 8
+SAMPLE_VOLUME = 300
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -34,28 +34,42 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.load_labware(
             'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
             'source tuberack ' + str(i+1))
-        for i, slot in enumerate(['1', '4'])
+        for i, slot in enumerate(['1', '3', '4', '6'])
     ]
     dest_plate = ctx.load_labware(
         'usascientific_96_wellplate_2.4ml_deep', '2',
         '96-deepwell sample plate')
-    tiprack = ctx.load_labware(
-        'opentrons_96_tiprack_1000ul', '3', '1000µl tiprack')
+    internal_control = ctx.load_labware(
+        'opentrons_24_aluminumblock_generic_2ml_screwcap', '7',
+        'chilled tubeblock for internal control (A1)').wells()[0]
+    tiprack20 = ctx.load_labware(
+        'opentrons_96_filtertiprack_1000ul', '10', '20µl filter tiprack')
+    tiprack1000 = ctx.load_labware(
+        'opentrons_96_filtertiprack_1000ul', '11', '1000µl filter tiprack')
 
     # load pipette
+    p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=[tiprack20])
     p1000 = ctx.load_instrument(
-        'p1000_single_gen2', 'right', tip_racks=[tiprack])
+        'p1000_single_gen2', 'right', tip_racks=[tiprack1000])
 
     # setup samples
     sources = [
         well for rack in source_racks for well in rack.wells()][:NUM_SAMPLES]
     dests = [well for col in dest_plate.columns()[0::2] for well in col] + [
         well for col in dest_plate.columns()[1::2] for well in col]
+    dests = dests[:NUM_SAMPLES]
 
-    # transfer
+    # transfer sample
     for s, d in zip(sources, dests):
         p1000.pick_up_tip()
         p1000.transfer(
             SAMPLE_VOLUME, s.bottom(5), d.bottom(5), new_tip='never')
         p1000.aspirate(100, d.top())
         p1000.drop_tip()
+
+    # transfer internal control
+    p20.transfer(10, internal_control, [d.bottom(5) for d in dests], air_gap=5,
+                 new_tip='always')
+
+    ctx.comment('Move deepwell plate (slot 5) to Station B for RNA \
+extraction.')
