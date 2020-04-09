@@ -86,7 +86,7 @@ def run(protocol):
     p20 = protocol.load_instrument('p20_single_gen2', 'right', tip_racks=sample_tip_racks)
 
     tempdeck = protocol.load_module('tempdeck', '4')
-    tempdeck.set_temperature(4)
+    tempdeck.set_temperature(6)
 
     tempplate = tempdeck.load_labware(
         QPCR_LABWARE)
