@@ -1,0 +1,72 @@
+{
+    "ordering": [
+        [
+            "A1"
+        ]
+    ],
+    "brand": {
+        "brand": "NALGENE",
+        "brandId": [
+            "Pool"
+        ]
+    },
+    "metadata": {
+        "displayName": "NALGENE 1 Reservoir 300000 µL",
+        "displayCategory": "reservoir",
+        "displayVolumeUnits": "µL",
+        "tags": []
+    },
+    "dimensions": {
+        "xDimension": 127.95,
+        "yDimension": 85.6,
+        "zDimension": 40
+    },
+    "wells": {
+        "A1": {
+            "depth": 36.75,
+            "totalLiquidVolume": 300000,
+            "shape": "rectangular",
+            "xDimension": 122,
+            "yDimension": 80,
+            "x": 3.3,
+            "y": 82.3,
+            "z": 3.25
+        }
+    },
+    "groups": [
+        {
+            "metadata": {
+                "displayName": "NALGENE 1 Reservoir 300000 µL",
+                "displayCategory": "reservoir",
+                "wellBottomShape": "flat"
+            },
+            "brand": {
+                "brand": "NALGENE",
+                "brandId": [
+                    "Pool"
+                ]
+            },
+            "wells": [
+                "A1"
+            ]
+        }
+    ],
+    "parameters": {
+        "format": "irregular",
+        "quirks": [
+            "centerMultichannelOnWells",
+            "touchTipDisabled"
+        ],
+        "isTiprack": false,
+        "isMagneticModuleCompatible": false,
+        "loadName": "nalgene_1_reservoir_300000ul"
+    },
+    "namespace": "custom_beta",
+    "version": 1,
+    "schemaVersion": 2,
+    "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+    }
+}
