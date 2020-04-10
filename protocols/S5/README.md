@@ -10,7 +10,7 @@ Reservoir 1 layout (slot 2):
 ![res1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/S5/reservoir_setup.png)  
 
 ## Station C
-This protocol plates elution output from station B to a new PCR plate, along with up to 3 probes (loaded in separate mastermix tubes).  
+This protocol plates elution output from station B to a new PCR plate, along with up to 3 probes (loaded in separate mastermix tubes). To create and transfer Seegene mastermix, the user should input `Seegene` for `MM_TYPE` at the top of the script. To create and tranfser the other 3 single-probe mastermixes, the user should input `singleplex` for `MM_TYPE`.
 
 The components for the following reagent map correspond to 1 of 4 possible mastermix formulas:
   1. Seegene (17µl mix, 8µl sample)
