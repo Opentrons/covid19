@@ -10,37 +10,37 @@ Reservoir 1 layout (slot 2):
 ![res1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/S5/reservoir_setup_UPDATE.png)  
 
 ## Station C
-This protocol plates elution output from station B to a new PCR plate, along with up to 3 probes (loaded in separate mastermix tubes). To create and transfer Seegene mastermix (1 below), the user should input `Seegene` for `MM_TYPE` at the top of the script. To create and transfer the other 3 single-probe mastermixes (2-4 below), the user should input `singleplex` for `MM_TYPE`.
+This protocol plates elution output from station B to a new PCR plate, along with up to 3 probes (loaded in separate mastermix tubes).  
 
-The components for the following reagent map correspond to the 4 possible mastermix formulas (volume per sample):
+The components for the following reagent map correspond to 1 of 4 possible mastermix formulas:
   1. Seegene (17µl mix, 8µl sample)
-    * component 1: 5µl nCov MOM
-    * component 2: 5µl RNase-free H2O
-    * component 3: 5µl 5x real time one-step buffer
-    * component 4: 2µl real time one-step enzyme
-  2. E gene (20µl mix, 5µl sample)
-    * component 5: 5µl Rxn buffer 5x
-    * component 6: 1µl dNTPs mix
-    * component 7: 2µl Primer F
-    * component 8: 2µl Primer R
-    * component 9: 1µl Enzyme Mix
-    * component 10: 8µl H20
-    * component 11: 1µl E gene sonda/probe
-  3. S gene (20µl mix, 5µl sample)
-    * component 5: 5µl Rxn buffer 5x
-    * component 6: 1µl dNTPs mix
-    * component 7: 2µl Primer F
-    * component 8: 2µl Primer R
-    * component 9: 1µl Enzyme Mix
-    * component 10: 9µl H20
-  4. human RNA genes (20µl mix, 5µl sample)
-    * component 5: 5µl Rxn buffer 5x
-    * component 6: 1µl dNTPs mix
-    * component 7: 2µl Primer F
-    * component 8: 2µl Primer R
-    * component 9: 1µl Enzyme Mix
-    * component 10: 8µl H20
-    * component 12: 1µl RNasP gene sonda/probe
+    * component 1: nCov MOM
+    * component 2: RNase-free H2O
+    * component 3: 5x real time one-step buffer
+    * component 4: real time one-step enzyme
+  2. E gene (20µl, 5µl sample)
+    * component 1: Rxn buffer 5x
+    * component 2: dNTPs mix
+    * component 3: Primer F
+    * component 4: Primer R
+    * component 5: Enzyme Mix
+    * component 6: H20
+    * component 7: sonda/probe
+  3. S gene (20µl, 5µl sample)
+    * component 1: Rxn buffer 5x
+    * component 2: dNTPs mix
+    * component 3: Primer F
+    * component 4: Primer R
+    * component 5: Enzyme Mix
+    * component 6: H20
+  4. human RNA genes (20µl, 5µl sample)
+    * component 1: Rxn buffer 5x
+    * component 2: dNTPs mix
+    * component 3: Primer F
+    * component 4: Primer R
+    * component 5: Enzyme Mix
+    * component 6: H20
+    * component 7: sonda/probe
 
 Reagent 2ml screw tubes aluminum block map (slot 5):  
-![reagent map](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/S5/mastermix_map_UPDATE2.png)
+![reagent map](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid+spain/S5/valldhebron_mastermix_map.png)
