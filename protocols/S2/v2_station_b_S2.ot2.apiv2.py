@@ -14,14 +14,9 @@ metadata = {
 REAGENT SETUP:
 
 - slot 2 12-channel reservoir:
-    - viral DNA/RNA buffer: channels 1-3
-    - magbeads: channel 4
-    - wash 1: channels 5-8
-    - wash 2: channels 9-12
-
-- slot 5 12-channel reservoir:
-    - EtOH: channels 1-8
-    - water: channel 12
+    - beads and isopropanol: channels 1-2
+    - 70% ethanol: channels 4-5
+    - nuclease-free water: channel 12
 
 """
 
@@ -68,7 +63,7 @@ def run(ctx: protocol_api.ProtocolContext):
         elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
 
     beads = reagent_res.rows()[0][:2]
-    etoh = reagent_res.rows()[0][4:6]
+    etoh = reagent_res.rows()[0][3:5]
     water = reagent_res.rows()[0][-1]
 
     # pipettes
