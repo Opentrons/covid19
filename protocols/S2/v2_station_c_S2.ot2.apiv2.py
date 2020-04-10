@@ -2,7 +2,7 @@ from opentrons import protocol_api
 
 # metadata
 metadata = {
-    'protocolName': 'S2 Station C Version 1',
+    'protocolName': 'S2 Station C Version 2',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -18,6 +18,7 @@ REAGENT SETUP:
 """
 
 NUM_SAMPLES = 8
+VOLUME_MMIX = 20
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -44,11 +45,19 @@ def run(ctx: protocol_api.ProtocolContext):
     dests = pcr_plate.wells()[:NUM_SAMPLES]
     mm = tuberack.rows()[0]
 
-    # transfer mastermix
+    # ensure volume does not reach the filter of the tip
+    max_trans_per_asp = 230//(VOLUME_MMIX+5)  # max tip volume of 230µl
+
+    # split destination wells into sets that can be distributed to with 1 aspiration
+    split_ind = [ind for ind in range(0, NUM_SAMPLES, max_trans_per_asp)]
+    dest_sets = [dests[split_ind[i]:split_ind[i+1]]
+                 for i in range(len(split_ind)-1)] + [dests[split_ind[-1]:]]
+
+    # distribute to each set of wells using the same tip for each
     p20.pick_up_tip()
-    for d in dests:
-        p20.transfer(20, mm, d, new_tip='never')
-        p20.blow_out(d.bottom(5))
+    for set in dest_sets:
+        p20.distribute(VOLUME_MMIX, mm, [d.bottom(2) for d in set],
+                       air_gap=5, disposal_volume=0, new_tip='never')
     p20.drop_tip()
 
     # transfer samples to corresponding locations
