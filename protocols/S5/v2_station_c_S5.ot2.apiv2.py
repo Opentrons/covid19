@@ -120,7 +120,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     if PREPARE_MASTERMIX:
         # create mastermix
-        for mm, tube_dest in zip(mm_dict[MM_TYPE], tube_block.rows()[0]):
+        for mm in mm_dict[MM_TYPE]:
+            tube_dest = mm['location']
             for r_tube, vol in mm['components'].items():
                 mm_vol = vol*NUM_SAMPLES*1.1
                 disp_loc = tube_dest.bottom(5) if mm_vol < 50 \
@@ -170,8 +171,8 @@ def run(ctx: protocol_api.ProtocolContext):
         ]
 
         # transfer mastermix
-        for mm, dest_set, mm_tube in zip(
-                mm_dict[MM_TYPE], mm_dests, tube_block.rows()[0][0:3]):
+        for mm, dest_set in zip(mm_dict[MM_TYPE], mm_dests):
+            mm_tube = mm['location']
             mm_vol = mm['volume']
             p20.pick_up_tip()
             for d in dest_set:
