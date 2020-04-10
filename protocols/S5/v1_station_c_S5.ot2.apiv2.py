@@ -11,9 +11,7 @@ metadata = {
 """
 MM_TYPE must be one of the following:
     Seegene
-    E gene
-    S gene
-    human RNA genes
+    singleplex
 """
 
 NUM_SAMPLES = 94
@@ -47,7 +45,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # setup up sample sources and destinations
     sources = source_plate.wells()[:NUM_SAMPLES]
-    sample_dests = pcr_plate.wells()[:NUM_SAMPLES]
 
     """ mastermix component maps """
     MM_TYPE = MM_TYPE.lower().strip()
@@ -59,6 +56,7 @@ def run(ctx: protocol_api.ProtocolContext):
             for tube, vol in zip(tube_block.wells()[8:12], [5, 5, 5, 2])
         }
     }
+
     mm2 = {
         'volume': 20,
         'components': {
@@ -68,7 +66,7 @@ def run(ctx: protocol_api.ProtocolContext):
         }
     }
     mm3 = {
-        'volume': 17,
+        'volume': 20,
         'components': {
             tube: vol
             for tube, vol in zip(
@@ -76,7 +74,7 @@ def run(ctx: protocol_api.ProtocolContext):
         }
     }
     mm4 = {
-        'volume': 17,
+        'volume': 20,
         'components': {
 
             tube: vol
@@ -85,43 +83,81 @@ def run(ctx: protocol_api.ProtocolContext):
         }
     }
 
+    mm_dict = {
+        'seegene': [mm1],
+        'singleplex': [mm2, mm3, mm4]
+    }
+
     if PREPARE_MASTERMIX:
-        mm_dict = {
-            'seegene': mm1,
-            'e gene': mm2,
-            's gene': mm3,
-            'human RNA genes': mm4
-        }
-
         # create mastermix
-        for tube, vol in mm_dict[MM_TYPE]['components'].items():
-            mm_vol = vol*(NUM_SAMPLES+5)
-            disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
-            pip = p300 if mm_vol > 20 else p20
-            pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='once')
+        for mm, tube_dest in zip(mm_dict[MM_TYPE], tube_block.rows()[0]):
+            for r_tube, vol in mm['components'].items():
+                mm_vol = vol*NUM_SAMPLES*1.1
+                disp_loc = tube_dest.bottom(5) if mm_vol < 50 \
+                    else tube_dest.top(-5)
+                pip = p300 if mm_vol > 20 else p20
+                pip.transfer(
+                    mm_vol, r_tube.bottom(2), disp_loc, new_tip='once')
 
-    # transfer mastermix
-    mm_vol = mm_dict[MM_TYPE]['volume']
-    mm_dests = sample_dests + pcr_plate.wells()[-2:]
-    p20.pick_up_tip()
-    for d in mm_dests:
-        p20.transfer(mm_vol, mm_tube, d.bottom(2), new_tip='never')
-        p20.blow_out(d.bottom(5))
-    p20.drop_tip()
+    if MM_TYPE == 'seegene':
+        sample_dests = pcr_plate.wells()[:NUM_SAMPLES]
+        mm_dests = sample_dests + pcr_plate.wells()[-2:]
 
-    # transfer samples to corresponding locations
-    sample_vol = 25 - mm_vol
-    for s, d in zip(sources, sample_dests):
+        # transfer mastermix
+        mm_vol = mm_dict[MM_TYPE][0]['volume']
+
         p20.pick_up_tip()
-        p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
-        p20.mix(1, 10, d.bottom(2))
-        p20.aspirate(5, d.top(2))
+        for d in mm_dests:
+            p20.transfer(mm_vol, mm_tube, d.bottom(2), new_tip='never')
+            p20.blow_out(d.bottom(5))
         p20.drop_tip()
 
-    # transfer positive and negative controls
-    for s, d in zip(tube_block.wells()[1:3], pcr_plate.wells()[-2:]):
-        p20.pick_up_tip()
-        p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
-        p20.mix(1, 10, d.bottom(2))
-        p20.aspirate(5, d.top(2))
-        p20.drop_tip()
+        # transfer samples to corresponding locations
+        sample_vol = 25 - mm_vol
+        for s, d in zip(sources, sample_dests):
+            p20.pick_up_tip()
+            p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
+            p20.mix(1, 10, d.bottom(2))
+            p20.aspirate(5, d.top(2))
+            p20.drop_tip()
+
+        # transfer positive and negative controls
+        for s, d in zip(tube_block.wells()[1:3], pcr_plate.wells()[-2:]):
+            p20.pick_up_tip()
+            p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
+            p20.mix(1, 10, d.bottom(2))
+            p20.aspirate(5, d.top(2))
+            p20.drop_tip()
+
+    else:
+        sample_dest_sets = [
+            row[i*3:(i+1)*3] for i in range(4) for row in pcr_plate.rows()
+        ][:NUM_SAMPLES]
+        mm_dests = [
+            [well for col in pcr_plate.columns()[j::3]
+                for well in col][:NUM_SAMPLES] + pcr_plate.columns()[9+j][-2:]
+            for j in range(3)
+        ]
+
+        # transfer mastermix
+        for mm, dest_set, mm_tube in zip(
+                mm_dict[MM_TYPE], mm_dests, tube_block.rows()[0][0:3]):
+            mm_vol = mm['volume']
+            p20.pick_up_tip()
+            for d in dest_set:
+                p20.transfer(mm_vol, mm_tube, d.bottom(2), new_tip='never')
+                p20.blow_out(d.bottom(5))
+            p20.drop_tip()
+
+        # transfer samples to corresponding locations
+        for s, d_set in zip(sources, sample_dest_sets):
+            for d in d_set:
+                p20.pick_up_tip()
+                p20.transfer(5, s, d, new_tip='never')
+                p20.mix(1, 10, d)
+                p20.aspirate(5, d.top(2))
+                p20.drop_tip()
+
+        """
+        add controls
+        """
