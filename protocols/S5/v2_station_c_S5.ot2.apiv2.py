@@ -59,7 +59,8 @@ def run(ctx: protocol_api.ProtocolContext):
         'Primer R': tube_block.wells_by_name()['D3'],
         'Enzyme Mix': tube_block.wells_by_name()['A4'],
         'H20': tube_block.wells_by_name()['B4'],
-        'sonda/probe': tube_block.wells_by_name()['C4']
+        'E gene sonda/probe': tube_block.wells_by_name()['C4'],
+        'RNasP gene sonda/probe': tube_block.wells_by_name()['D4']
     }
 
     MM_TYPE = MM_TYPE.lower().strip()
@@ -85,7 +86,7 @@ def run(ctx: protocol_api.ProtocolContext):
             components[tube]: vol
             for tube, vol in zip(
                 ['Rxn buffer 5x', 'dNTPs mix', 'Primer F', 'Primer R',
-                 'Enzyme Mix', 'H20', 'sonda/probe'],
+                 'Enzyme Mix', 'H20', 'E gene sonda/probe'],
                 [5, 1, 2, 2, 1, 8, 1])
         }
     }
@@ -107,7 +108,7 @@ def run(ctx: protocol_api.ProtocolContext):
             components[tube]: vol
             for tube, vol in zip(
                 ['Rxn buffer 5x', 'dNTPs mix', 'Primer F', 'Primer R',
-                 'Enzyme Mix', 'H20', 'sonda/probe'],
+                 'Enzyme Mix', 'H20', 'RNAseP gene sonda/probe'],
                 [5, 1, 2, 2, 1, 8, 1])
         }
     }
