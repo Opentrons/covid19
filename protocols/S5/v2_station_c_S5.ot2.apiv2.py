@@ -16,7 +16,7 @@ MM_TYPE must be one of the following:
 
 NUM_SAMPLES = 94
 PREPARE_MASTERMIX = True
-MM_TYPE = 'Seegene'
+MM_TYPE = 'singleplex'
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -108,7 +108,7 @@ def run(ctx: protocol_api.ProtocolContext):
             components[tube]: vol
             for tube, vol in zip(
                 ['Rxn buffer 5x', 'dNTPs mix', 'Primer F', 'Primer R',
-                 'Enzyme Mix', 'H20', 'RNAseP gene sonda/probe'],
+                 'Enzyme Mix', 'H20', 'RNasP gene sonda/probe'],
                 [5, 1, 2, 2, 1, 8, 1])
         }
     }
