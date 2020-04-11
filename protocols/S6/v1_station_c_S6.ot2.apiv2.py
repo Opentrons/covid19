@@ -20,6 +20,8 @@ REAGENT SETUP:
 
 NUM_SAMPLES = 96
 NUM_MASTERMIX = 3  # should be 2 or 3
+VOL_SAMPLE = 3
+VOL_MASTERMIX = 5
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -28,17 +30,20 @@ def run(ctx: protocol_api.ProtocolContext):
         'RNA elution plate from station B')
     pcr_plate = ctx.load_labware(
         'corning_384_wellplate_112ul_flat', '2', 'PCR plate')
-    tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '5',
-        '2ml Eppendorf tuberack')
-    tips20s = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
+    strips = ctx.load_labware(
+        'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '5',
+        'strips for mastermix and controls')
+    tips300s = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '4')]
     tips20m = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['3', '6', '9']
+        for slot in ['3', '6', '9', '10']
     ]
+    tuberack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '7',
+        '2ml Eppendorf tuberack')
 
     # pipette
-    p20 = ctx.load_instrument('p20_single_gen2', 'right', tip_racks=tips20s)
+    p300 = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=tips300s)
     m20 = ctx.load_instrument('p20_multi_gen2', 'left', tip_racks=tips20m)
 
     # setup up sample sources and destinations
@@ -51,43 +56,29 @@ def run(ctx: protocol_api.ProtocolContext):
     ]
     mm = tuberack.wells()[:NUM_MASTERMIX]
     mm_dest_sets = [
-        [well for row in pcr_plate.rows()[v_block:v_block+3:2]
-         for well in row[12*h_block:12*h_block+num_cols]]
-        for h_block in range(2) for v_block in range(2)][:NUM_MASTERMIX]
-    pos_control = tuberack.columns()[1][0]
-    pos_control_dests = pcr_plate.rows()[-1][-6:NUM_MASTERMIX]
-    neg_control = tuberack.columns()[1][1]
-    neg_control_dests = pcr_plate.rows()[-1][-3:NUM_MASTERMIX]
+        row[12*h_block:12*h_block+num_cols] for h_block in range(2)
+        for row in pcr_plate.rows()[:2]][:NUM_MASTERMIX]
+    controls = strips.rows()[0][NUM_MASTERMIX]
 
-    # transfer mastermixes
-    for i, (s, d_set) in enumerate(zip(mm, mm_dest_sets)):
-        control_dests = pcr_plate.rows()[0][-6+i::3]
-        all_dests = d_set + control_dests
-        p20.transfer(20, s, all_dests)
+    # transfer mastermixes to strip
+    vol_mm_per_strip_well = NUM_SAMPLES*VOL_MASTERMIX/8*1.1
+    mm_strips = strips.columns()[:NUM_MASTERMIX]
+    for s, strip in zip(mm, mm_strips):
+        p300.transfer(vol_mm_per_strip_well, s, strip)
+
+    # transfer mastermix from strips to PCR plate
+    for s, d_set in zip(mm_strips, mm_dest_sets):
+        m20.transfer(VOL_MASTERMIX, s, d_set, air_gap=2)
 
     # transfer samples to corresponding locations
     for s, d_set in zip(samples, sample_dest_sets):
         for d in d_set:
             m20.pick_up_tip()
-            m20.transfer(5, s, d, new_tip='never')
-            m20.mix(1, 10, d)
+            m20.transfer(VOL_SAMPLE, s, d, new_tip='never')
+            m20.mix(1, 5, d)
             m20.blow_out(d.top(-2))
             m20.aspirate(5, d.top(2))
             m20.drop_tip()
 
     # transfer controls
-    for d in pos_control_dests:
-        p20.pick_up_tip()
-        p20.transfer(5, pos_control, d, new_tip='never')
-        p20.mix(1, 10, d)
-        p20.blow_out(d.top(-2))
-        p20.aspirate(5, d.top(2))
-        p20.drop_tip()
-
-    for d in neg_control_dests:
-        p20.pick_up_tip()
-        p20.transfer(5, neg_control, d, new_tip='never')
-        p20.mix(1, 10, d)
-        p20.blow_out(d.top(-2))
-        p20.aspirate(5, d.top(2))
-        p20.drop_tip()
+    m20.transfer(VOL_SAMPLE, controls, pcr_plate.rows()[1][-1])
