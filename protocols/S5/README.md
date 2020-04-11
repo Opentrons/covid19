@@ -19,27 +19,27 @@ The components for the following reagent map correspond to 1 of 4 possible maste
     * component 3: 5x real time one-step buffer
     * component 4: real time one-step enzyme
   2. E gene (20µl, 5µl sample)
-    * component 1: Rxn buffer 5x
-    * component 2: dNTPs mix
-    * component 3: Primer F
-    * component 4: Primer R
-    * component 5: Enzyme Mix
-    * component 6: H20
+    * component 1: H20
+    * component 2: Rxn buffer 5x
+    * component 3: dNTPs mix
+    * component 4: Primer F
+    * component 5: Primer R
+    * component 6: Enzyme Mix
     * component 7: sonda/probe
   3. S gene (20µl, 5µl sample)
-    * component 1: Rxn buffer 5x
-    * component 2: dNTPs mix
-    * component 3: Primer F
-    * component 4: Primer R
-    * component 5: Enzyme Mix
-    * component 6: H20
+    * component 1: H20
+    * component 2: Rxn buffer 5x
+    * component 3: dNTPs mix
+    * component 4: Primer F
+    * component 5: Primer R
+    * component 6: Enzyme Mix
   4. human RNA genes (20µl, 5µl sample)
-    * component 1: Rxn buffer 5x
-    * component 2: dNTPs mix
-    * component 3: Primer F
-    * component 4: Primer R
-    * component 5: Enzyme Mix
-    * component 6: H20
+    * component 1: H20
+    * component 2: Rxn buffer 5x
+    * component 3: dNTPs mix
+    * component 4: Primer F
+    * component 5: Primer R
+    * component 6: Enzyme Mix
     * component 7: sonda/probe
 
 Reagent 2ml screw tubes aluminum block map (slot 5):  

@@ -64,7 +64,7 @@ def run(ctx: protocol_api.ProtocolContext):
         'components': {
             tube: vol
             for tube, vol in zip(
-                tube_block.wells()[8:15], [5, 1, 2, 2, 1, 8, 1])
+                tube_block.wells()[8:15], [8, 5, 1, 2, 2, 1, 1])
         }
     }
     mm3 = {
@@ -72,7 +72,7 @@ def run(ctx: protocol_api.ProtocolContext):
         'components': {
             tube: vol
             for tube, vol in zip(
-                tube_block.wells()[8:14], [5, 1, 2, 2, 1, 9])
+                tube_block.wells()[8:14], [9, 5, 1, 2, 2, 1])
         }
     }
     mm4 = {
@@ -81,7 +81,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
             tube: vol
             for tube, vol in zip(
-                tube_block.wells()[8:15], [5, 1, 2, 2, 1, 8, 1])
+                tube_block.wells()[8:15], [8, 5, 1, 2, 2, 1, 1])
         }
     }
 
