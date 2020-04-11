@@ -61,7 +61,7 @@ def run(ctx: protocol_api.ProtocolContext):
     water = reagent_res.wells()[-1]
 
     # pipettes
-    m300 = ctx.load_instrument('p300_multi', 'left', tip_racks=tips300)
+    m300 = ctx.load_instrument('p300_multi', 'right', tip_racks=tips300)
     m300.flow_rate.aspirate = 150
     m300.flow_rate.dispense = 300
 
