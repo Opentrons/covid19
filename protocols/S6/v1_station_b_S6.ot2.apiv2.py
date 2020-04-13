@@ -33,7 +33,7 @@ def run(ctx: protocol_api.ProtocolContext):
     reagent_res = ctx.load_labware(
         'nest_12_reservoir_15ml', '2', 'reagent reservoir 1')
     magdeck = ctx.load_module('magdeck', '4')
-    magplate = magdeck.load_labware('usascientific_96_wellplate_2.4ml_deep')
+    magplate = magdeck.load_labware('nest_96_deepwell_2ml')
     magdeck.disengage()
     etoh = ctx.load_labware(
         'nest_1_reservoir_195ml', '5', 'reservoir for ethanol').wells()[0]
