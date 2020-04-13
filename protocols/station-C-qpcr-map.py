@@ -1,6 +1,6 @@
 metadata = {
     'protocolName': 'BP Genomics Station C',
-    'author': 'Chaz <chaz@opentrons.com; Anton <acjs@stanford.edu>',
+    'author': 'Chaz <chaz@opentrons.com>; Anton <acjs@stanford.edu>',
     'source': 'COVID-19 Project',
     'apiLevel': '2.2'
 }
