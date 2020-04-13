@@ -25,8 +25,9 @@ VOL_MASTERMIX = 5
 
 
 def run(ctx: protocol_api.ProtocolContext):
-    source_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '1',
+    tempdeck = ctx.load_module('tempdeck', '1')
+    source_plate = tempdeck.load_labware(
+        'nest_96_wellplate_100ul_pcr_full_skirt',
         'RNA elution plate from station B')
     pcr_plate = ctx.load_labware(
         'corning_384_wellplate_112ul_flat', '2', 'PCR plate')
