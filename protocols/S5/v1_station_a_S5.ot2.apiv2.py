@@ -1,4 +1,5 @@
 from opentrons import protocol_api
+import math
 
 # metadata
 metadata = {
@@ -9,7 +10,7 @@ metadata = {
 }
 
 NUM_SAMPLES = 30
-SAMPLE_VOLUME = 400
+SAMPLE_VOLUME = 200
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -19,27 +20,52 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.load_labware(
             'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
             'source tuberack ' + str(i+1))
-        for i, slot in enumerate(['1', '3', '4', '6'])
+        for i, slot in enumerate(['10', '7', '4', '1'])
     ]
     dest_plate = ctx.load_labware(
         'usascientific_96_wellplate_2.4ml_deep', '2',
         '96-deepwell sample plate')
-    tiprack = ctx.load_labware(
-        'opentrons_96_tiprack_1000ul', '3', '1000µl tiprack')
+    reagent_rack = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
+                                    '5', 'lysis buffer tuberack')
+    tipracks1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot,
+                                     '1000µl filter tiprack')
+                    for slot in ['6', '9']]
 
     # load pipette
     p1000 = ctx.load_instrument(
-        'p1000_single_gen2', 'right', tip_racks=[tiprack])
+        'p1000_single_gen2', 'right', tip_racks=tipracks1000)
 
     # setup samples
     sources = [
         well for rack in source_racks for well in rack.wells()][:NUM_SAMPLES]
-    dests = [well for col in dest_plate.columns()[0::2] for well in col] + [
-        well for col in dest_plate.columns()[1::2] for well in col]
+    dests = dest_plate.wells()[:NUM_SAMPLES]
 
-    # transfer
+    lys_buff = reagent_rack.wells()[:2]
+    heights = {tube: 60 for tube in lys_buff}
+    radius = (lys_buff[0].diameter)/2
+    min_h = 5
+
+    def h_track(tube, vol):
+        nonlocal heights
+        dh = vol/(math.pi*(radius**2))
+        if heights[tube] - dh > min_h:
+            heights[tube] = heights[tube] - dh
+        else:
+            heights[tube] = 5
+        return tube.bottom(heights[tube])
+
+    # transfer lysis buffer
+    p1000.pick_up_tip()
+    for i, d in enumerate(dests):
+        source = lys_buff[i//48]
+        p1000.transfer(528, h_track(source, 528), d.bottom(2), air_gap=100,
+                       new_tip='never',)
+        p1000.blow_out(d.top(-2))
+
+    # transfer samples
     for s, d in zip(sources, dests):
-        p1000.pick_up_tip()
+        if not p1000.hw_pipette['has_tip']:
+            p1000.pick_up_tip()
         p1000.transfer(
             SAMPLE_VOLUME, s.bottom(5), d.bottom(5), new_tip='never')
         p1000.aspirate(100, d.top())
