@@ -7,7 +7,7 @@ metadata = {
     'protocolName': 'S2 Station B Version 1',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.2'
 }
 
 """
@@ -109,7 +109,7 @@ def run(ctx: protocol_api.ProtocolContext):
             for _ in range(20):
                 m300.aspirate(200, beads[i//3].bottom(3))
                 m300.dispense(200, beads[i//3].bottom(20))
-        m300.transfer(550, beads, m, new_tip='never')
+        m300.transfer(550, beads[i//3], m, new_tip='never')
         m300.mix(10, 200, m)
         m300.blow_out(m.top(-2))
         m300.aspirate(20, m.top(-2))

@@ -1213,8 +1213,9 @@
         "format": "irregular",
         "quirks": [],
         "isTiprack": false,
-        "isMagneticModuleCompatible": false,
-        "loadName": "nest_96_deepwell_2ml"
+        "isMagneticModuleCompatible": true,
+        "loadName": "nest_96_deepwell_2ml",
+        "engage_height": 14.94
     },
     "namespace": "custom_beta",
     "version": 1,
