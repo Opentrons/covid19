@@ -51,12 +51,14 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # reagents and samples
     num_cols = math.ceil(NUM_SAMPLES/8)
-    mag_samples_m = [
-        well for well in
-        magplate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
-    elution_samples_m = [
-        well for well in
-        elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
+    # mag_samples_m = [
+    #     well for well in
+    #     magplate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
+    # elution_samples_m = [
+    #     well for well in
+    #     elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
+    mag_samples_m = magplate.rows()[0][:num_cols]
+    elution_samples_m = elution_plate.rows()[0][:num_cols]
 
     beads = reagent_res1.wells()[:2]
     wash = reagent_res1.wells()[3:9]
@@ -85,7 +87,7 @@ def run(ctx: protocol_api.ProtocolContext):
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, m in enumerate(mag_samples_m):
-            side = -1 if i < 6 == 0 else 1
+            side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0.5).move(Point(x=side*2))
             if not m300.hw_pipette['has_tip']:
                 pick_up(m300)
@@ -126,7 +128,7 @@ def run(ctx: protocol_api.ProtocolContext):
         for i, m in enumerate(mag_samples_m):
             wash_loc = i + wash_ind*len(mag_samples_m)
             pick_up(m300)
-            side = 1 if i < 6 == 0 else -1
+            side = 1 if i % 2 == 0 else -1
             loc = m.bottom(0.5).move(Point(x=side*2))
             m300.transfer(400, wash[wash_loc//4], m.top(), new_tip='never')
             m300.mix(10, 200, loc)
@@ -157,7 +159,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # transfer and mix water
     for m in mag_samples_m:
         pick_up(m300)
-        side = 1 if i < 6 == 0 else -1
+        side = 1 if i % 2 == 0 else -1
         loc = m.bottom(0.5).move(Point(x=side*2))
         m300.transfer(40, water, m.top(), new_tip='never')
         m300.mix(10, 30, loc)
@@ -173,7 +175,7 @@ def run(ctx: protocol_api.ProtocolContext):
     m300.flow_rate.aspirate = 30
     for s, d in zip(mag_samples_m, elution_samples_m):
         pick_up(m300)
-        side = -1 if i < 6 == 0 else 1
+        side = -1 if i % 2 == 0 else 1
         loc = s.bottom(0.5).move(Point(x=side*2))
         m300.transfer(40, loc, d, new_tip='never')
         m300.blow_out(d.top(-2))
