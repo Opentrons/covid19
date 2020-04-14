@@ -68,8 +68,8 @@ def run(ctx: protocol_api.ProtocolContext):
     resuming.')
             pip.reset_tipracks()
             tip_log['count'][pip] = 0
-        tip_log['count'][pip] += 1
         pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
+        tip_log['count'][pip] += 1
 
     lys_buff = reagent_rack.wells()[:2]
     heights = {tube: 60 for tube in lys_buff}
