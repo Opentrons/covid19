@@ -57,9 +57,10 @@ def run(ctx: protocol_api.ProtocolContext):
         well for col in dest_plate.columns()[1::2] for well in col]
     dests = dests[:NUM_SAMPLES]
 
-    tip_log = {}
-    file_path = '/data/A/tip_log.json'
-    if tip_log and not ctx.is_simulating():
+    tip_log = {'count': {}}
+    folder_path = '/data/A'
+    file_path = folder_path + '/tip_log.json'
+    if TIP_TRACK and not ctx.is_simulating():
         if os.path.isfile(file_path):
             with open(file_path) as json_file:
                 data = json.load(json_file)
@@ -87,7 +88,7 @@ def run(ctx: protocol_api.ProtocolContext):
         nonlocal tip_log
         if tip_log['count'][pip] == tip_log['max'][pip]:
             ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
-    resuming.')
+resuming.')
             pip.reset_tipracks()
             tip_log['count'][pip] = 0
         pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
@@ -113,8 +114,8 @@ extraction.')
 
     # track final used tip
     if not ctx.is_simulating():
-        if not os.path.isdir('/data/A'):
-            os.mkdir('/data/A')
+        if not os.path.isdir(folder_path):
+            os.mkdir(folder_path)
         data = {
             'tips1000': tip_log['count'][p1000],
             'tips20': tip_log['count'][p20]

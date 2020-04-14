@@ -1,8 +1,10 @@
 from opentrons import protocol_api
+import json
+import os
 
 # metadata
 metadata = {
-    'protocolName': 'S3 Station C Version 1',
+    'protocolName': 'S3 Station C Version 2',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.1'
@@ -26,6 +28,8 @@ VOLUME_MMIX = 20
 ELUTION_LABWARE = '2ml tubes'
 PREPARE_MASTERMIX = True
 MM_TYPE = 'MM1'
+TIP_TRACK = False
+
 
 EL_LW_DICT = {
     'large strips': 'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
@@ -89,6 +93,45 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
 
     mm_tube = mm_rack.wells()[0]
 
+    tip_log = {'count': {}}
+    folder_path = '/data/C'
+    file_path = folder_path + '/tip_log.json'
+    if TIP_TRACK and not ctx.is_simulating():
+        if os.path.isfile(file_path):
+            with open(file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips20' in data:
+                    tip_log['count'][p20] = data['tips20']
+                else:
+                    tip_log['count'][p20] = 0
+                if 'tips300' in data:
+                    tip_log['count'][p300] = data['tips300']
+                else:
+                    tip_log['count'][p300] = 0
+        else:
+            tip_log['count'] = {p20: 0, p300: 0}
+    else:
+        tip_log['count'] = {p20: 0, p300: 0}
+
+    tip_log['tips'] = {
+        p20: [tip for rack in tips20 for tip in rack.wells()],
+        p300: [tip for rack in tips300 for tip in rack.wells()]
+    }
+    tip_log['max'] = {
+        pip: len(tip_log['tips'][pip])
+        for pip in [p20, p300]
+    }
+
+    def pick_up(pip):
+        nonlocal tip_log
+        if tip_log['count'][pip] == tip_log['max'][pip]:
+            ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
+resuming.')
+            pip.reset_tipracks()
+            tip_log['count'][pip] = 0
+        pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
+        tip_log['count'][pip] += 1
+
     if PREPARE_MASTERMIX:
         """ mastermix component maps """
         mm1 = {
@@ -119,10 +162,9 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
             mm_vol = vol*(NUM_SAMPLES+5)
             disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
             pip = p300 if mm_vol > 20 else p20
-            pip.transfer(
-                mm_vol, tube.bottom(2), disp_loc, air_gap=5, new_tip='never')
-            pip.blow_out(tube.bottom(5))
-            pip.aspirate(5, tube.top(2))
+            pick_up(pip)
+            pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='never')
+            pip.drop_tip()
 
     # transfer mastermix
     max_trans_per_asp = 230//(VOLUME_MMIX+5)
@@ -130,7 +172,7 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
     dest_sets = [dests[split_ind[i]:split_ind[i+1]]
                  for i in range(len(split_ind)-1)] + [dests[split_ind[-1]:]]
 
-    p20.pick_up_tip()
+    pick_up(p20)
     for set in dest_sets:
         p20.distribute(VOLUME_MMIX, mm_tube, [d.bottom(2) for d in set],
                        air_gap=5, disposal_volume=0, new_tip='never')
@@ -138,9 +180,20 @@ following:\nlarge strips\nshort strips\n1.5ml tubes\n2ml tubes')
 
     # transfer samples to corresponding locations
     for s, d in zip(sources, dests):
-        p20.pick_up_tip()
+        pick_up(p20)
         p20.transfer(5, s.bottom(2), d.bottom(2), air_gap=5, new_tip='never')
         # p20.mix(1, 10, d.bottom(2))
         # p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))
         p20.drop_tip()
+
+    # track final used tip
+    if TIP_TRACK and not ctx.is_simulating():
+        if not os.path.isdir(folder_path):
+            os.mkdir(folder_path)
+        data = {
+            'tips20': tip_log['count'][p20],
+            'tips300': tip_log['count'][p300]
+        }
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile)
