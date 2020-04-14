@@ -13,7 +13,7 @@ Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endo
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
-Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Reaction
+Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous	Reaction	Reaction	Endogenous
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous
 Reaction	Reaction	Reaction	Reaction	Reaction	Reaction	Endogenous	Endogenous	Endogenous
@@ -27,7 +27,7 @@ Sample 4	Sample 12	Sample 20	Sample 4	Sample 12	Sample 20	Sample 4	Sample 12	Sam
 Sample 5	Sample 13	Sample 21	Sample 5	Sample 13	Sample 21	Sample 5	Sample 13	Sample 21	Negative	Negative	Negative
 Sample 6	Sample 14	Sample 22	Sample 6	Sample 14	Sample 22	Sample 6	Sample 14	Sample 22
 Sample 7	Sample 15	Sample 23	Sample 7	Sample 15	Sample 23	Sample 7	Sample 15	Sample 23
-Sample 8	Sample 16	Sample 24	Sample 8	Sample 16	Sample 24	Sample 8	Sample 16	Sample 24			
+Sample 8	Sample 16	Sample 24	Sample 8	Sample 16	Sample 24	Sample 8	Sample 16	Sample 24
 '''
 
 # Master mix locations on the eppendorf tube holder
