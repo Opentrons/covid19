@@ -1,4 +1,6 @@
 from opentrons import protocol_api
+import json
+import os
 
 # metadata
 metadata = {
@@ -11,20 +13,14 @@ metadata = {
 """
 REAGENT SETUP:
 
-- slot 2 12-channel reservoir:
-    - viral DNA/RNA buffer: channels 1-3
-    - magbeads: channel 4
-    - wash 1: channels 5-8
-    - wash 2: channels 9-12
-
-- slot 5 12-channel reservoir:
-    - EtOH: channels 1-8
-    - water: channel 12
+slot 5 2ml screwcap tuberack:
+    - internal control: tube A1
 
 """
 
 NUM_SAMPLES = 8
 SAMPLE_VOLUME = 300
+TIP_TRACK = False
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -40,17 +36,19 @@ def run(ctx: protocol_api.ProtocolContext):
         'usascientific_96_wellplate_2.4ml_deep', '2',
         '96-deepwell sample plate')
     internal_control = ctx.load_labware(
-        'opentrons_24_aluminumblock_generic_2ml_screwcap', '7',
+        'opentrons_24_aluminumblock_generic_2ml_screwcap', '5',
         'chilled tubeblock for internal control (A1)').wells()[0]
-    tiprack20 = ctx.load_labware(
-        'opentrons_96_filtertiprack_1000ul', '10', '20µl filter tiprack')
-    tiprack1000 = ctx.load_labware(
-        'opentrons_96_filtertiprack_1000ul', '11', '1000µl filter tiprack')
+    tipracks1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot,
+                                     '1000µl filter tiprack')
+                    for slot in ['7', '8', '9']]
+    tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot,
+                                   '20µl filter tiprack')
+                  for slot in ['10', '11']]
 
     # load pipette
-    p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=[tiprack20])
+    p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tipracks20)
     p1000 = ctx.load_instrument(
-        'p1000_single_gen2', 'right', tip_racks=[tiprack1000])
+        'p1000_single_gen2', 'right', tip_racks=tipracks1000)
 
     # setup samples
     sources = [
@@ -59,17 +57,65 @@ def run(ctx: protocol_api.ProtocolContext):
         well for col in dest_plate.columns()[1::2] for well in col]
     dests = dests[:NUM_SAMPLES]
 
+    tip_log = {}
+    file_path = '/data/A/tip_log.json'
+    if tip_log and not ctx.is_simulating():
+        if os.path.isfile(file_path):
+            with open(file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips1000' in data:
+                    tip_log['count'][p1000] = data['tips1000']
+                else:
+                    tip_log['count'][p1000] = 0
+                if 'tips20' in data:
+                    tip_log['count'][p20] = data['tips20']
+                else:
+                    tip_log['count'][p20] = 0
+    else:
+        tip_log['count'] = {p1000: 0, p20: 0}
+
+    tip_log['tips'] = {
+        pip: [tip for rack in rackset for tip in rack.wells()]
+        for pip, rackset in zip([p1000, p20], [tipracks1000, tipracks20])
+    }
+    tip_log['max'] = {
+        pip: len(tip_log['tips'][pip])
+        for pip in [p1000, p20]
+    }
+
+    def pick_up(pip):
+        nonlocal tip_log
+        if tip_log['count'][pip] == tip_log['max'][pip]:
+            ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
+    resuming.')
+            pip.reset_tipracks()
+            tip_log['count'][pip] = 0
+        tip_log['count'][pip] += 1
+        pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
+
     # transfer sample
     for s, d in zip(sources, dests):
-        p1000.pick_up_tip()
+        pick_up(p1000)
         p1000.transfer(
             SAMPLE_VOLUME, s.bottom(5), d.bottom(5), new_tip='never')
         p1000.aspirate(100, d.top())
         p1000.drop_tip()
 
     # transfer internal control
-    p20.transfer(10, internal_control, [d.bottom(5) for d in dests], air_gap=5,
-                 new_tip='always')
+    for d in dests:
+        pick_up(p20)
+        p20.transfer(10, internal_control, d.bottom(5), air_gap=5,
+                     new_tip='never')
+        p20.drop_tip()
 
-    ctx.comment('Move deepwell plate (slot 5) to Station B for RNA \
+    ctx.comment('Move deepwell plate (slot 2) to Station B for RNA \
 extraction.')
+
+    # track final used tip
+    if not ctx.is_simulating():
+        data = {
+            'tips1000': tip_log['count'][p1000],
+            'tips20': tip_log['count'][p20]
+        }
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile)
