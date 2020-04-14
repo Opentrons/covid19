@@ -104,7 +104,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # track final used tip
     if not ctx.is_simulating():
-        file_path = 'tip_track.json'
         data = {'tips1000': tip_log['count'][p1000]}
         with open(file_path, 'w') as outfile:
             json.dump(data, outfile)
