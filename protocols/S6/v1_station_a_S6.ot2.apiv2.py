@@ -8,7 +8,7 @@ metadata = {
     'apiLevel': '2.0'
 }
 
-NUM_SAMPLES = 8
+NUM_SAMPLES = 48
 SAMPLE_VOLUME = 300
 
 """ REAGENT SETUP
@@ -29,7 +29,7 @@ def run(ctx: protocol_api.ProtocolContext):
         for i, slot in enumerate(['1', '3', '4', '6'])
     ]
     dest_plate = ctx.load_labware(
-        'usascientific_96_wellplate_2.4ml_deep', '2',
+        'nest_96_deepwell_2ml', '2',
         '96-deepwell sample plate')
     prot_k = ctx.load_labware(
         'opentrons_24_tuberack_generic_2ml_screwcap', '5').wells()[0]
