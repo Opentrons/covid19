@@ -5,7 +5,7 @@ from opentrons.protocol_api.labware import OutOfTipsError
 
 # metadata
 metadata = {
-    'protocolName': 'S2 Station B Version 1',
+    'protocolName': 'S2 Station B Version 2',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'
@@ -57,12 +57,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # reagents and samples
     num_cols = math.ceil(NUM_SAMPLES/8)
-    mag_samples_m = [
-        well for well in
-        magplate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
-    elution_samples_m = [
-        well for well in
-        elution_plate.rows()[0][0::2] + elution_plate.rows()[0][1::2]][:num_cols]
+    mag_samples_m = [well for well in magplate.rows()[0]][:num_cols]
+    elution_samples_m = [well for well in elution_plate.rows()[0]][:num_cols]
 
     if NUM_SAMPLES < 16:
         enzyme_mix = tuberack.wells()[0]
@@ -93,7 +89,7 @@ def run(ctx: protocol_api.ProtocolContext):
         transfer_vol = working_volume - m300.min_volume
         num_trans = math.ceil(vol/transfer_vol)
         for i, m in enumerate(mag_samples_m):
-            side = -1 if i < 6 else 1
+            side = -1 if i % 2 == 0 else 1
             print(side)
             loc = m.bottom(0.5).move(Point(x=side*1))
             if not m300.hw_pipette['has_tip']:
@@ -147,7 +143,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # mix the samples again
     for i, m in enumerate(mag_samples_m):
         pick_up(m300)
-        side = 1 if i < 6 else -1
+        side = 1 if i % 2 == 0 else -1
         print(side)
         loc = m.bottom(1).move(Point(x=side*0.5))
         m300.move_to(m.center())
@@ -172,7 +168,7 @@ def run(ctx: protocol_api.ProtocolContext):
         vol_per_trans = vol/num_trans
         for i, m in enumerate(mag_samples_m):
             pick_up(m300)
-            side = 1 if i < 6 else -1
+            side = 1 if i % 2 == 0 else -1
             print(side)
             loc = m.bottom(1).move(Point(x=side*0.5))
             for _ in range(num_trans):
@@ -197,7 +193,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # transfer and mix water for elution
     for i, m in enumerate(mag_samples_m):
         pick_up(m300)
-        side = 1 if i < 6 else -1
+        side = 1 if i % 2 == 0 else -1
         print(side)
         loc = m.bottom(1).move(Point(x=side*0.5))
         m300.aspirate(50, water)
@@ -212,7 +208,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # resuspend beads again
     for i, m in enumerate(mag_samples_m):
         pick_up(m300)
-        side = 1 if i < 6 else -1
+        side = 1 if i % 2 == 0 else -1
         print(side)
         loc = m.bottom(1).move(Point(x=side*0.5))
         m300.move_to(m.center())
@@ -229,7 +225,7 @@ def run(ctx: protocol_api.ProtocolContext):
     m300.flow_rate.aspirate = aspirate_flow_rate * 5/6
     for i, (s, d) in enumerate(zip(mag_samples_m, elution_samples_m)):
         pick_up(m300)
-        side = -1 if i < 6 else 1
+        side = -1 if i % 2 == 0 else 1
         print(side)
         loc = s.bottom(1).move(Point(x=side*0.5))
         m300.aspirate(50, loc)
