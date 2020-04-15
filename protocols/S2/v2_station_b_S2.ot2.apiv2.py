@@ -1,6 +1,8 @@
 import math
 from opentrons.types import Point
 from opentrons import protocol_api
+import os
+import json
 
 # metadata
 metadata = {
@@ -20,7 +22,8 @@ REAGENT SETUP:
 
 """
 
-NUM_SAMPLES = 30
+NUM_SAMPLES = 96
+TIP_TRACK = False
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -32,20 +35,22 @@ def run(ctx: protocol_api.ProtocolContext):
         'cooled elution plate')
     reagent_res = ctx.load_labware('nunc_96_wellplate_2000ul', '2',
                                    'reagent deepwell plate 1')
+    # reagent_res = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep',
+    #                                '2')
     magdeck = ctx.load_module('magdeck', '4')
     magplate = magdeck.load_labware(
-        'usascientific_96_wellplate_2.4ml_deep', '96-deepwell sample plate')
+        'nunc_96_wellplate_2000ul', '96-deepwell sample plate')
     waste = ctx.load_labware(
         'nest_1_reservoir_195ml', '7', 'waste reservoir').wells()[0].top()
     tips300 = [
         ctx.load_labware(
             'opentrons_96_tiprack_300ul', slot, '200µl filter tiprack')
-        for slot in ['3', '8', '9', '10', '11']
+        for slot in ['3', '6', '8', '9', '10', '11']
     ]
     tips1000 = [
         ctx.load_labware(
             'opentrons_96_filtertiprack_1000ul', slot, '1000µl filter tiprack')
-        for slot in ['5', '6']
+        for slot in ['5']
     ]
 
     # reagents and samples
@@ -75,20 +80,42 @@ def run(ctx: protocol_api.ProtocolContext):
     p1000.flow_rate.aspirate = 100
     p1000.flow_rate.dispense = 1000
 
-    tip_track = {
-        'counts': {m300: 0, p1000: 0},
-        'maxes': {m300: len(tips300)*12, p1000: len(tips1000)*96}
+    tip_log = {'count': {}}
+    folder_path = '/data/B'
+    file_path = folder_path + '/tip_log.json'
+    if TIP_TRACK and not ctx.is_simulating():
+        if os.path.isfile(file_path):
+            with open(file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips1000' in data:
+                    tip_log['count'][p1000] = data['tips1000']
+                else:
+                    tip_log['count'][p1000] = 0
+                if 'tips300' in data:
+                    tip_log['count'][m300] = data['tips300']
+                else:
+                    tip_log['count'][m300] = 0
+    else:
+        tip_log['count'] = {p1000: 0, m300: 0}
+
+    tip_log['tips'] = {
+        p1000: [tip for rack in tips1000 for tip in rack.wells()],
+        m300: [tip for rack in tips300 for tip in rack.rows()[0]]
+    }
+    tip_log['max'] = {
+        pip: len(tip_log['tips'][pip])
+        for pip in [p1000, m300]
     }
 
     def pick_up(pip):
-        nonlocal tip_track
-        if tip_track['counts'][pip] == tip_track['maxes'][pip]:
+        nonlocal tip_log
+        if tip_log['count'][pip] == tip_log['max'][pip]:
             ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
 resuming.')
             pip.reset_tipracks()
-            tip_track['counts'][pip] = 0
-        tip_track['counts'][pip] += 1
-        pip.pick_up_tip()
+            tip_log['count'][pip] = 0
+        pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
+        tip_log['count'][pip] += 1
 
     def remove_supernatant(pip, vol):
         if pip == p1000:
@@ -184,3 +211,14 @@ resuming.')
         m300.blow_out(d.top(-2))
         m300.drop_tip()
     m300.flow_rate.aspirate = 150
+
+    # track final used tip
+    if not ctx.is_simulating():
+        if not os.path.isdir(folder_path):
+            os.mkdir(folder_path)
+        data = {
+            'tips1000': tip_log['count'][p1000],
+            'tips300': tip_log['count'][m300]
+        }
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile)
