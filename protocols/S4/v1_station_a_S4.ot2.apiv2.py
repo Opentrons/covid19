@@ -42,10 +42,10 @@ def run(ctx: protocol_api.ProtocolContext):
         well for col in dest_plate.columns()[1::2] for well in col]
 
     tip_log = {}
-    file_path = '/data/A/tip_log.json'
+    tip_file_path = '/data/A/tip_log.json'
     if tip_log and not ctx.is_simulating():
-        if os.path.isfile(file_path):
-            with open(file_path) as json_file:
+        if os.path.isfile(tip_file_path):
+            with open(tip_file_path) as json_file:
                 data = json.load(json_file)
                 if 'tips1000' in data:
                     tip_log['count'] = {p1000: data['tips1000']}
@@ -81,5 +81,5 @@ def run(ctx: protocol_api.ProtocolContext):
         if not os.path.isdir('/data/A'):
             os.mkdir('/data/A')
         data = {'tips1000': tip_log['count'][p1000]}
-        with open(file_path, 'w') as outfile:
+        with open(tip_file_path, 'w') as outfile:
             json.dump(data, outfile)

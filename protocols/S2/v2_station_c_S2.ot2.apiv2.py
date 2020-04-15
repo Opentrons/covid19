@@ -49,10 +49,10 @@ def run(ctx: protocol_api.ProtocolContext):
 
     tip_log = {'count': {}}
     folder_path = '/data/C'
-    file_path = folder_path + '/tip_log.json'
+    tip_file_path = folder_path + '/tip_log.json'
     if TIP_TRACK and not ctx.is_simulating():
-        if os.path.isfile(file_path):
-            with open(file_path) as json_file:
+        if os.path.isfile(tip_file_path):
+            with open(tip_file_path) as json_file:
                 data = json.load(json_file)
                 if 'tips20' in data:
                     tip_log['count'][p20] = data['tips20']
@@ -106,5 +106,5 @@ resuming.')
             os.mkdir(folder_path)
         data = {
             'tips20': tip_log['count'][p20]}
-        with open(file_path, 'w') as outfile:
+        with open(tip_file_path, 'w') as outfile:
             json.dump(data, outfile)
