@@ -46,9 +46,11 @@ def run(ctx: protocol_api.ProtocolContext):
         'nest_1_reservoir_195ml', '11', 'waste reservoir').wells()[0].top()
     reagent_res = ctx.load_labware(
         'nest_12_reservoir_15ml', '7', 'reagent reservoir')
+    # using standard tip definition despite actually using filter tips
+    # so that the tips can accommodate ~220µl per transfer for efficiency
     tips300 = [
         ctx.load_labware(
-            'opentrons_96_filtertiprack_200ul', slot, '200µl filter tiprack')
+            'opentrons_96_tiprack_300ul', slot, '200µl filter tiprack')
         for slot in ['2', '3', '5', '6', '9']
     ]
     tips1000 = [
@@ -122,7 +124,7 @@ resuming.')
     bead_dests = bead_buffer[:math.ceil(num_cols/4)]
     pick_up(m300)
     m300.mix(5, 200, beads)
-    m300.transfer(200, beads, bead_dests, new_tip='never')
+    m300.transfer(200, beads, bead_dests, new_tip='never', air_gap=20)
 
     # premix, transfer, and mix magnetic beads with sample
     for d in bead_dests:
@@ -133,7 +135,7 @@ resuming.')
     for i, m in enumerate(mag_samples_m):
         if not m300.hw_pipette['has_tip']:
             pick_up(m300)
-        m300.transfer(400, bead_buffer[i//4], m, new_tip='never')
+        m300.transfer(400, bead_buffer[i//4], m, new_tip='never', air_gap=20)
         m300.mix(5, 200, m)
         m300.blow_out(m.top(-2))
         m300.drop_tip()
@@ -163,7 +165,8 @@ resuming.')
             disp_loc = m.bottom(0.5).move(Point(x=side*2))
             asp_loc = m.bottom(0.5).move(Point(x=-1*side*2))
             pick_up(m300)
-            m300.transfer(200, wash_chan, m.center(), new_tip='never')
+            m300.transfer(
+                200, wash_chan, m.center(), new_tip='never', air_gap=20)
             m300.mix(5, 175, disp_loc)
             m300.move_to(m.top(-20))
 
@@ -184,7 +187,8 @@ resuming.')
         disp_loc = m.bottom(0.5).move(Point(x=side*2))
         asp_loc = m.bottom(0.5).move(Point(x=-1*side*2))
         pick_up(m300)
-        m300.transfer(50, elution_buffer, m.center(), new_tip='never')
+        m300.transfer(
+            50, elution_buffer, m.center(), new_tip='never', air_gap=20)
         m300.mix(5, 40, disp_loc)
         m300.move_to(m.top(-20))
 
@@ -193,6 +197,7 @@ resuming.')
 
         # transfer elution to new plate
         m300.transfer(50, asp_loc, e, new_tip='never', air_gap=20)
+        m300.blow_out(e.top(-2))
         m300.drop_tip()
 
     # track final used tip
