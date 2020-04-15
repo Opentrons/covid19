@@ -17,9 +17,8 @@ REAGENT SETUP:
 
 - slot 2 12-channel reservoir:
     - VHB buffer: channels 1-3
-    - SPR wash buffer: channel 4
-    - wash 1: channels 5-8
-    - wash 2: channels 9-12
+    - SPR wash buffer: channels 4-11
+    - nuclease-free water: channel 12
 
 """
 
@@ -165,7 +164,7 @@ resuming.')
 
     # incubate on magnet
     magdeck.engage()
-    ctx.delay(minutes=10, msg='Incubating on magnet for 10 minutes.')
+    ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
 
     # remove supernatant with P300 multi
     remove_supernatant(m300, 420)
@@ -187,10 +186,12 @@ resuming.')
 
         # incubate on magnet
         magdeck.engage()
-        ctx.delay(minutes=10, msg='Incubating on magnet for 10 minutes.')
+        ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
 
         # remove supernatant with P300 multi
         remove_supernatant(m300, 520)
+
+    ctx.delay(minutes=10, msg='Airdrying on magnet for 10 minutes.')
 
     # transfer and mix water
     magdeck.disengage()
@@ -206,7 +207,7 @@ resuming.')
     # incubate off and on magnet
     ctx.delay(minutes=10, msg='Incubating off magnet for 10 minutes.')
     magdeck.engage()
-    ctx.delay(minutes=10, msg='Incubating on magnet for 10 minutes.')
+    ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
 
     # transfer elution to clean plate
     m300.flow_rate.aspirate = 30
