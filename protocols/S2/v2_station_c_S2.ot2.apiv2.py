@@ -48,20 +48,20 @@ def run(ctx: protocol_api.ProtocolContext):
     mm = tuberack.rows()[0]
 
     tip_log = {'count': {}}
-    folder_path = 'C'
+    folder_path = '/data/C'
     file_path = folder_path + '/tip_log.json'
-    # if TIP_TRACK and not ctx.is_simulating():
-    if os.path.isfile(file_path):
-        with open(file_path) as json_file:
-            data = json.load(json_file)
-            if 'tips20' in data:
-                tip_log['count'][p20] = data['tips20']
-            else:
-                tip_log['count'][p20] = 0
+    if TIP_TRACK and not ctx.is_simulating():
+        if os.path.isfile(file_path):
+            with open(file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips20' in data:
+                    tip_log['count'][p20] = data['tips20']
+                else:
+                    tip_log['count'][p20] = 0
+        else:
+            tip_log['count'] = {p20: 0}
     else:
         tip_log['count'] = {p20: 0}
-    # else:
-    #     tip_log['count'] = {p20: 0}
 
     tip_log['tips'] = {p20: [tip for rack in tips20 for tip in rack.wells()]}
     tip_log['max'] = {p20: len(tip_log['tips'][p20])}
@@ -101,10 +101,10 @@ resuming.')
         p20.drop_tip()
 
     # track final used tip
-    # if TIP_TRACK and not ctx.is_simulating():
-    if not os.path.isdir(folder_path):
-        os.mkdir(folder_path)
-    data = {
-        'tips20': tip_log['count'][p20]}
-    with open(file_path, 'w') as outfile:
-        json.dump(data, outfile)
+    if TIP_TRACK and not ctx.is_simulating():
+        if not os.path.isdir(folder_path):
+            os.mkdir(folder_path)
+        data = {
+            'tips20': tip_log['count'][p20]}
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile)
