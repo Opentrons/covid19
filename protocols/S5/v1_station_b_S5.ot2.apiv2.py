@@ -1,6 +1,8 @@
 import math
 from opentrons.types import Point
 from opentrons import protocol_api
+import os
+import json
 
 # metadata
 metadata = {
@@ -26,6 +28,7 @@ REAGENT SETUP:
 """
 
 NUM_SAMPLES = 30
+TIP_TRACK = False
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -69,18 +72,36 @@ def run(ctx: protocol_api.ProtocolContext):
     m300.flow_rate.aspirate = 150
     m300.flow_rate.dispense = 300
 
-    tip_counts = {m300: 0}
-    tip_maxes = {m300: len(tips300)*12}
+    tip_log = {'count': {}}
+    folder_path = 'B'
+    file_path = folder_path + '/tip_log.json'
+    if TIP_TRACK and not ctx.is_simulating():
+        if os.path.isfile(file_path):
+            with open(file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips300' in data:
+                    tip_log['count'][m300] = data['tips300']
+                else:
+                    tip_log['count'][m300] = 0
+        else:
+            tip_log['count'] = {m300: 0}
+    else:
+        tip_log['count'] = {m300: 0}
+
+    tip_log['tips'] = {
+        m300: [tip for rack in tips300 for tip in rack.rows()[0]]}
+    tip_log['max'] = {
+        m300: len(tip_log['tips'][m300])}
 
     def pick_up(pip):
-        nonlocal tip_counts
-        if tip_counts[pip] == tip_maxes[pip]:
+        nonlocal tip_log
+        if tip_log['count'][pip] == tip_log['max'][pip]:
             ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
-    resuming.')
+resuming.')
             pip.reset_tipracks()
-            tip_counts[pip] = 0
-        tip_counts[pip] += 1
-        pip.pick_up_tip()
+            tip_log['count'][pip] = 0
+        pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
+        tip_log['count'][pip] += 1
 
     def remove_supernatant(vol):
         m300.flow_rate.aspirate = 30
@@ -181,3 +202,11 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.blow_out(d.top(-2))
         m300.drop_tip()
     m300.flow_rate.aspirate = 150
+
+    # track final used tip
+    if not ctx.is_simulating():
+        if not os.path.isdir(folder_path):
+            os.mkdir(folder_path)
+        data = {'tips300': tip_log['count'][m300]}
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile)
