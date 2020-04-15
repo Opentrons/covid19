@@ -6,23 +6,25 @@ import json
 
 # metadata
 metadata = {
-    'protocolName': 'S2 Station B Version 2',
+    'protocolName': 'S5 Station B Version 2',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.2'
 }
 
 """
 REAGENT SETUP:
 
 - slot 2 12-channel reservoir:
-    - beads and isopropanol: channels 1-2
-    - 70% ethanol: channels 4-5
-    - nuclease-free water: channel 12
+    - VHB buffer: channels 1-3
+    - SPR wash buffer: channel 4
+    - wash 1: channels 5-8
+    - wash 2: channels 9-12
 
 """
 
-NUM_SAMPLES = 96
+NUM_SAMPLES = 30
+ELUTION_VOL = 50
 TIP_TRACK = False
 
 
@@ -30,55 +32,53 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load labware and modules
     tempdeck = ctx.load_module('tempdeck', '1')
+    tempdeck.set_temperature(4)
     elution_plate = tempdeck.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul',
         'cooled elution plate')
-    reagent_res = ctx.load_labware('nunc_96_wellplate_2000ul', '2',
-                                   'reagent deepwell plate 1')
-    # reagent_res = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep',
-    #                                '2')
+    reagent_res = ctx.load_labware(
+        'nest_12_reservoir_15ml', '2', 'reagent reservoir')
     magdeck = ctx.load_module('magdeck', '4')
-    magplate = magdeck.load_labware(
-        'nunc_96_wellplate_2000ul', '96-deepwell sample plate')
+    magplate = magdeck.load_labware('usascientific_96_wellplate_2.4ml_deep')
     waste = ctx.load_labware(
         'nest_1_reservoir_195ml', '7', 'waste reservoir').wells()[0].top()
     tips300 = [
         ctx.load_labware(
-            'opentrons_96_tiprack_300ul', slot, '200µl filter tiprack')
-        for slot in ['3', '6', '8', '9', '10', '11']
+            'opentrons_96_filtertiprack_200ul', slot, '200µl filter tiprack')
+        for slot in ['3', '6', '8', '9']
     ]
     tips1000 = [
         ctx.load_labware(
             'opentrons_96_filtertiprack_1000ul', slot, '1000µl filter tiprack')
-        for slot in ['5']
+        for slot in ['10', '11']
     ]
 
     # reagents and samples
     num_cols = math.ceil(NUM_SAMPLES/8)
-    mag_samples_m = [
-        well for well in
-        magplate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
-    mag_samples_s = [
-        well for col in [
-            c for set in [magplate.columns()[i::2] for i in range(2)]
-            for c in set]
-        for well in col][:NUM_SAMPLES]
-    elution_samples_m = [
-        well for well in
-        elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
+    # mag_samples_m = [
+    #     well for well in
+    #     magplate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
+    # elution_samples_m = [
+    #     well for well in
+    #     elution_plate.rows()[0][0::2] + magplate.rows()[0][1::2]][:num_cols]
+    mag_samples_m = magplate.rows()[0][:num_cols]
+    mag_samples_s = magplate.wells()[:NUM_SAMPLES]
+    elution_samples_m = elution_plate.rows()[0][:num_cols]
 
-    beads = reagent_res.rows()[0][:2]
-    etoh = reagent_res.rows()[0][3:5]
-    water = reagent_res.rows()[0][-1]
+    vhb = reagent_res.wells()[:3]
+    spr = reagent_res.wells()[3:11]
+    water = reagent_res.wells()[11]
 
     # pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', 'right', tip_racks=tips300)
-    p1000 = ctx.load_instrument('p1000_single', 'left', tip_racks=tips1000)
+    p1000 = ctx.load_instrument('p1000_single_gen2', 'left',
+                                tip_racks=tips1000)
     m300.flow_rate.aspirate = 150
     m300.flow_rate.dispense = 300
     m300.flow_rate.blow_out = 300
     p1000.flow_rate.aspirate = 100
     p1000.flow_rate.dispense = 1000
+    p1000.flow_rate.blow_out = 1000
 
     tip_log = {'count': {}}
     folder_path = '/data/B'
@@ -96,7 +96,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 else:
                     tip_log['count'][m300] = 0
         else:
-            tip_log['count'] = {p1000: 0, m300: 0}
+            tip_log['count'][m300] = 0
     else:
         tip_log['count'] = {p1000: 0, m300: 0}
 
@@ -122,7 +122,7 @@ resuming.')
     def remove_supernatant(pip, vol):
         if pip == p1000:
             for i, s in enumerate(mag_samples_s):
-                side = -1 if i < 48 == 0 else 1
+                side = -1 if (i % 8) % 2 == 0 else 1
                 loc = s.bottom(0.5).move(Point(x=side*2))
                 pick_up(p1000)
                 p1000.move_to(s.center())
@@ -143,73 +143,78 @@ resuming.')
                 m300.drop_tip()
             m300.flow_rate.aspirate = 150
 
-    # premix, transfer, and mix magnetic beads with sample
+    # incubate on magnet
+    magdeck.engage()
+    ctx.delay(minutes=15, msg='Incubating on magnet for 15 minutes.')
+
+    # remove supernatant with P1000
+    remove_supernatant(p1000, 770)
+
+    magdeck.disengage()
+
+    # transfer and mix magnetic beads with VHB buffer
     for i, m in enumerate(mag_samples_m):
         pick_up(m300)
-        if i == 0 or i == 6:
-            for _ in range(20):
-                m300.aspirate(200, beads[i//6].bottom(3))
-                m300.dispense(200, beads[i//6].bottom(20))
-        for _ in range(2):
-            m300.transfer(310/2, beads[i//8], m.top(), new_tip='never')
-        m300.mix(10, 200, m)
+        side = 1 if i % 2 == 0 else -1
+        loc = m.bottom(0.5).move(Point(x=side*2))
+        m300.transfer(400, vhb[i//4], m, new_tip='never')
+        m300.mix(10, 200, loc)
         m300.blow_out(m.top(-2))
         m300.aspirate(20, m.top(-2))
         m300.drop_tip()
 
-    # incubate off and on magnet
-    ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
+    # incubate on magnet
     magdeck.engage()
-    ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
+    ctx.delay(minutes=10, msg='Incubating on magnet for 10 minutes.')
 
-    # remove supernatant
-    remove_supernatant(p1000, 620)
+    # remove supernatant with P300 multi
+    remove_supernatant(m300, 420)
 
-    # 70% EtOH washes
+    # transfer and mix magnetic beads with SPR wash buffer 2x
     for wash in range(2):
-        # transfer EtOH
-        for m in mag_samples_m:
-            side = -1 if i < 48 == 0 else 1
-            loc = m.bottom(0.5).move(Point(x=side*2))
+        magdeck.disengage()
+        for i, m in enumerate(mag_samples_m):
             pick_up(m300)
-            m300.aspirate(200, etoh[wash])
-            m300.aspirate(30, etoh[wash].top())
-            m300.move_to(m.center())
-            m300.dispense(30, m.center())
-            m300.dispense(200, loc)
+            col_ind = wash*num_cols+i
+            wash_loc = spr[col_ind//3]
+            side = 1 if i % 2 == 0 else -1
+            loc = m.bottom(0.5).move(Point(x=side*2))
+            m300.transfer(500, wash_loc, m, new_tip='never')
+            m300.mix(10, 200, loc)
+            m300.blow_out(m.top(-2))
+            m300.aspirate(20, m.top(-2))
             m300.drop_tip()
 
-        ctx.delay(seconds=30, msg='Incubating for 30 seconds.')
+        # incubate on magnet
+        magdeck.engage()
+        ctx.delay(minutes=10, msg='Incubating on magnet for 10 minutes.')
 
-        # remove supernatant
-        remove_supernatant(m300, 210)
-
-    ctx.delay(minutes=5, msg='Airdrying beads for 5 minutes.')
-
-    magdeck.disengage()
+        # remove supernatant with P300 multi
+        remove_supernatant(m300, 520)
 
     # transfer and mix water
+    magdeck.disengage()
     for m in mag_samples_m:
         pick_up(m300)
-        side = 1 if i < 6 == 0 else -1
+        side = 1 if i % 2 == 0 else -1
         loc = m.bottom(0.5).move(Point(x=side*2))
-        m300.transfer(50, water, m.center(), new_tip='never')
+        m300.transfer(ELUTION_VOL, water, m.top(), new_tip='never')
         m300.mix(10, 30, loc)
         m300.blow_out(m.top(-2))
         m300.drop_tip()
 
     # incubate off and on magnet
-    ctx.delay(minutes=2, msg='Incubating on magnet for 2 minutes.')
+    ctx.delay(minutes=10, msg='Incubating off magnet for 10 minutes.')
     magdeck.engage()
-    ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')
+    ctx.delay(minutes=10, msg='Incubating on magnet for 10 minutes.')
 
     # transfer elution to clean plate
     m300.flow_rate.aspirate = 30
     for s, d in zip(mag_samples_m, elution_samples_m):
         pick_up(m300)
-        side = -1 if i < 6 == 0 else 1
+        side = -1 if i % 2 == 0 else 1
         loc = s.bottom(0.5).move(Point(x=side*2))
-        m300.transfer(45, loc, d, new_tip='never')
+        m300.transfer(ELUTION_VOL, loc, d, new_tip='never')
         m300.blow_out(d.top(-2))
         m300.drop_tip()
     m300.flow_rate.aspirate = 150

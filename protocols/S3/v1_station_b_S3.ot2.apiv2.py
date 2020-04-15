@@ -94,6 +94,8 @@ def run(ctx: protocol_api.ProtocolContext):
                     tip_log['count'][m300] = data['tips300']
                 else:
                     tip_log['count'][m300] = 0
+        else:
+            tip_log['count'][m300] = 0
     else:
         tip_log['count'] = {p1000: 0, m300: 0}
 
