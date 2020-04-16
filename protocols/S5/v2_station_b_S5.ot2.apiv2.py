@@ -46,6 +46,9 @@ def run(ctx: protocol_api.ProtocolContext):
             'opentrons_96_filtertiprack_200ul', slot, '200µl filter tiprack')
         for slot in ['3', '6', '8', '9']
     ]
+    lysis_buffer_beads = ctx.load_labware(
+        'nest_12_reservoir_15ml', '5',
+        'reservoir for lysis buffer + beads').wells()[:4]
     tips1000 = [
         ctx.load_labware(
             'opentrons_96_filtertiprack_1000ul', slot, '1000µl filter tiprack')
@@ -141,6 +144,16 @@ resuming.')
                 m300.blow_out(waste)
                 m300.drop_tip()
             m300.flow_rate.aspirate = 150
+
+    # transfer lysis buffer with beads
+    for i, m in enumerate(mag_samples_m):
+        pick_up(m300)
+        source = lysis_buffer_beads[i//3]
+        m300.transfer(538, source, m.top(2), air_gap=20, new_tip='never')
+        m300.mix(10, 200, m)
+        m300.blow_out(m.top(-2))
+        m300.aspirate(20, m.top(-2))
+        m300.drop_tip()
 
     # incubate on magnet
     magdeck.engage()

@@ -1,5 +1,5 @@
 from opentrons import protocol_api
-import math
+# import math
 import json
 import os
 
@@ -29,11 +29,11 @@ def run(ctx: protocol_api.ProtocolContext):
     dest_plate = ctx.load_labware(
         'usascientific_96_wellplate_2.4ml_deep', '2',
         '96-deepwell sample plate')
-    reagent_rack = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
-                                    '5', 'lysis buffer tuberack')
+    # reagent_rack = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
+    #                                 '5', 'lysis buffer tuberack')
     tipracks1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot,
                                      '1000µl filter tiprack')
-                    for slot in ['6', '9']]
+                    for slot in ['3', '5', '6', '8', '9', '11']]
 
     # load pipette
     p1000 = ctx.load_instrument(
@@ -71,27 +71,19 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
         tip_log['count'][pip] += 1
 
-    lys_buff = reagent_rack.wells()[:2]
-    heights = {tube: 60 for tube in lys_buff}
-    radius = (lys_buff[0].diameter)/2
-    min_h = 5
-
-    def h_track(tube, vol):
-        nonlocal heights
-        dh = vol/(math.pi*(radius**2))
-        if heights[tube] - dh > min_h:
-            heights[tube] = heights[tube] - dh
-        else:
-            heights[tube] = 5
-        return tube.bottom(heights[tube])
-
-    # transfer lysis buffer
-    pick_up(p1000)
-    for i, d in enumerate(dests):
-        source = lys_buff[i//48]
-        p1000.transfer(528, h_track(source, 528), d.bottom(2), air_gap=100,
-                       new_tip='never',)
-        p1000.blow_out(d.top(-2))
+    # lys_buff = reagent_rack.wells()[:2]
+    # heights = {tube: 60 for tube in lys_buff}
+    # radius = (lys_buff[0].diameter)/2
+    # min_h = 5
+    #
+    # def h_track(tube, vol):
+    #     nonlocal heights
+    #     dh = vol/(math.pi*(radius**2))
+    #     if heights[tube] - dh > min_h:
+    #         heights[tube] = heights[tube] - dh
+    #     else:
+    #         heights[tube] = 5
+    #     return tube.bottom(heights[tube])
 
     # transfer samples
     for s, d in zip(sources, dests):
