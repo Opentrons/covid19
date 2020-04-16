@@ -71,8 +71,8 @@ def run(ctx: protocol_api.ProtocolContext):
     wash_sets = [reagent_res.wells()[i:i+2] for i in [5, 7, 9]]
 
     # pipettes
-    m300 = ctx.load_instrument('p300_multi_gen2', 'right', tip_racks=tips300)
-    p1000 = ctx.load_instrument('p1000_single_gen2', 'left',
+    m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=tips300)
+    p1000 = ctx.load_instrument('p1000_single_gen2', 'right',
                                 tip_racks=tips1000)
     m300.flow_rate.aspirate = 150
     m300.flow_rate.dispense = 300
