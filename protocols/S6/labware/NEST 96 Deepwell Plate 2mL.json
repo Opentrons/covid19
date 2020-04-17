@@ -1215,7 +1215,7 @@
         "isTiprack": false,
         "isMagneticModuleCompatible": true,
         "loadName": "nest_96_deepwell_2ml",
-        "magneticModuleEngageHeight": 14.60
+        "magneticModuleEngageHeight": 6.8
     },
     "namespace": "custom_beta",
     "version": 1,
