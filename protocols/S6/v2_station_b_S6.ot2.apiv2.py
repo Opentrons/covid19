@@ -258,7 +258,7 @@ def run(ctx: protocol_api.ProtocolContext):
     for i, (s, d) in enumerate(zip(mag_samples_m, elution_samples_m)):
         pick_up(m300)
         side = -1 if i < 6 else 1
-        loc = get_deep_well_loc(m, side)
+        loc = get_deep_well_loc(s, side)
         m300.aspirate(50, loc)
         m300.dispense(50, d)
         m300.blow_out(d.top(-3))
