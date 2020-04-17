@@ -132,7 +132,6 @@ def run(ctx: protocol_api.ProtocolContext):
         loc = well.bottom(DEEPWELL_Z_OFFSET).move(Point(x=side*DEEPWELL_X_OFFSET))
         return loc
 
-
     # premix, transfer, and mix magnetic beads with sample
     for i, m in enumerate(mag_samples_m):
         pick_up(m300)
@@ -152,7 +151,7 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.aspirate(vol, beads[i//2])
             m300.default_speed = 50
             m300.flow_rate.dispense = dispense_flow_rate * 3/16
-            m300.dispense(vol, m.bottom(8))
+            m300.dispense(vol, m.bottom(6))
             m300.drop_tip()
             m300.default_speed = 400
 

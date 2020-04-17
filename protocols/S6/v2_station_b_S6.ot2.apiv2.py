@@ -149,7 +149,7 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.aspirate(vol, beads[i//2])
             m300.default_speed = 50
             m300.flow_rate.dispense = dispense_flow_rate * 3/16
-            m300.dispense(vol, m.bottom(8))
+            m300.dispense(vol, m.bottom(6))
             m300.drop_tip()
             m300.default_speed = 400
 
@@ -167,58 +167,69 @@ def run(ctx: protocol_api.ProtocolContext):
 
     m300.flow_rate.aspirate = aspirate_flow_rate
     m300.flow_rate.dispense = dispense_flow_rate
+    transfer_vol = working_volume - m300.min_volume  # transfer volume for bead wash
 
-    for vol, wash_reagent, blow_out in zip(
-            [1000, 1000, 500],
-            [wash_buffer, etoh, etoh],
-            [False, True, True]):
+    # wash with wash buffer
+    magdeck.disengage()
+    for m, wash_buff in zip(mag_samples_m, wash_buffer):
+        pick_up(m300)
+        num_trans = math.ceil(1000/transfer_vol)
 
+        for _ in range(num_trans):
+            if m300.current_volume > 0:
+                m300.dispense(location=wash_buff.top(-3))  # remove air gap if any
+            m300.aspirate(transfer_vol, wash_buff.bottom(0.25))
+            m300.air_gap()
+            m300.default_speed = 100
+            m300.dispense(transfer_vol, m.top(-10))
+            m300.air_gap(20, height=-10)
+
+        m300.dispense(20, m.top(-10)) # dispense air gap
+        m300.mix(10, 180, m.bottom(0.5))
+        m300.air_gap(20, height=-10)
+        m300.drop_tip()
+
+        m300.default_speed = 400
+
+    # incubate on magnet
+    magdeck.engage()
+    ctx.delay(minutes=2, msg='Incubating on magnet for 2 minutes.')
+
+    # remove supernatant
+    remove_supernatant(1010, blow_out=False)
+
+    m300.flow_rate.aspirate = aspirate_flow_rate
+    m300.flow_rate.dispense = dispense_flow_rate
+
+    # wash with EtOH
+    for vol in [1000, 500]:
         magdeck.disengage()
 
-        # transfer and mix wash
-        transfer_vol = working_volume - m300.min_volume
-        num_trans = math.ceil(vol/transfer_vol)
-
-        for i, m in enumerate(mag_samples_m):
-
+        for m in mag_samples_m:
             pick_up(m300)
-
-            if not blow_out and isinstance(wash_reagent, list):
-                reagent = wash_reagent[i]
-                m300.flow_rate.aspirate = aspirate_flow_rate * 2/3
-                m300.flow_rate.dispense = dispense_flow_rate * 2/3
-            else:
-                reagent = wash_reagent
-                m300.flow_rate.aspirate = aspirate_flow_rate
-                m300.flow_rate.dispense = dispense_flow_rate
+            num_trans = math.ceil(vol/transfer_vol)
 
             for _ in range(num_trans):
                 if m300.current_volume > 0:
-                    m300.dispense(location=reagent.top(-3))  # remove air gap if any
-                m300.aspirate(transfer_vol, reagent.bottom(0.25))
+                    m300.dispense(location=etoh.top(-3))  # remove air gap if any
+                m300.aspirate(transfer_vol, etoh.bottom(0.25))
                 m300.air_gap()
-
-                m300.default_speed = 100 if blow_out else 400  # slow down for wash buffer
-
                 m300.dispense(transfer_vol, m.top(-10))
-                if blow_out:
-                    m300.blow_out(m.top(-10))
+                m300.blow_out(m.top(-10))
                 m300.air_gap(20, height=-10)  # air gap to prevent dripping
 
             m300.dispense(20, m.top(-10))
             m300.mix(10, 180, m.bottom(0.5))
-            if blow_out:
-                m300.blow_out(m.top(-10))
+            m300.blow_out(m.top(-10))
             m300.air_gap(20, height=-10)
-            m300.return_tip()
+            m300.drop_tip()
 
-        m300.default_speed = 400
         # incubate on magnet
         magdeck.engage()
-        ctx.delay(minutes=0.1, msg='Incubating on magnet for 2 minutes.')
+        ctx.delay(minutes=2, msg='Incubating on magnet for 2 minutes.')
 
         # remove supernatant
-        remove_supernatant(vol+10, blow_out=blow_out)
+        remove_supernatant(vol+10, blow_out=True)
 
     ctx.delay(minutes=2, msg="Airdrying beads for 2 minutes.")
 
