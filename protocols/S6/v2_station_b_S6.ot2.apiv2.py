@@ -22,7 +22,7 @@ REAGENT SETUP:
 
 NUM_SAMPLES = 8
 
-DEEPWELL_Z_OFFSET = 1
+DEEPWELL_Z_OFFSET = 0.5
 DEEPWELL_X_OFFSET = 1
 
 
@@ -42,7 +42,7 @@ def run(ctx: protocol_api.ProtocolContext):
     etoh = ctx.load_labware(
         'nest_1_reservoir_195ml', '5', 'reservoir for ethanol').wells()[0]
     waste = ctx.load_labware(
-        'nest_1_reservoir_195ml', '7', 'waste reservoir').wells()[0].top()
+        'nest_1_reservoir_195ml', '7', 'waste reservoir').wells()[0]
     wash_buffer = ctx.load_labware(
         'nest_12_reservoir_15ml', '8', 'reservoir for wash buffer').wells()
 
@@ -183,7 +183,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
             pick_up(m300)
 
-            if blow_out and isinstance(wash_reagent, list):
+            if not blow_out and isinstance(wash_reagent, list):
                 reagent = wash_reagent[i]
                 m300.flow_rate.aspirate = aspirate_flow_rate * 2/3
                 m300.flow_rate.dispense = dispense_flow_rate * 2/3
@@ -205,8 +205,8 @@ def run(ctx: protocol_api.ProtocolContext):
                     m300.blow_out(m.top(-10))
                 m300.air_gap(20, height=-10)  # air gap to prevent dripping
 
-            m300.move_to(m.center())
-            m300.mix(10, 180, loc)
+            m300.dispense(20, m.top(-10))
+            m300.mix(10, 180, m.bottom(0.5))
             if blow_out:
                 m300.blow_out(m.top(-10))
             m300.air_gap(20, height=-10)
