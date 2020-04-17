@@ -24,7 +24,7 @@ REAGENT SETUP (For Samples Less than 32 Target):
 
 """
 
-NUM_SAMPLES = 96
+NUM_SAMPLES = 8
 NUM_MASTERMIX = 3  # should be 2 or 3
 VOL_SAMPLE = 3
 VOL_CONTROL = 8
@@ -35,7 +35,7 @@ DEAD_VOL = 3
 def run(ctx: protocol_api.ProtocolContext):
     tempdeck = ctx.load_module('tempdeck', '1')
     source_plate = tempdeck.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt',
+        'opentrons_96_aluminumblock_nest_wellplate_100ul',
         'RNA elution plate from station B')
     pcr_plate = ctx.load_labware(
         'appliedbiosystems_384_wellplate_40ul', '2', 'PCR plate')
@@ -75,7 +75,7 @@ def run(ctx: protocol_api.ProtocolContext):
     mm1_dest = sample_dest_sets[0:mm_sample_repeat:3]
     mm2_dest = sample_dest_sets[1:mm_sample_repeat:3]
     mm3_dest = sample_dest_sets[2:mm_sample_repeat:3]
-    controls = strips.rows()[0][-1]
+    controls = strips['A4']
 
     mm_strips = strips.columns()[:NUM_MASTERMIX]
     if NUM_SAMPLES >= 32:
