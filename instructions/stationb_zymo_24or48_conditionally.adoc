@@ -1,5 +1,18 @@
-= Station B, Zymo kit, 24 samples
+= Station B, Zymo kit, {sample_count} samples
 :imagesdir: images
+:attribute-missing: warn
+:attribute-undefined: drop
+
+ifeval::[{sample_count} == 48]
+:tip_rack_slots: Slots 3, 6, 7, 9, and 10
+:protocol_filename: StationB-48samples-Zymo.py
+endif::[]
+ifeval::[{sample_count} != 48]
+:tip_rack_slots: Slots 3 and 6
+:protocol_filename: StationB-24samples-Zymo-20200407.py
+endif::[]
+
+
 
 == Before starting
 
@@ -25,7 +38,7 @@ image::temperature_module_with_aluminum_block.png[width=50%]
 +
 image::nest_100ul_pcr_plate.png[width=50%]
 
-Slots 3 and 6:: A full, sterile rack of Opentrons 200 µL filter tips:
+{tip_rack_slots}:: A full, sterile rack of Opentrons 200 µL filter tips:
 +
 image::opentrons_200ul_filter_tips.png[width=50%]
 
@@ -41,27 +54,38 @@ Start pre-cooling the Temperature Module to *6 °C.*
 
 == Sample preparation
 
-. Prepare the **sample well plate.**  The sample well plate is the **NEST 96 deep well plate** that was output from Station A.
+. Prepare the **sample well plate.**
 +
 --
+ifeval::[{sample_count} == 48]
+The sample well plate is a **NEST 96 deep well plate.**
+endif::[]
+ifeval::[{sample_count} != 48]
+The sample well plate is the **NEST 96 deep well plate** that was output from Station A.
+endif::[]
+
 image::nest_deep_well_plate.jpg[width=50%]
 
-The 24 samples (#1-#24) should be laid out like this:
+The {sample_count} samples (1-{sample_count}) should be laid out like this:
 
-[format=csv]
-|===
-,      Col. 1, Col. 2, Col. 3, Col. 4, Col. 5, Col. 6, Col. 7, Col. 8, Col. 9, Col. 10, Col. 11, Col. 12
-Row A, #1,     empty,  #9,    empty,   #17,   empty,  empty,  empty,  empty,  empty,   empty,   empty
-Row B, #2,     empty,  #10,   empty,   #18,   empty,  empty,  empty,  empty,  empty,   empty,   empty
-Row C, #3,     empty,  #11,   empty,   #19,   empty,  empty,  empty,  empty,  empty,   empty,   empty
-Row D, #4,     empty,  #12,   empty,   #20,   empty,  empty,  empty,  empty,  empty,   empty,   empty
-Row E, #5,     empty,  #13,   empty,   #21,   empty,  empty,  empty,  empty,  empty,   empty,   empty
-Row F, #6,     empty,  #14,   empty,   #22,   empty,  empty,  empty,  empty,  empty,   empty,   empty
-Row G, #7,     empty,  #15,   empty,   #23,   empty,  empty,  empty,  empty,  empty,   empty,   empty
-Row H, #8,     empty,  #16,   empty,   #24,   empty,  empty,  empty,  empty,  empty,   empty,   empty
-|===
+ifeval::[{sample_count} == 48]
+include::deep_well_sample_map_48.csv[]
+endif::[]
 
+ifeval::[{sample_count} != 48]
+include::deep_well_sample_map_24.csv[]
+endif::[]
+
+ifeval::[{sample_count} == 48]
+For each sample well...
+
+. Add **4 µL Proteinase K.**
+. Add **400 µL sample.**
+. Mix.
+endif::[]
+ifeval::[{sample_count} != 48]
 Each sample well should already contain a sample, Proteinase K, and internal extraction control RNA, mixed.
+endif::[]
 --
 
 . Prepare 3x **14.35 ml Viral DNA/RNA Buffer + MagBinding Beads...**
@@ -79,7 +103,23 @@ CAUTION: This step is time-sensitive. The MagBinding Beads will slowly settle in
 
 Into a **15 mL NEST 12 well reservoir,** pipette or pour the following reagents:
 
+
 [horizontal]
+ifeval::[{sample_count} == 48]
+Well 1:: **14.35 ml Viral DNA/RNA Buffer + MagBinding Beads**
+Well 2:: **14.35 ml Viral DNA/RNA Buffer + MagBinding Beads**
+Well 3:: **14.35 ml Viral DNA/RNA Buffer + MagBinding Beads**
+Well 4:: **13 ml MagBead DNA/RNA Wash 1**
+Well 5:: **13 ml MagBead DNA/RNA Wash 1**
+Well 6:: **13 ml MagBead DNA/RNA Wash 2**
+Well 7:: **13 ml MagBead DNA/RNA Wash 2**
+Well 8:: **13 ml 95-100% ethanol**
+Well 9:: **13 ml 95-100% ethanol**
+Well 10:: **13 ml 95-100% ethanol**
+Well 11:: **13 ml 95-100% ethanol**
+Well 12:: **5 ml nuclease-free water**
+endif::[]
+ifeval::[{sample_count} != 48]
 Well 1:: **14.76 ml Viral DNA/RNA Buffer + MagBinding Beads**  (2 prepared tubes' worth)
 Well 2:: **7.38 ml Viral DNA/RNA Buffer + MagBinding Beads**  (1 prepared tube's worth)
 Well 3:: Empty
@@ -87,11 +127,12 @@ Well 4:: **13 ml MagBead DNA/RNA Wash 1**
 Well 5:: Empty
 Well 6:: **13 ml MagBead DNA/RNA Wash 2**
 Well 7:: Empty
-Well 8:: **13 ml 95-100% ethanol** 
+Well 8:: **13 ml 95-100% ethanol**
 Well 9:: **13 ml 95-100% ethanol**
 Well 10:: Empty
 Well 11:: Empty
 Well 12:: **3 ml nuclease-free water**
+endif::[]
 
 .A 15 mL NEST 12 well reservoir.
 image::nest_12_well_reservoir.png[width=50%]
@@ -107,11 +148,20 @@ image::nest_12_well_reservoir.png[width=50%]
 .. Check that labware are inserted the right way around (well A1 at the top-left for the plates, well 1 at the left for the troughs).
 .. Check that labware are properly clicked into the deck slots.
 .. Check the deck layout.
+ifeval::[{sample_count} == 48]
++
+image::deck_layout_zymo_b_48.png[]
+endif::[]
 
 == Running the OT-2
 
-Run the Station B protocol on the OT-2. The protocol file should be **StationB-24samples-Zymo-20200407.py.**
+Run the Station B protocol on the OT-2. The protocol file should be **{protocol_filename}**
 
 include::run.adoc[]
 
-Wait for the run to finish.  The output is the **NEST 100 µL PCR plate** sitting on the aluminum block atop the Temperature Module in **slot 1.**
+Wait for the run to finish.
+ifeval::[{sample_count} == 48]
+It should take 2.5-3 hours.
+endif::[]
+
+The output is the **NEST 100 µL PCR plate** sitting on the aluminum block atop the Temperature Module in **slot 1.**
