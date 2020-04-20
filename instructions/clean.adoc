@@ -1,4 +1,4 @@
-= Cleaning an OT-2 COVID-19 Diagnostic Station
+// = Cleaning an OT-2 COVID-19 Diagnostic Station
 
 // == Before starting
 
@@ -13,7 +13,7 @@
 
 // Avoid spraying the OT-2 directly: the cleaning agents might go where you don't want them. Use something like a paper towel, instead.
 
-== Steps
+// == Steps
 
 . Wipe these parts of the OT-2 down with a 1:10 dilution of bleach:
 .. The clear polycarbonate windows.
@@ -41,3 +41,7 @@ CAUTION: The aluminum on the OT-2 will be discolored if the bleach sits for too 
 . Any Temperature Modules or Magnetic Modules that the OT-2 has on its deck.
 . Any 96 well aluminum blocks that are going to be used on the OT-2.
 --
+
+. Rinse the RNaseZap or RNase AWAY off with distilled water.
+
+. Wipe the OT-2 dry, or let the water evaporate.
