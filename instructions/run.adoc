@@ -1,0 +1,15 @@
+. Open the Opentrons App.
+. Ensure you are connected to the robot. In the *Robots* tab, you can try flipping the robot's lights on and off to test the connection.
+. Go to the *Run* tab.  Double-check the name at the top to make sure the correct protocol is uploaded.
+. Click *Start run.*  The OT-2 will home its motors and then begin the protocol.
++
+CAUTION: Do not click *Start run* more than once.  If you do, a https://github.com/Opentrons/opentrons/issues/5239[known bug] will make the OT-2 run the protocol back-to-back.
++
+[CAUTION]
+--
+.If something goes wrong and you need to abort the protocol:
+. Shut down the OT-2 with the power switch on its back left side.
+. Turn the OT-2 back on.  Wait a couple of minutes for the pipettes to rise.
+. Manually remove any tips attached to the pipettes.  (This ensures that the pipettes will not aspirate liquid into themselves when they home.)
+. Reconnect to the OT-2 in the Opentrons App.  Click the *Home* button to move the gantry out of the way so you can access the labware on the deck.
+--

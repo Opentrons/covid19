@@ -1,0 +1,58 @@
+= Station A, Zymo kit, 24 or 48 samples
+
+== Cleaning the OT-2
+
+include::clean.adoc[leveloffset=+1]
+
+
+== Reagent preparation
+
+Prepare the *reagent tube rack,* an Opentrons 24 tube rack.
+
+. Pipette **Proteinase K** prepared from the Zymo Quick-DNA/RNA Viral MagBead kit into a *1.5 mL snap cap tube.*  The volume depends on how many samples are being processed:
++
+|===
+| Samples to process | Volume of Proteinase K
+
+| 24 | 110 µL
+| 48 | 220 µL
+|===
++
+Place the Proteinase K tube in *well D1* of the *reagent tube rack.*
+
+. Pipette **internal extraction control RNA** prepared from the BP Genomics 2019-nCoV Detection Assay kit into a *1.5 mL snap cap tube.*  The volume depends on how many samples are being processed:
++
+|===
+| Samples to process | Volume of internal extraction control RNA
+
+| 24 | 110 µL
+| 48 | 220 µL
+|===
++
+Place the internal extraction control RNA tube in *well D4* of the *reagent tube rack.*
+
+
+== OT-2 deck setup
+
+Set up labware on the OT-2's deck.
+
+. In *deck slot 7*, place the *reagent tube rack.*
+. In *deck slot 3*, place a full, sterile *Opentrons 20 µL filter tip rack.*
+. In *deck slot 1*, place an empty, sterile *NEST 96 deep well plate.*
+
+== Running the OT-2
+
+Run the 24- or 48-sample protocol on the OT-2.
+
+|===
+| Samples to process | OT-2 protocol filename
+
+| 24 | StationA-24samples-Zymo-M-2020-04-13.py
+| 48 | StationA-48samples-Zymo-M-2020-04-13.py
+|===
+
+include::run.adoc[leveloffset=+1]
+
+The output is the *NEST 96 deep well plate* in *deck slot 1.*  It contains either 24 or 48 wells of *8 µl Proteinase K + internal extraction control RNA mix.*
+
+Only the odd-numbered columns (1, 3, 5, ...) are used.  The even-numbered columns are skipped.
