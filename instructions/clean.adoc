@@ -1,0 +1,43 @@
+= Cleaning an OT-2 COVID-19 Diagnostic Station
+
+== Before starting
+
+Consult the https://support.opentrons.com/en/articles/1962344-ot-2-glossary[OT-2 glossary] to make sure you understand the terminology used here.
+Different parts of the OT-2 are affected differently by cleaning agents, and some parts shouldn't be cleaned at all.
+
+In particular:
+
+* Avoid the X and Y rails and carriages.
+* Avoid pulleys and belts.
+* Avoid electronics, buttons, and switches.
+
+Avoid spraying the OT-2 directly: the cleaning agents might go where you don't want them. Use something like a paper towel, instead.
+
+== Steps
+
+. Wipe these parts of the OT-2 down with a 1:10 dilution of bleach:
+.. The clear polycarbonate windows.
+.. The black pipette stems. (Avoid the rest of the pipettes, including the ejectors.)
+.. The aluminum deck.
+.. The removable black trash bin.
+
+. Wait 30 seconds, then quickly rinse the bleach off with distilled water.
++
+CAUTION: The aluminum on the OT-2 will be discolored if the bleach sits for too long.  In the long term, it may also cause more serious corrosion.
+
+. Wipe these parts of the OT-2 down with RNaseZap or RNase AWAY:
++
+--
+.The same parts that you wiped down with bleach:
+["loweralpha"]
+. The clear polycarbonate windows.
+. The black pipette stems. (Avoid the rest of the pipettes, including the ejectors.)
+. The aluminum deck.
+. The removable black trash bin.
+
+.Plus these additional parts:
+["loweralpha", start=5]
+. The bottoms of the pipette ejectors.
+. Any Temperature Modules or Magnetic Modules that the OT-2 has on its deck.
+. Any 96 well aluminum blocks that are going to be used on the OT-2.
+--
