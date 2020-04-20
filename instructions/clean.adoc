@@ -1,17 +1,17 @@
 = Cleaning an OT-2 COVID-19 Diagnostic Station
 
-== Before starting
+// == Before starting
 
-Consult the https://support.opentrons.com/en/articles/1962344-ot-2-glossary[OT-2 glossary] to make sure you understand the terminology used here.
-Different parts of the OT-2 are affected differently by cleaning agents, and some parts shouldn't be cleaned at all.
+// Consult the https://support.opentrons.com/en/articles/1962344-ot-2-glossary[OT-2 glossary] to make sure you understand the terminology used here.
+// Different parts of the OT-2 are affected differently by cleaning agents, and some parts shouldn't be cleaned at all.
 
-In particular:
+// In particular:
 
-* Avoid the X and Y rails and carriages.
-* Avoid pulleys and belts.
-* Avoid electronics, buttons, and switches.
+// * Avoid the X and Y rails and carriages.
+// * Avoid pulleys and belts.
+// * Avoid electronics, buttons, and switches.
 
-Avoid spraying the OT-2 directly: the cleaning agents might go where you don't want them. Use something like a paper towel, instead.
+// Avoid spraying the OT-2 directly: the cleaning agents might go where you don't want them. Use something like a paper towel, instead.
 
 == Steps
 
