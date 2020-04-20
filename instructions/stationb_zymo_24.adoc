@@ -1,0 +1,117 @@
+= Station B, Zymo kit, 24 samples
+:imagesdir: images
+
+== Before starting
+
+When placing labware on the OT-2's deck:
+
+. Make sure the labware is properly inserted by pressing the corner into the metal springs (pictured below). You should feel a slight click, and the labware should sit completely flat.
+. Make sure the labware is inserted the right way around, with well A1 at the top left.
+
+.Closeup of a gloved hand pressing labware into the labware holding springs on a deck slot.
+image::placing_reagent_trough.png[width=50%]
+
+== Clean the OT-2
+
+include::clean.adoc[leveloffset=+1]
+
+== Initial OT-2 setup
+
+Place the following labware on the OT-2's deck:
+
+Slot 1:: An Opentrons Temperature Module with an Opentrons 96 well aluminum block and an empty, sterile NEST 100 µL PCR plate:
++
+image::temperature_module_with_aluminum_block.png[width=50%]
++
+image::nest_100ul_pcr_plate.png[width=50%]
+
+Slots 3 and 6:: A full, sterile rack of Opentrons 200 µL filter tips:
++
+image::opentrons_200ul_filter_tips.png[width=50%]
+
+Slot 4:: An Opentrons Magnetic Module with nothing on it:
++
+image::opentrons_magnetic_module.png[width=50%]
+
+Slot 11:: An empty NEST 1-well reservoir, for organic liquid waste:
++
+image::nest_1_well_reservoir.png[width=50%]
+
+Start pre-cooling the Temperature Module to *6 °C.*
+
+== Sample preparation
+
+. Prepare the **sample well plate.**  The sample well plate is the **NEST 96 deep well plate** that was output from Station A.
++
+--
+image::nest_deep_well_plate.jpg[width=50%]
+
+The 24 samples (#1-#24) should be laid out like this:
+
+[format=csv]
+|===
+,      Col. 1, Col. 2, Col. 3, Col. 4, Col. 5, Col. 6, Col. 7, Col. 8, Col. 9, Col. 10, Col. 11, Col. 12
+Row A, #1,     empty,  #9,    empty,   #17,   empty,  empty,  empty,  empty,  empty,   empty,   empty
+Row B, #2,     empty,  #10,   empty,   #18,   empty,  empty,  empty,  empty,  empty,   empty,   empty
+Row C, #3,     empty,  #11,   empty,   #19,   empty,  empty,  empty,  empty,  empty,   empty,   empty
+Row D, #4,     empty,  #12,   empty,   #20,   empty,  empty,  empty,  empty,  empty,   empty,   empty
+Row E, #5,     empty,  #13,   empty,   #21,   empty,  empty,  empty,  empty,  empty,   empty,   empty
+Row F, #6,     empty,  #14,   empty,   #22,   empty,  empty,  empty,  empty,  empty,   empty,   empty
+Row G, #7,     empty,  #15,   empty,   #23,   empty,  empty,  empty,  empty,  empty,   empty,   empty
+Row H, #8,     empty,  #16,   empty,   #24,   empty,  empty,  empty,  empty,  empty,   empty,   empty
+|===
+
+Each sample well should already contain a sample, Proteinase K, and internal extraction control RNA, mixed.
+--
+
+. Prepare 3x **14.35 ml Viral DNA/RNA Buffer + MagBinding Beads...**
+.. In a sterile 15 mL tube, add **14 ml Viral DNA/RNA Buffer.**
+.. Vortex the **MagBinding Beads** in their container.
+.. Pipette **0.35 ml vortexed MagBinding Beads** to the 15 mL tube.
+.. Repeat for a total of 3x **14.35 ml Viral DNA/RNA Buffer + MagBinding Beads.**
+
+. Wait for the Temperature Module to reach **6 °C.**
+
+. Prepare the **reagent reservoir.**
++
+--
+CAUTION: This step is time-sensitive. The MagBinding Beads will slowly settle in the Viral DNA/RNA Buffer. Continue quickly until you start the run on the OT-2. Vortex the Viral DNA/RNA Buffer + MagBinding Beads immediately before adding them to the reservoir.
+
+Into a **15 mL NEST 12 well reservoir,** pipette or pour the following reagents:
+
+[horizontal]
+Well 1:: **14.76 ml Viral DNA/RNA Buffer + MagBinding Beads**  (2 prepared tubes' worth)
+Well 2:: **7.38 ml Viral DNA/RNA Buffer + MagBinding Beads**  (1 prepared tube's worth)
+Well 3:: Empty
+Well 4:: **13 ml MagBead DNA/RNA Wash 1**
+Well 5:: Empty
+Well 6:: **13 ml MagBead DNA/RNA Wash 2**
+Well 7:: Empty
+Well 8:: **13 ml 95-100% ethanol** 
+Well 9:: **13 ml 95-100% ethanol**
+Well 10:: Empty
+Well 11:: Empty
+Well 12:: **3 ml nuclease-free water**
+
+.A 15 mL NEST 12 well reservoir.
+image::nest_12_well_reservoir.png[width=50%]
+--
+
+== Final OT-2 setup
+
+. Place the **sample well plate** in **slot 4.**
+
+. Place the **reagent reservoir** in **slot 2.**
+
+. Double-check all the labware to make sure it looks correct.
+.. Check that labware are inserted the right way around (well A1 at the top-left for the plates, well 1 at the left for the troughs).
+.. Check that labware are properly clicked into the deck slots.
+.. Check the deck layout.
+
+== Running the OT-2
+
+Run the Station B protocol on the OT-2. The protocol file should be **StationB-24samples-Zymo-20200407.py.**
+
+include::run.adoc[]
+
+Wait for the run to finish.  The output is the **NEST 100 µL PCR plate** sitting on the aluminum block atop the Temperature Module in **slot 1.**
