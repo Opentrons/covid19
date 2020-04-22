@@ -27,12 +27,12 @@ def run(ctx: protocol_api.ProtocolContext):
             'source tuberack ' + str(i+1))
         for i, slot in enumerate(['1', '3', '4', '6'])
     ]
-    prot_k = ctx.load_labware(
-        'opentrons_24_aluminumblock_generic_2ml_screwcap', '2',
-        'chilled tubeblock for internal control (A1)').wells()[0]
     dest_plate = ctx.load_labware(
-        'usascientific_96_wellplate_2.4ml_deep', '5',
+        'usascientific_96_wellplate_2.4ml_deep', '2',
         '96-deepwell sample plate')
+    prot_k = ctx.load_labware(
+        'opentrons_24_aluminumblock_generic_2ml_screwcap', '5',
+        'chilled tubeblock for internal control (A1)').wells()[0]
     lys_buff = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
                                 '8',
                                 'tuberack for lysis buffer (A1)').wells()[0]
