@@ -1,10 +1,8 @@
 # Protocols to run OT diagnostic stations
 
-## Station B
-The current protocol (for extracting from 8 samples) is V15-StationB-8samples.py
-
 ## Station C
-The current protocol is station-C-qpcr-map.py.
+
+station-C-qpcr-map.py is a template that we edit for different station C variants.
 
 The qPCR build map is defined in the two `MAP` constants at the top, `MASTER_MIX_MAP` and `SAMPLE_MAP`, with a tab-separated list of which wells get which master mixes and samples. The tab-separated maps can be filled by directly copying a 12x8 grid of cells from a google sheet; see
 https://docs.google.com/spreadsheets/d/1EF5goRfT6f6d0IyCboaYNDJns9UazWaFNT4N8_CPyzQ/edit?usp=sharing for an example.
