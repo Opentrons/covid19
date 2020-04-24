@@ -30,18 +30,20 @@ def run(ctx: protocol_api.ProtocolContext):
     dest_plate = ctx.load_labware(
         'usascientific_96_wellplate_2.4ml_deep', '2',
         '96-deepwell sample plate')
-    prot_k = ctx.load_labware(
-        'opentrons_24_aluminumblock_generic_2ml_screwcap', '5',
-        'chilled tubeblock for internal control (A1)').wells()[0]
+    tempdeck = ctx.load_module('tempdeck', '7')
+    tempdeck.set_temperature(4)
+    reagent_block = tempdeck.load_labware(
+        'opentrons_24_aluminumblock_generic_2ml_screwcap',
+        'chilled tubeblock for internal control (A1)')
     lys_buff = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
-                                '8',
+                                '5',
                                 'tuberack for lysis buffer (A1)').wells()[0]
     tipracks1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot,
                                      '1000µl filter tiprack')
-                    for slot in ['7', '10']]
+                    for slot in ['8', '9']]
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,
                                    '20µl filter tiprack')
-                  for slot in ['9', '11']]
+                  for slot in ['10', '11']]
 
     # load pipette
     p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tipracks20)
@@ -52,6 +54,8 @@ def run(ctx: protocol_api.ProtocolContext):
     sources = [
         well for rack in source_racks for well in rack.wells()][:NUM_SAMPLES]
     dests = dest_plate.wells()[:NUM_SAMPLES]
+    prot_k = reagent_block.wells()[0]
+    iec = reagent_block.wells()[1]
 
     tip_log = {'count': {}}
     folder_path = '/data/A'
@@ -128,6 +132,17 @@ def run(ctx: protocol_api.ProtocolContext):
     for d in dests:
         pick_up(p20)
         p20.transfer(10, prot_k, d.bottom(5), air_gap=5,
+                     new_tip='never')
+        p20.blow_out(d.top(-2))
+        p20.aspirate(10, d.top())
+        p20.drop_tip()
+
+    ctx.delay(minutes=25, msg='Delaying 25 minutes before addition of IEC.')
+
+    # transfer IEC
+    for d in dests:
+        pick_up(p20)
+        p20.transfer(10, iec, d.bottom(5), air_gap=5,
                      new_tip='never')
         p20.blow_out(d.top(-2))
         p20.aspirate(10, d.top())
