@@ -1,6 +1,7 @@
 from opentrons import types
 import json
 import os
+import math
 
 metadata = {
     'protocolName': 'V1 S7 Station B (BP Genomics RNA Extraction)',
@@ -41,14 +42,15 @@ def run(ctx):
     ethanol2 = trough1['A1']
     water = trough2['A12']
 
+    num_cols = math.ceil(NUM_SAMPLES/8)
     mag_samples_m = [
         well for set in [magplate.rows()[0][i::2] for i in range(2)]
         for well in set
-    ]
+    ][:num_cols]
     elution_samples_m = [
         well for set in [flatplate.rows()[0][i::2] for i in range(2)]
         for well in set
-    ]
+    ][:num_cols]
 
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(4)
