@@ -16,7 +16,7 @@ TIP_TRACK = False
 def run(ctx):
 
     # load labware and pipettes
-    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+    tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
                for slot in ['3', '6', '9', '10']]
 
     m300 = ctx.load_instrument(
@@ -104,7 +104,7 @@ resuming.')
     pick_up(m300)
     for well, reagent in zip(mag_samples_m, bind1):
         m300.transfer(
-            210, reagent, well.top(-3), new_tip='never')
+            200, reagent, well.top(-3), new_tip='never')
         m300.blow_out(well.top())
 
     for well, reagent in zip(mag_samples_m, bind1):
@@ -114,7 +114,7 @@ resuming.')
             m300.dispense(180, reagent.bottom(2.5))
         m300.dispense(20, reagent)
         m300.transfer(
-            210, reagent, well.top(-3), new_tip='never')
+            200, reagent, well.top(-3), new_tip='never')
         m300.blow_out(well.top())
 
     tip_block = []
@@ -140,17 +140,10 @@ resuming.')
 
     # Step 5 - Remove supernatant
     def supernatant_removal(vol, src, dest):
-        tvol = vol
         m300.flow_rate.aspirate = 25
-        while tvol > 200:
-            m300.aspirate(20, src.top())
-            m300.aspirate(
-                200, src.bottom().move(types.Point(x=-1, y=0, z=0.5)))
-            m300.dispense(220, dest)
-            tvol -= 200
         m300.transfer(
-            tvol, src.bottom().move(types.Point(x=-1, y=0, z=0.5)),
-            dest, new_tip='never')
+            vol, src.bottom().move(types.Point(x=-1, y=0, z=0.5)),
+            dest, air_gap=20, new_tip='never')
         m300.flow_rate.aspirate = 50
 
     for well in mag_samples_m:
@@ -216,7 +209,7 @@ resuming.')
                 pick_up(m300)
             for _ in range(3):
                 m300.transfer(
-                    210, well.bottom().move(types.Point(x=-1, y=0, z=0.5)),
+                    200, well.bottom().move(types.Point(x=-1, y=0, z=0.5)),
                     waste, new_tip='never')
             if not keeptips:
                 m300.drop_tip()
