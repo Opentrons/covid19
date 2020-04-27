@@ -148,7 +148,7 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.aspirate(10, d.top())
         p20.drop_tip()
 
-    ctx.comment('Move deepwell plate (slot 5) to Station B for RNA \
+    ctx.comment('Move deepwell plate (slot 2) to Station B for RNA \
 extraction.')
 
     # track final used tip
