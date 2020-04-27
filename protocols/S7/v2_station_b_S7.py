@@ -4,12 +4,12 @@ import os
 import math
 
 metadata = {
-    'protocolName': 'V1 S7 Station B (BP Genomics RNA Extraction)',
+    'protocolName': 'Version 2 S7 Station B (BP Genomics RNA Extraction)',
     'author': 'Nick <ndiehl@opentrons.com',
     'apiLevel': '2.3'
 }
 
-NUM_SAMPLES = 48
+NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 TIP_TRACK = False
 
 
@@ -24,7 +24,7 @@ def run(ctx):
 
     magdeck = ctx.load_module('magdeck', '4')
     magheight = 13.7
-    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    magplate = magdeck.load_labware('nest_96_deepwell_2ml')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     tempdeck.set_temperature(4)
     flatplate = tempdeck.load_labware(

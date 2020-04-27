@@ -4,13 +4,13 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'S5 Station C Version 1',
+    'protocolName': 'Version 2 S7 Station C',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'
 }
 
-NUM_SAMPLES = 94
+NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 PREPARE_MASTERMIX = True
 TIP_TRACK = False
 
@@ -29,10 +29,10 @@ def run(ctx: protocol_api.ProtocolContext):
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '2')]
     tempdeck = ctx.load_module('Temperature Module Gen2', '4')
     pcr_plate = tempdeck.load_labware(
-        'opentrons_96_aluminumblock_biorad_wellplate_200ul', 'PCR plate')
+        'opentrons_96_aluminumblock_nest_wellplate_100ul', 'PCR plate')
     tempdeck.set_temperature(4)
     tube_block = ctx.load_labware(
-        'opentrons_24_aluminumblock_generic_2ml_screwcap', '5',
+        'opentrons_24_aluminumblock_nest_2ml_screwcap', '5',
         '2ml screw tube aluminum block for mastermix + controls')
 
     # pipette

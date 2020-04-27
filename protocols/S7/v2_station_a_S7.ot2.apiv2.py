@@ -5,13 +5,13 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'S5 Station A Version 1',
+    'protocolName': 'Version 2 S7 Station A',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
 }
 
-NUM_SAMPLES = 30
+NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 SAMPLE_VOLUME = 200
 ROBOT = 'A1'
 TIP_TRACK = False
@@ -23,17 +23,16 @@ def run(ctx: protocol_api.ProtocolContext):
     # load labware
     source_racks = [
         ctx.load_labware(
-            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
+            'opentrons_24_aluminumblock_nest_2ml_snapcap', slot,
             'source tuberack ' + str(i+1))
         for i, slot in enumerate(['1', '3', '4', '6'])
     ]
-    dest_plate = ctx.load_labware(
-        'usascientific_96_wellplate_2.4ml_deep', '2',
-        '96-deepwell sample plate')
+    dest_plate = ctx.load_labware('nest_96_deepwell_2ml', '2',
+                                  '96-deepwell sample plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '7')
     tempdeck.set_temperature(4)
     reagent_block = tempdeck.load_labware(
-        'opentrons_24_aluminumblock_generic_2ml_screwcap',
+        'opentrons_24_aluminumblock_nest_2ml_screwcap',
         'chilled tubeblock for internal control (A1)')
     lys_buff = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical',
                                 '5',
