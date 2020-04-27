@@ -8,7 +8,7 @@ metadata = {
     'protocolName': 'Version 2 S7 Station A',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.3'
 }
 
 NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
