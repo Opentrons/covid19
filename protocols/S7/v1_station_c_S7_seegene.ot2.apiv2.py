@@ -7,7 +7,7 @@ metadata = {
     'protocolName': 'S5 Station C Version 1',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.1'
+    'apiLevel': '2.3'
 }
 
 NUM_SAMPLES = 94
@@ -27,7 +27,7 @@ def run(ctx: protocol_api.ProtocolContext):
         for slot in ['3', '6', '7', '8', '9', '10', '11']
     ]
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '2')]
-    tempdeck = ctx.load_module('tempdeck', '4')
+    tempdeck = ctx.load_module('Temperature Module Gen2', '4')
     pcr_plate = tempdeck.load_labware(
         'opentrons_96_aluminumblock_biorad_wellplate_200ul', 'PCR plate')
     tempdeck.set_temperature(4)
@@ -115,7 +115,7 @@ resuming.')
         p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
         p20.mix(1, 10, d.bottom(2))
         p20.blow_out(d.top(-2))
-        p20.aspirate(5, d.top(2))
+        p20.aspirate(5, d.top(2))  # suck in any remaining droplets on way to trash
         p20.drop_tip()
 
     # transfer positive and negative controls
@@ -124,7 +124,7 @@ resuming.')
         p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
         p20.mix(1, 10, d.bottom(2))
         p20.blow_out(d.top(-2))
-        p20.aspirate(5, d.top(2))
+        p20.aspirate(5, d.top(2))  # suck in any remaining droplets on way to trash
         p20.drop_tip()
 
     # track final used tip

@@ -30,7 +30,7 @@ def run(ctx: protocol_api.ProtocolContext):
     dest_plate = ctx.load_labware(
         'usascientific_96_wellplate_2.4ml_deep', '2',
         '96-deepwell sample plate')
-    tempdeck = ctx.load_module('tempdeck', '7')
+    tempdeck = ctx.load_module('Temperature Module Gen2', '7')
     tempdeck.set_temperature(4)
     reagent_block = tempdeck.load_labware(
         'opentrons_24_aluminumblock_generic_2ml_screwcap',

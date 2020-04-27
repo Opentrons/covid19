@@ -6,7 +6,7 @@ import math
 metadata = {
     'protocolName': 'V1 S7 Station B (BP Genomics RNA Extraction)',
     'author': 'Nick <ndiehl@opentrons.com',
-    'apiLevel': '2.2'
+    'apiLevel': '2.3'
 }
 
 NUM_SAMPLES = 48
@@ -25,7 +25,8 @@ def run(ctx):
     magdeck = ctx.load_module('magdeck', '4')
     magheight = 13.7
     magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
-    tempdeck = ctx.load_module('tempdeck', '1')
+    tempdeck = ctx.load_module('Temperature Module Gen2', '1')
+    tempdeck.set_temperature(4)
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
     liqwaste2 = ctx.load_labware(
@@ -221,9 +222,9 @@ resuming.')
 
     eth_wash(ethanol2, waste2, False)
 
-    ctx.comment('Allowing beads to air dry for 2 minutes.')
-    ctx.delay(minutes=2)
-
+    # ctx.comment('Allowing beads to air dry for 2 minutes.')
+    # ctx.delay(minutes=2)
+    #
     # for well, tip in zip(mag_samples_m, tips6):
     #     pick_up(m300, tip)
     #     m300.transfer(
