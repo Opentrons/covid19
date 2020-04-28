@@ -23,7 +23,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # load labware
     source_racks = [
         ctx.load_labware(
-            'opentrons_24_aluminumblock_nest_2ml_snapcap', slot,
+            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
             'source tuberack ' + str(i+1))
         for i, slot in enumerate(['1', '3', '4', '6'])
     ]
