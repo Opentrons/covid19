@@ -1,11 +1,12 @@
 from opentrons import protocol_api
+from opentrons.types import Point
 import math
 import json
 import os
 
 # metadata
 metadata = {
-    'protocolName': 'Version 2 S7 Station A',
+    'protocolName': 'Version 3 S7 Station A',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'
@@ -27,7 +28,9 @@ def run(ctx: protocol_api.ProtocolContext):
             'source tuberack ' + str(i+1))
         for i, slot in enumerate(['1', '3', '4', '6'])
     ]
-    dest_plate = ctx.load_labware('nest_96_deepwell_2ml', '2',
+    # dest_plate = ctx.load_labware('nest_96_deepwell_2ml', '2',
+    #                               '96-deepwell sample plate')
+    dest_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2',
                                   '96-deepwell sample plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '7')
     # tempdeck.set_temperature(4)
@@ -99,6 +102,23 @@ def run(ctx: protocol_api.ProtocolContext):
     radius = (lys_buff.diameter)/2
     min_h = 5
 
+    switch = True
+    drop_count = 0
+    drop_threshold = 192
+
+    def drop(pip):
+        nonlocal switch
+        nonlocal drop_count
+        side = 1 if switch else -1
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            Point(x=40*side))
+        pip.drop_tip(drop_loc)
+        switch = not switch
+        drop_count += 1
+        if drop_count == drop_threshold:
+            ctx.pause('Please empty tips from waste before resuming.')
+            drop_count = 0
+
     def h_track(vol):
         nonlocal heights
         dh = vol/(math.pi*(radius**2))
@@ -116,7 +136,7 @@ def run(ctx: protocol_api.ProtocolContext):
             SAMPLE_VOLUME, s.bottom(5), d.bottom(5), new_tip='never')
         p1000.blow_out(d.top(-2))
         p1000.aspirate(100, d.top())
-        p1000.drop_tip()
+        drop(p1000)
 
     # transfer lysis buffer
     for i, d in enumerate(dests):
@@ -125,7 +145,7 @@ def run(ctx: protocol_api.ProtocolContext):
                        d.bottom(5), mix_after=(5, 200), new_tip='never')
         p1000.blow_out(d.top(-2))
         p1000.aspirate(100, d.top())
-        p1000.drop_tip()
+        drop(p1000)
 
     # transfer proteinase K
     for d in dests:
@@ -134,7 +154,7 @@ def run(ctx: protocol_api.ProtocolContext):
                      new_tip='never')
         p20.blow_out(d.top(-2))
         p20.aspirate(10, d.top())
-        p20.drop_tip()
+        drop(p20)
 
     ctx.delay(minutes=25, msg='Delaying 25 minutes before addition of IEC.')
 
@@ -145,7 +165,7 @@ def run(ctx: protocol_api.ProtocolContext):
                      new_tip='never')
         p20.blow_out(d.top(-2))
         p20.aspirate(10, d.top())
-        p20.drop_tip()
+        drop(p20)
 
     ctx.comment('Move deepwell plate (slot 2) to Station B for RNA \
 extraction.')
