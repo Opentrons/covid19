@@ -94,23 +94,21 @@ resuming.')
 
     if PREPARE_MASTERMIX:
 
-        # calculate mastermix total volume and mix volume
-        mm_total_vol = 0
-        for tube, vol in mm_dict['components'].items():
-            mm_total_vol += vol*(NUM_SAMPLES+2)*1.1  # 10% volume overage for samples + controls
-        mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200 # mix volume is half of total mastermix volume
-
-        # create mastermix
-        for tube, vol in mm_dict['components'].items():
-            mm_vol = vol*(NUM_SAMPLES+5)
-            disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
-            pip = p300 if mm_vol > 20 else p20
+        for i, (tube, vol) in enumerate(mm_dict['components'].items()):
+            comp_vol = vol*(NUM_SAMPLES+2)*1.1  # 10% volume overage for samples + controls
+            disp_loc = mm_tube.bottom(5) if comp_vol < 50 else mm_tube.top(-5)
+            pip = p300 if comp_vol > 20 else p20
             pick_up(pip)
-            if tube == tube_block.wells()[11]:
-                pip.transfer(mm_vol, tube.bottom(2), disp_loc, mix_after=(5, mix_vol), new_tip='never') # mix after last mastermix reagent added
-            else:
-                pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='never')
-            pip.drop_tip()
+            pip.transfer(comp_vol, tube.bottom(1), disp_loc, new_tip='never')
+            if i < len(mm_dict['components'].items()) - 1 or pip == p20:  # keep tip if last component
+                pip.drop_tip()
+        mm_total_vol = mm_dict['volume']*(NUM_SAMPLES+2)*1.1
+        if not p300.hw_pipette['has_tip']:  # pickup tip with P300 if necessary for mixing
+            pick_up(p300)
+        mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200  # mix volume is 1/2 MM total, maxing at 200µl
+        p300.mix(10, mix_vol, mm_tube)
+        # pip.blow_out(mm_tube.top(-2))
+        p300.drop_tip()
 
     # transfer mastermix
     mm_vol = mm_dict['volume']
