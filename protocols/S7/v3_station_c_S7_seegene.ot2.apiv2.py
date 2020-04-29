@@ -4,7 +4,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Version 2 S7 Station C Seegene',
+    'protocolName': 'Version 3 S7 Station C Seegene',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'
@@ -94,18 +94,25 @@ resuming.')
 
     if PREPARE_MASTERMIX:
 
-        # create mastermix
-        for tube, vol in mm_dict['components'].items():
-            mm_vol = vol*(NUM_SAMPLES+5)
-            disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
-            pip = p300 if mm_vol > 20 else p20
+        for i, (tube, vol) in enumerate(mm_dict['components'].items()):
+            comp_vol = vol*(NUM_SAMPLES+2)*1.1  # 10% volume overage for samples + controls
+            disp_loc = mm_tube.bottom(5) if comp_vol < 50 else mm_tube.top(-5)
+            pip = p300 if comp_vol > 20 else p20
             pick_up(pip)
-            pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='never')
-            pip.drop_tip()
+            pip.transfer(comp_vol, tube.bottom(1), disp_loc, new_tip='never')
+            if i < len(mm_dict['components'].items()) - 1 or pip == p20:  # keep tip if last component
+                pip.drop_tip()
+        mm_total_vol = mm_dict['volume']*(NUM_SAMPLES+2)*1.1
+        if not p300.hw_pipette['has_tip']:  # pickup tip with P300 if necessary for mixing
+            pick_up(p300)
+        mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200  # mix volume is 1/2 MM total, maxing at 200µl
+        p300.mix(15, mix_vol, mm_tube)
+        # pip.blow_out(mm_tube.top(-2))
+        p300.drop_tip()
 
     # transfer mastermix
     mm_vol = mm_dict['volume']
-    mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[-2:]]
+    mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]]
     p20.transfer(mm_vol, mm_tube, mm_dests)
 
     # transfer samples to corresponding locations
@@ -119,7 +126,10 @@ resuming.')
         p20.drop_tip()
 
     # transfer positive and negative controls
-    for s, d in zip(tube_block.wells()[1:3], pcr_plate.wells()[-2:]):
+    # positive control is slot 5 location B1, negative control is water in slot 5 location B3
+    control_locations = [tube_block.wells()[1], tube_block.wells()[9]]
+    for s, d in zip(control_locations,
+                    pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]):
         pick_up(p20)
         p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
         p20.mix(1, 10, d.bottom(2))

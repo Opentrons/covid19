@@ -106,7 +106,7 @@ resuming.')
 
     # transfer mastermix
     mm_vol = mm_dict['volume']
-    mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[-2:]]
+    mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]
     p20.transfer(mm_vol, mm_tube, mm_dests)
 
     # transfer samples to corresponding locations
