@@ -107,7 +107,7 @@ resuming.')
             pip = p300 if mm_vol > 20 else p20
             pick_up(pip)
             if tube == tube_block.wells()[11]:
-                pip.transfer(mm_vol, tube.bottom(2), disp_loc, mix_after=(5, mix_vol), new_tip='never') # mix after last mastermix reagent added
+                pip.transfer(mm_vol, tube.bottom(2), disp_loc, mix_after=(15, mix_vol), new_tip='never') # mix after last mastermix reagent added
             else:
                 pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='never')
             pip.drop_tip()
