@@ -31,16 +31,13 @@ def run(ctx):
     liqwaste2 = ctx.load_labware(
                 'nest_1_reservoir_195ml', '11', 'Liquid Waste')
     waste2 = liqwaste2['A1'].top()
-    trough1 = ctx.load_labware(
-                    'nest_1_reservoir_195ml', '2', 'Trough with Ethanol')
+    etoh = ctx.load_labware(
+        'nest_1_reservoir_195ml', '2', 'Trough with Ethanol').wells()[0]
     trough2 = ctx.load_labware(
                     'nest_12_reservoir_15ml', '5', 'Trough with Reagents')
-    bind1 = trough2.wells()[:6]
-    wb1 = [t for t in trough2.wells()[6:9] for _ in range(2)]
-    wb2 = trough1['A1']
-    ethanol1 = trough1['A1']
-    ethanol2 = trough1['A1']
-    water = trough2['A12']
+    bind1 = trough2.wells()[:2]
+    wb1 = trough2.wells()[3:5]
+    water = trough2.wells()[-1]
 
     num_cols = math.ceil(NUM_SAMPLES/8)
     mag_samples_m = [
@@ -102,19 +99,13 @@ resuming.')
         m300.dispense(20, loc2)
 
     pick_up(m300)
-    for well, reagent in zip(mag_samples_m, bind1):
-        m300.transfer(
-            200, reagent, well.top(-3), new_tip='never')
-        m300.blow_out(well.top())
-
-    for well, reagent in zip(mag_samples_m, bind1):
-        m300.aspirate(20, reagent.bottom(0.5))
-        for _ in range(2):
-            m300.aspirate(180, reagent.bottom(0.5))
-            m300.dispense(180, reagent.bottom(2.5))
-        m300.dispense(20, reagent)
-        m300.transfer(
-            200, reagent, well.top(-3), new_tip='never')
+    for i, well in enumerate(mag_samples_m):
+        source = bind1[i//8]
+        if i % 8 == 0:  # mix beads if accessing new column
+            for _ in range(5):
+                m300.aspirate(180, source.bottom(0.5))
+                m300.dispense(180, source.bottom(5))
+        m300.transfer(200, source, well.top(-3), new_tip='never')
         m300.blow_out(well.top())
 
     tip_block = []
@@ -156,13 +147,11 @@ resuming.')
     def wash_step(src, mtimes, wasteman):
         pick_up(m300)
         if src == wb1:
-            for well, s in zip(mag_samples_m, src):
-                for _ in range(3):
-                    m300.transfer(200, s, well.top(-3), new_tip='never')
+            for i, well in enumerate(mag_samples_m):
+                m300.transfer(200, src[i//8], well.top(-3), new_tip='never')
         else:
             for well in mag_samples_m:
-                for _ in range(3):
-                    m300.transfer(200, src, well.top(-3), new_tip='never')
+                m300.transfer(200, src, well.top(-3), new_tip='never')
 
         wash_tip_block = []
         for well in mag_samples_m:
@@ -178,25 +167,23 @@ resuming.')
 
         for well, tip in zip(mag_samples_m, wash_tip_block):
             pick_up(m300, tip)
-            supernatant_removal(600, well, wasteman)
+            supernatant_removal(200, well, wasteman)
             m300.drop_tip()
 
         magdeck.disengage()
 
     wash_step(wb1, 20, waste2)
 
-    wash_step(wb2, 15, waste2)
+    wash_step(etoh, 15, waste2)
 
     def eth_wash(src, waste, keeptips):
         pick_up(m300)
         m300.flow_rate.aspirate = 50
         m300.flow_rate.dispense = 30
         for well in mag_samples_m:
-            for _ in range(3):
-                m300.transfer(
-                    200, src,
-                    well.top().move(types.Point(x=-1, y=0, z=-3)),
-                    new_tip='never')
+            m300.transfer(200, src,
+                          well.top().move(types.Point(x=-1, y=0, z=-3)),
+                          new_tip='never')
             m300.blow_out(well.top(-3))
         # m300.touch_tip()
         # m300.return_tip()
@@ -207,19 +194,18 @@ resuming.')
         for well in mag_samples_m:
             if not m300.hw_pipette['has_tip']:
                 pick_up(m300)
-            for _ in range(3):
-                m300.transfer(
-                    200, well.bottom().move(types.Point(x=-1, y=0, z=0.5)),
-                    waste, new_tip='never')
+            m300.transfer(
+                200, well.bottom().move(types.Point(x=-1, y=0, z=0.5)),
+                waste, new_tip='never')
             if not keeptips:
                 m300.drop_tip()
             else:
                 m300.return_tip()
 
     magdeck.engage(height=magheight)
-    eth_wash(ethanol1, waste2, False)
+    eth_wash(etoh, waste2, False)
 
-    eth_wash(ethanol2, waste2, False)
+    eth_wash(etoh, waste2, False)
 
     # ctx.comment('Allowing beads to air dry for 2 minutes.')
     # ctx.delay(minutes=2)
