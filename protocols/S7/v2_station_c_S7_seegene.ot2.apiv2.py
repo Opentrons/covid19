@@ -4,7 +4,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Version 2 S7 Station C',
+    'protocolName': 'Version 2 S7 Station C Seegene',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'

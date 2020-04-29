@@ -4,7 +4,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Version 2 S7 Station C Diavetha',
+    'protocolName': 'Version 2 S7 Station C BP Genomics',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'
@@ -89,8 +89,7 @@ resuming.')
         'volume': 15,
         'components': {
             tube: vol
-            for tube, vol in zip(tube_block.columns()[1][:3],
-                                 [5, 0.625, 9.375])
+            for tube, vol in zip(tube_block.columns()[1], [10, 1, 1, 3])
         }
     }
 
@@ -120,7 +119,8 @@ resuming.')
         p20.drop_tip()
 
     # transfer positive and negative controls
-    for s, d in zip(tube_block.columns()[0][1:3], pcr_plate.wells()[-2:]):
+    for s, d in zip(tube_block.columns()[0][1:3],
+                    pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]):
         pick_up(p20)
         p20.transfer(SAMPLE_VOL, s.bottom(2), d.bottom(2), new_tip='never')
         p20.mix(1, 10, d.bottom(2))
