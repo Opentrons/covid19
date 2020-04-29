@@ -97,7 +97,7 @@ resuming.')
         # calculate mastermix total volume and mix volume
         mm_total_vol = 0
         for tube, vol in mm_dict['components'].items():
-            mm_total_vol += (vol*(NUM_SAMPLES+5))
+            mm_total_vol += vol*(NUM_SAMPLES+2)*1.1  # 10% volume overage for samples + controls
         mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200 # mix volume is half of total mastermix volume
 
         # create mastermix
