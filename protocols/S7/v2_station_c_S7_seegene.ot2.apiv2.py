@@ -94,13 +94,22 @@ resuming.')
 
     if PREPARE_MASTERMIX:
 
+        # calculate mastermix total volume and mix volume
+        mm_total_vol = 0
+        for tube, vol in mm_dict['components'].items():
+            mm_total_vol += (vol*(NUM_SAMPLES+5))
+        mix_vol = mm_total_vol / 2 # mix volume is half of total mastermix volume
+
         # create mastermix
         for tube, vol in mm_dict['components'].items():
             mm_vol = vol*(NUM_SAMPLES+5)
             disp_loc = mm_tube.bottom(5) if mm_vol < 50 else mm_tube.top(-5)
             pip = p300 if mm_vol > 20 else p20
             pick_up(pip)
-            pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='never')
+            if tube == tube_block.wells()[11]:
+                pip.transfer(mm_vol, tube.bottom(2), disp_loc, mix_after=(5, mix_vol), new_tip='never') # mix after last mastermix reagent added
+            else:
+                pip.transfer(mm_vol, tube.bottom(2), disp_loc, new_tip='never')
             pip.drop_tip()
 
     # transfer mastermix
@@ -119,7 +128,9 @@ resuming.')
         p20.drop_tip()
 
     # transfer positive and negative controls
-    for s, d in zip(tube_block.wells()[1:3], pcr_plate.wells()[-2:]):
+    # positive control is slot 5 location B1, negative control is water in slot 5 location B3
+    control_locations = [tube_block.wells()[1], tube_block.wells()[9]]
+    for s, d in zip(control_locations, pcr_plate.wells()[-2:]):
         pick_up(p20)
         p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
         p20.mix(1, 10, d.bottom(2))
