@@ -1,0 +1,108 @@
+# Plate File Name: /Users/chazmanchilders/Desktop/20200420-zymo-negatives/Zymo_Negatives_2020-04-20.eds
+# Description: 
+# User Name: 
+# Last Modified Date/Time: 2020-04-20 10:34:46 PM PDT
+# Date Created: 2020-04-29 03:42:54 PM PDT
+# Barcode: 
+# Instrument Type: 7500 System
+# Block Type: 96-Well 0.2-mL Block
+# Instrument Name: 
+# Instrument Serial Number: null
+# Plate Run Start Date/Time: 2020-04-20 08:26:20 PM PDT
+# Plate Run End Date/Time: 2020-04-20 10:20:29 PM PDT
+# Run Duration: 114 minutes 8 seconds
+# Sample Volume: 20.0
+# Cover Temperature: 105.0
+# PCR Stage / Cycle where Analysis is performed: Stage 3 Step 2
+# Pre-read Stage/Step: Stage 1, Step 1
+# Post-read Stage/Step: Stage 4, Step 1
+# Passive Reference: null
+# Quantification Cycle Method: CT
+"Well","Well Position","Sample","Quantity","Target","Task","Reporter","Quencher","Amp Status","Cq","Cq Mean","Cq Confidence","Cq SD","Auto Threshold","Threshold","Auto Baseline","Baseline Start","Baseline End","Delta Rn","Target Call","Well Call","Assessment","Omit"
+"1","A1","Neg NT",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","31.232310758267896","Negative","Undetermined",,"false"
+"1","A1","Neg NT",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-181.94610748149887","Negative","Undetermined",,"false"
+"2","A2","Neg DC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","8.578826029139748","Negative","Undetermined",,"false"
+"2","A2","Neg DC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-331.4977306891778","Negative","Undetermined",,"false"
+"3","A3","buffer only",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","87.43281412609853","Negative","Undetermined",,"false"
+"3","A3","buffer only",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-352.34837534690513","Negative","Undetermined",,"false"
+"4","A4","Neg NT",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","24.633346667827304","24.396551999249432","0.9785967231696889","0.3348782318007296","false","30000.0","true","3","16","635340.4898523352","Positive","Positive",,"false"
+"5","A5","Neg DC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.21676857456947","22.619195019999268","0.9811736849700441","0.4205307116047786","false","30000.0","true","3","15","637529.5781679258","Positive","Positive",,"false"
+"6","A6","buffer only",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","40.08371041620165","38.44016525622584","0.9141713173112965","2.3243238556102876","false","30000.0","true","3","30","98181.03764068487","Negative","Negative",,"false"
+"8","A8","PCD 4",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-816.9635713279081","Negative","Undetermined",,"false"
+"8","A8","PCD 4",,"nCoV","IPC","FAM","NFQ-MGB","Amp","35.8382526114099","35.202435798031985","0.9084473810232327","0.7391718274805431","false","18310.99923149687","true","3","26","112469.78890964674","Negative","Undetermined",,"false"
+"13","B1","Neg NT",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-33.93980092940565","Negative","Undetermined",,"false"
+"13","B1","Neg NT",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-464.44335395467044","Negative","Undetermined",,"false"
+"14","B2","Neg DC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-0.7682330813483098","Negative","Undetermined",,"false"
+"14","B2","Neg DC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-515.947328862165","Negative","Undetermined",,"false"
+"15","B3","buffer only",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","155.32257006677844","Negative","Undetermined",,"false"
+"15","B3","buffer only",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-481.84549173219114","Negative","Undetermined",,"false"
+"16","B4","Neg NT",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","24.15975733067156","24.396551999249432","0.9782543554999636","0.3348782318007296","false","30000.0","true","3","17","681321.3121279761","Positive","Positive",,"false"
+"17","B5","Neg DC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.05575011407757","22.619195019999268","0.9830763113847706","0.4205307116047786","false","30000.0","true","3","15","605798.5478193681","Positive","Positive",,"false"
+"18","B6","buffer only",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","36.796620096250024","38.44016525622584","0.9826305024500473","2.3243238556102876","false","30000.0","true","3","29","408058.77852818475","Negative","Negative",,"false"
+"20","B8","PCD 4",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-611.0319230241095","Negative","Undetermined",,"false"
+"20","B8","PCD 4",,"nCoV","IPC","FAM","NFQ-MGB","Amp","35.37765792721615","35.202435798031985","0.9092414162071338","0.7391718274805431","false","18310.99923149687","true","3","26","117577.08471920289","Negative","Undetermined",,"false"
+"25","C1","Neg MM",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","189.9365920949931","Negative","Undetermined",,"false"
+"25","C1","Neg MM",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-873.7284921369137","Negative","Undetermined",,"false"
+"26","C2","Neg DC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-24.98420019440912","Negative","Undetermined",,"false"
+"26","C2","Neg DC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-536.0285831984276","Negative","Undetermined",,"false"
+"27","C3","buffer only",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-55.045289553943114","Negative","Undetermined",,"false"
+"27","C3","buffer only",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-508.12868582331225","Negative","Undetermined",,"false"
+"28","C4","Neg MM",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.361448789164974","23.066162285132553","0.9843752193256956","0.41759817878835326","false","30000.0","true","3","17","678369.5465029762","Positive","Positive",,"false"
+"29","C5","Neg DC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.58506637135077","22.619195019999268","0.9842827657774497","0.4205307116047786","false","30000.0","true","3","16","628283.4465315935","Positive","Positive",,"false"
+"30","C6","buffer only",,"Endo","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","30000.0","true","3","49","-405.04754712072446","Negative","Negative",,"false"
+"32","C8","PCD 4",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-494.24852567067535","Negative","Undetermined",,"false"
+"32","C8","PCD 4",,"nCoV","IPC","FAM","NFQ-MGB","Amp","34.39139685546991","35.202435798031985","0.9188857167845123","0.7391718274805431","false","18310.99923149687","true","3","25","124727.07185647234","Positive","Undetermined",,"false"
+"37","D1","Neg MM",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-133.5592342521392","Negative","Undetermined",,"false"
+"37","D1","Neg MM",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-1137.2719487164563","Negative","Undetermined",,"false"
+"38","D2","buffer and PCD 4",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-489.06601598635524","Negative","Undetermined",,"false"
+"38","D2","buffer and PCD 4",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","39.378776161287014","39.47214719591137","0.9290144403394278","0.12918814687388758","false","18310.99923149687","true","3","31","89277.50367533867","Negative","Undetermined",,"false"
+"39","D3","Neg DG",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-38.73087979157025","Negative","Undetermined",,"false"
+"39","D3","Neg DG",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-317.683228781214","Negative","Undetermined",,"false"
+"40","D4","Neg MM",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.77087578110013","23.066162285132553","0.9764396021574256","0.41759817878835326","false","30000.0","true","3","16","647061.2254120879","Positive","Positive",,"false"
+"41","D5","buffer and PCD 4",,"Endo","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","30000.0","true","3","49","-349.9980342275679","Negative","Negative",,"false"
+"42","D6","Neg DG",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.993314800959162","23.945505076303693","0.98678635391978","0.06761316102003823","false","30000.0","true","3","17","712445.8945684524","Positive","Positive",,"false"
+"44","D8","Negative Control",,"IEC","NTC","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-181.86280426110287","Negative","Undetermined",,"false"
+"44","D8","Negative Control",,"nCoV","NTC","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-9504.521189870471","Negative","Undetermined",,"false"
+"49","E1","Neg CC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","19.295925539142","Negative","Undetermined",,"false"
+"49","E1","Neg CC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-35.7825797872359","Negative","Undetermined",,"false"
+"50","E2","buffer and PCD 4",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-835.957613483609","Negative","Undetermined",,"false"
+"50","E2","buffer and PCD 4",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","39.41808071714883","39.47214719591137","0.8749167747120536","0.12918814687388758","false","18310.99923149687","true","3","32","89108.4834549963","Negative","Undetermined",,"false"
+"51","E3","Neg DG",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","91.07796510031226","Negative","Undetermined",,"false"
+"51","E3","Neg DG",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-460.57916570306","Negative","Undetermined",,"false"
+"52","E4","Neg CC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","24.4989090118373","24.921137884086903","0.9811468247738039","0.44073784119788584","false","30000.0","true","3","17","646642.4436755952","Positive","Positive",,"false"
+"53","E5","buffer and PCD 4",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","38.11384437610529","38.11384437610529","0.9560213636841995","","false","30000.0","true","3","29","191315.43281631562","Negative","Negative",,"false"
+"54","E6","Neg DG",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.897695351648224","23.945505076303693","0.9820531601116768","0.06761316102003823","false","30000.0","true","3","16","737528.8491758242","Positive","Positive",,"false"
+"56","E8","ICD",,"IEC","IPC","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-22.898316445999008","Negative","Undetermined",,"false"
+"56","E8","ICD",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-367.0403127890771","Negative","Undetermined",,"false"
+"61","F1","Neg CC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","176.79368965367715","Negative","Undetermined",,"false"
+"61","F1","Neg CC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-563.5053408302471","Negative","Undetermined",,"false"
+"62","F2","buffer and PCD 4",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-346.15616733999184","Negative","Undetermined",,"false"
+"62","F2","buffer and PCD 4",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","39.61958470929826","39.47214719591137","0.9169274914569752","0.12918814687388758","false","18310.99923149687","true","3","31","84890.03651477833","Negative","Undetermined",,"false"
+"63","F3","Neg WC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","4.288998811141308","Negative","Undetermined",,"false"
+"63","F3","Neg WC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-260.24108898010604","Negative","Undetermined",,"false"
+"64","F4","Neg CC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","24.608138948967124","24.921137884086903","0.9790575929624689","0.44073784119788584","false","30000.0","true","3","18","645490.8050321691","Positive","Positive",,"false"
+"65","F5","buffer and PCD 4",,"Endo","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","30000.0","true","3","49","-357.2566200277562","Negative","Negative",,"false"
+"66","F6","Neg WC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.969953631632194","23.87007464473975","0.982688469489664","0.14125021785906733","false","30000.0","true","3","17","676613.6575148809","Positive","Positive",,"false"
+"68","F8","ICD",,"IEC","IPC","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","58.873335959181354","Negative","Undetermined",,"false"
+"68","F8","ICD",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-408.35154081869155","Negative","Undetermined",,"false"
+"73","G1","Neg CC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-181.9334609519542","Negative","Undetermined",,"false"
+"73","G1","Neg CC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-413.5270438251631","Negative","Undetermined",,"false"
+"74","G2","Water",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","419.5737788000115","Negative","Undetermined",,"false"
+"74","G2","Water",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-983.5951014685397","Negative","Undetermined",,"false"
+"75","G3","Neg WC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","78.2374456160384","Negative","Undetermined",,"false"
+"75","G3","Neg WC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-909.9493669056442","Negative","Undetermined",,"false"
+"76","G4","Neg CC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","25.1541709279169","24.921137884086903","0.9833584919158244","0.44073784119788584","false","30000.0","true","3","18","632885.2088694853","Positive","Positive",,"false"
+"77","G5","Water",,"Endo","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","30000.0","true","3","49","-323.70421629277814","Negative","Negative",,"false"
+"78","G6","Neg WC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.770195657847303","23.87007464473975","0.9868152310867049","0.14125021785906733","false","30000.0","true","3","17","710589.8471726191","Positive","Positive",,"false"
+"80","G8","ICD",,"IEC","IPC","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-33.591185281278854","Negative","Undetermined",,"false"
+"80","G8","ICD",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-654.3766116443084","Negative","Undetermined",,"false"
+"85","H1","Neg CC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","-138.50358780570656","Negative","Undetermined",,"false"
+"85","H1","Neg CC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","231.63333285152243","Negative","Undetermined",,"false"
+"86","H2","Water",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","242.54678466119336","Negative","Undetermined",,"false"
+"86","H2","Water",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-234.25173450509325","Negative","Undetermined",,"false"
+"87","H3","Empty",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","6000.0","true","3","49","120.61041708636567","Negative","Undetermined",,"false"
+"87","H3","Empty",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","18310.99923149687","true","3","49","-66.22446686553214","Negative","Undetermined",,"false"
+"88","H4","Neg CC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","25.423332647626303","24.921137884086903","0.9802511560588222","0.44073784119788584","false","30000.0","true","3","18","636887.4504710478","Positive","Positive",,"false"
+"89","H5","Water",,"Endo","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","30000.0","true","3","49","-12.924895929698977","Negative","Negative",,"false"
+"90","H6","Empty",,"Endo","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","30000.0","true","3","49","-490.2194943917628","Negative","Negative",,"false"
+"92","H8","Negative Control",,"Endo","NTC","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","30000.0","true","3","49","-403.50795704208747","Negative","Negative",,"false"

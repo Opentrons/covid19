@@ -1,0 +1,58 @@
+# Plate File Name: /Users/chazmanchilders/Desktop/20200420-zymo-negatives/Zymo_Negatives_2020-04-20.eds
+# Description: 
+# User Name: 
+# Last Modified Date/Time: 2020-04-20 10:34:46 PM PDT
+# Date Created: 2020-04-29 03:42:54 PM PDT
+# Barcode: 
+# Instrument Type: 7500 System
+# Block Type: 96-Well 0.2-mL Block
+# Instrument Name: 
+# Instrument Serial Number: null
+# Plate Run Start Date/Time: 2020-04-20 08:26:20 PM PDT
+# Plate Run End Date/Time: 2020-04-20 10:20:29 PM PDT
+# Run Duration: 114 minutes 8 seconds
+# Sample Volume: 20.0
+# Cover Temperature: 105.0
+# PCR Stage / Cycle where Analysis is performed: Stage 3 Step 2
+# Pre-read Stage/Step: Stage 1, Step 1
+# Post-read Stage/Step: Stage 4, Step 1
+# Passive Reference: null
+# Quantification Cycle Method: CT
+"Sample","Target","Number of Replicates","Quantity","Number of Cqs","Cq Mean","Cq SD","Cq SE","Biogroup"
+"Empty","Endo","1","0.0","0","","","",
+"Empty","IEC","1","0.0","0","","","",
+"Empty","nCoV","1","0.0","0","","","",
+"ICD","IEC","3","0.0","0","","","",
+"ICD","nCoV","3","0.0","0","","","",
+"Neg CC","Endo","4","0.0","0","24.921137884086903","0.44073784119788584","0.22036892059894292",
+"Neg CC","IEC","4","0.0","0","","","",
+"Neg CC","nCoV","4","0.0","0","","","",
+"Neg DC","Endo","3","0.0","0","22.619195019999268","0.4205307116047786","0.24279351954752382",
+"Neg DC","IEC","3","0.0","0","","","",
+"Neg DC","nCoV","3","0.0","0","","","",
+"Neg DG","Endo","2","0.0","0","23.945505076303693","0.06761316102003823","0.04780972465472697",
+"Neg DG","IEC","2","0.0","0","","","",
+"Neg DG","nCoV","2","0.0","0","","","",
+"Neg MM","Endo","2","0.0","0","23.066162285132553","0.41759817878835326","0.2952865040323968",
+"Neg MM","IEC","2","0.0","0","","","",
+"Neg MM","nCoV","2","0.0","0","","","",
+"Neg NT","Endo","2","0.0","0","24.396551999249432","0.3348782318007296","0.23679466857805645",
+"Neg NT","IEC","2","0.0","0","","","",
+"Neg NT","nCoV","2","0.0","0","","","",
+"Neg WC","Endo","2","0.0","0","23.87007464473975","0.14125021785906733","0.09987898689222369",
+"Neg WC","IEC","2","0.0","0","","","",
+"Neg WC","nCoV","2","0.0","0","","","",
+"Negative Control","Endo","1","0.0","0","","","",
+"Negative Control","IEC","1","0.0","0","","","",
+"Negative Control","nCoV","1","0.0","0","","","",
+"PCD 4","IEC","3","0.0","0","","","",
+"PCD 4","nCoV","3","0.0","0","35.202435798031985","0.7391718274805431","0.4267610535732792",
+"Water","Endo","2","0.0","0","","","",
+"Water","IEC","2","0.0","0","","","",
+"Water","nCoV","2","0.0","0","","","",
+"buffer and PCD 4","Endo","3","0.0","0","38.11384437610529","","",
+"buffer and PCD 4","IEC","3","0.0","0","","","",
+"buffer and PCD 4","nCoV","3","0.0","0","39.47214719591137","0.12918814687388758","0.07458681137374791",
+"buffer only","Endo","3","0.0","0","38.44016525622584","2.3243238556102876","1.643545159975696",
+"buffer only","IEC","3","0.0","0","","","",
+"buffer only","nCoV","3","0.0","0","","","",

@@ -1,0 +1,98 @@
+# Plate File Name: /Users/chazmanchilders/Desktop/20200418-zymo-lod/Zymo_LOD_1x_2020-04-18_Copy.eds
+# Description: 
+# User Name: 
+# Last Modified Date/Time: 2020-04-20 09:59:51 AM PDT
+# Date Created: 2020-04-20 09:46:05 AM PDT
+# Barcode: 
+# Instrument Type: 7500 System
+# Block Type: 96-Well 0.2-mL Block
+# Instrument Name: 
+# Instrument Serial Number: null
+# Plate Run Start Date/Time: 2020-04-18 07:08:17 PM PDT
+# Plate Run End Date/Time: 2020-04-18 09:00:39 PM PDT
+# Run Duration: 112 minutes 22 seconds
+# Sample Volume: 20.0
+# Cover Temperature: 105.0
+# PCR Stage / Cycle where Analysis is performed: Stage 3 Step 2
+# Pre-read Stage/Step: Stage 1, Step 1
+# Post-read Stage/Step: Stage 4, Step 1
+# Passive Reference: null
+# Quantification Cycle Method: CT
+"Well","Well Position","Sample","Quantity","Target","Task","Reporter","Quencher","Amp Status","Cq","Cq Mean","Cq Confidence","Cq SD","Auto Threshold","Threshold","Auto Baseline","Baseline Start","Baseline End","Delta Rn","Target Call","Well Call","Assessment","Omit"
+"1","A1","Spike-In NT",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-6534.571840580917","Negative","Undetermined",,"false"
+"1","A1","Spike-In NT",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.334176165173844","34.62217243032318","0.7922930943193779","1.143681907733328","false","60000.0","true","3","27","897851.6657692309","Positive","Undetermined",,"false"
+"2","A2","Spike-In NT",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-6027.589939960831","Negative","Undetermined",,"false"
+"2","A2","Spike-In NT",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","35.882325534002476","34.62217243032318","0.7648336718784289","1.143681907733328","false","60000.0","true","3","30","750163.2616652984","Positive","Undetermined",,"false"
+"3","A3","Spike-In NT",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-4241.027390274483","Negative","Undetermined",,"false"
+"3","A3","Spike-In NT",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","33.65001559179322","34.62217243032318","0.8125198437430726","1.143681907733328","false","60000.0","true","3","26","913957.8823369566","Positive","Undetermined",,"false"
+"4","A4","Spike-In NT",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.959668480580902","23.400840168238307","0.986059847213424","0.5770644172923559","false","30000.0","true","3","17","658524.015625","Positive","Positive",,"false"
+"5","A5","Spike-In NT",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.435729256876975","23.400840168238307","0.9863047831462657","0.5770644172923559","false","30000.0","true","3","14","764264.1199009324","Positive","Positive",,"false"
+"6","A6","Spike-In NT",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.807122767257056","23.400840168238307","0.9869084326678368","0.5770644172923559","false","30000.0","true","3","14","745805.4158380682","Positive","Positive",,"false"
+"8","A8","Water",,"IEC","NTC","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","358.460972732135","Negative","Undetermined",,"false"
+"8","A8","Water",,"nCoV","NTC","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","60000.0","true","3","49","-2416.8966234967984","Negative","Undetermined",,"false"
+"13","B1","Spike-In CC",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","38.361827256873404","36.93368012923113","0.9313779820744275","3.3198217115485495","false","13336.662","true","3","30","32897.65677903817","Negative","Undetermined",,"false"
+"13","B1","Spike-In CC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","37.47221341454215","35.068627718688745","0.622857185760043","1.608331227036924","false","60000.0","true","3","30","722580.0922961138","Positive","Undetermined",,"false"
+"14","B2","Spike-In CC",,"IEC","UNKNOWN","VIC","NFQ-MGB","Inconclusive","Undetermined","","0.0","","false","13336.662","true","3","49","7652.964888919402","Negative","Undetermined",,"false"
+"14","B2","Spike-In CC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.34278990959197","35.068627718688745","0.6642731011776171","1.608331227036924","false","60000.0","true","3","28","905851.617051282","Positive","Undetermined",,"false"
+"15","B3","No Spike-In",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","36.00959184083032","34.924401145713745","0.9849344461720837","1.7667402105439853","false","13336.662","true","3","28","108594.17905749199","Positive","Undetermined",,"false"
+"15","B3","No Spike-In",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","60000.0","true","3","49","-6081.706406105553","Negative","Undetermined",,"false"
+"16","B4","Spike-In CC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","24.453981962283365","23.925524602624435","0.9814028433759192","0.8798303081077736","false","30000.0","true","3","17","725048.5374255952","Positive","Positive",,"false"
+"17","B5","Spike-In CC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","24.361064926686943","23.925524602624435","0.9827424848311559","0.8798303081077736","false","30000.0","true","3","19","676260.3506433824","Positive","Positive",,"false"
+"18","B6","No Spike-In",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.6363665133279","23.117292101250353","0.9820959681057362","0.4352826417368713","false","30000.0","true","3","16","731206.4226991758","Positive","Positive",,"false"
+"20","B8","PCD 4",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-217.72303104312346","Negative","Undetermined",,"false"
+"20","B8","PCD 4",,"nCoV","IPC","FAM","NFQ-MGB","Amp","28.773152416505283","28.773152416505283","0.7456810344446395","","false","60000.0","true","3","23","1304873.8195887445","Positive","Undetermined",,"false"
+"25","C1","Spike-In WC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-3683.0023230624124","Negative","Undetermined",,"false"
+"25","C1","Spike-In WC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","35.61491014133637","34.944333675737816","0.5901087721291928","0.8595320284884135","false","60000.0","true","3","28","848926.8497435898","Positive","Undetermined",,"false"
+"26","C2","Spike-In WC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-3106.073720079789","Negative","Undetermined",,"false"
+"26","C2","Spike-In WC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","33.97537304269039","34.944333675737816","0.6998002693225991","0.8595320284884135","false","60000.0","true","3","27","1015342.9845192309","Positive","Undetermined",,"false"
+"27","C3","Spike-In WC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-2692.1024053610645","Negative","Undetermined",,"false"
+"27","C3","Spike-In WC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","35.242717843186696","34.944333675737816","0.7193064246064604","0.8595320284884135","false","60000.0","true","3","29","884953.7539173788","Positive","Undetermined",,"false"
+"28","C4","Spike-In WC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.055468851798544","23.094244990998877","0.9929468349676671","0.4994873092070615","false","30000.0","true","3","14","681023.0659054487","Positive","Positive",,"false"
+"29","C5","Spike-In WC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.611990242076757","23.094244990998877","0.9842696951814568","0.4994873092070615","false","30000.0","true","3","16","743637.9631524725","Positive","Positive",,"false"
+"30","C6","Spike-In WC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.615275879121334","23.094244990998877","0.9920529133484173","0.4994873092070615","false","30000.0","true","3","12","703554.2543087122","Positive","Positive",,"false"
+"32","C8","Water",,"Endo","NTC","FAM","NFQ-MGB","Amp","38.132898824709365","38.132898824709365","0.9626401491169426","","false","30000.0","true","3","29","276175.73986950546","Negative","Negative",,"false"
+"37","D1","Spike-In MM",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","36.94164615011814","35.16600728893857","0.9457016652455925","2.5111325593568377","false","13336.662","true","3","27","45352.367905649044","Positive","Undetermined",,"false"
+"37","D1","Spike-In MM",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","36.03107606810242","35.11261996344332","0.7091098452694587","1.2988930796532292","false","60000.0","true","3","30","793022.3472906403","Positive","Undetermined",,"false"
+"38","D2","No Spike-In",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","34.07607959646083","34.924401145713745","0.9791185735272331","1.7667402105439853","false","13336.662","true","3","27","90890.93250600962","Positive","Undetermined",,"false"
+"38","D2","No Spike-In",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","60000.0","true","3","49","-3008.660268270133","Negative","Undetermined",,"false"
+"39","D3","Spike-In MM",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","33.390368427759014","35.16600728893857","0.9662763540835035","2.5111325593568377","false","13336.662","true","3","23","98725.70177303166","Positive","Undetermined",,"false"
+"39","D3","Spike-In MM",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.19416385878422","35.11261996344332","0.8996772264825156","1.2988930796532292","false","60000.0","true","3","29","923951.3043854295","Positive","Undetermined",,"false"
+"40","D4","Spike-In MM",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.764176595197263","22.59462137610716","0.9825390049938499","0.23978729040850877","false","30000.0","true","3","14","746487.1087194056","Positive","Positive",,"false"
+"41","D5","No Spike-In",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.79237335846549","23.117292101250353","0.9875728674374515","0.4352826417368713","false","30000.0","true","3","16","733187.0084134616","Positive","Positive",,"false"
+"42","D6","Spike-In MM",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.425066157017056","22.59462137610716","0.985729663768426","0.23978729040850877","false","30000.0","true","3","14","751091.2597792833","Positive","Positive",,"false"
+"49","E1","Spike-In CM",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","38.343115001751364","36.64463154128075","0.8753432843328485","1.6533465168058052","false","13336.662","true","3","30","39267.05136601156","Negative","Undetermined",,"false"
+"49","E1","Spike-In CM",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","36.246055402916156","34.957799888684434","0.6626118405788171","1.1190549564237473","false","60000.0","true","3","31","852885.8946428571","Positive","Undetermined",,"false"
+"50","E2","Spike-In CM",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","36.5503203744188","36.64463154128075","0.9432298373607856","1.6533465168058052","false","13336.662","true","3","29","48976.77215926435","Positive","Undetermined",,"false"
+"50","E2","Spike-In CM",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.226595768327996","34.957799888684434","0.7507659602579801","1.1190549564237473","false","60000.0","true","3","28","860723.0634615384","Positive","Undetermined",,"false"
+"51","E3","Spike-In CM",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","35.040459247672075","36.64463154128075","0.9696757805334971","1.6533465168058052","false","13336.662","true","3","26","64916.35560461956","Positive","Undetermined",,"false"
+"51","E3","Spike-In CM",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.40074849480915","34.957799888684434","0.7599134036764875","1.1190549564237473","false","60000.0","true","3","28","918603.213974359","Positive","Undetermined",,"false"
+"52","E4","Spike-In CM",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.237995580321545","21.868715091078172","0.9834370066121826","0.3280565615018944","false","30000.0","true","3","13","729498.3048295454","Positive","Positive",,"false"
+"53","E5","Spike-In CM",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","21.757184679875408","21.868715091078172","0.9862917826771719","0.3280565615018944","false","30000.0","true","3","14","747364.9852946532","Positive","Positive",,"false"
+"54","E6","Spike-In CM",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","21.610965013037564","21.868715091078172","0.9859166260894663","0.3280565615018944","false","30000.0","true","3","14","757052.1888658217","Positive","Positive",,"false"
+"61","F1","No Spike-In",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","36.734537432620314","34.924401145713745","0.9786073331353426","1.7667402105439853","false","13336.662","true","3","29","70213.95692632021","Positive","Undetermined",,"false"
+"61","F1","No Spike-In",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","60000.0","true","3","49","-591.8627428308258","Negative","Undetermined",,"false"
+"62","F2","Spike-In DG",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","34.964645172902976","35.11380919703119","0.9781696541172635","0.21094978594064864","false","13336.662","true","3","27","68703.88960186297","Positive","Undetermined",,"false"
+"62","F2","Spike-In DG",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.97383384637682","35.18154910876087","0.7888219808005354","0.293753741175836","false","60000.0","true","3","29","867287.2737586488","Positive","Undetermined",,"false"
+"63","F3","Spike-In DG",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","35.2629732211594","35.11380919703119","0.9573393584304641","0.21094978594064864","false","13336.662","true","3","28","65155.09129807693","Positive","Undetermined",,"false"
+"63","F3","Spike-In DG",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","35.38926437114492","35.18154910876087","0.8525251463068132","0.293753741175836","false","60000.0","true","3","28","796098.4650000001","Positive","Undetermined",,"false"
+"64","F4","No Spike-In",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.3156413201606","23.117292101250353","0.9798076074680887","0.4352826417368713","false","30000.0","true","3","15","714138.1377918957","Positive","Positive",,"false"
+"65","F5","Spike-In DG",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.47751397525591","23.419459392458","0.9813861058975537","0.08210157835152486","false","30000.0","true","3","17","688143.6931547619","Positive","Positive",,"false"
+"66","F6","Spike-In DG",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","23.361404809660087","23.419459392458","0.9884975369499265","0.08210157835152486","false","30000.0","true","3","16","769514.5941105769","Positive","Positive",,"false"
+"73","G1","Spike-In DC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-3164.9685986824984","Negative","Undetermined",,"false"
+"73","G1","Spike-In DC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.78981518975766","35.38814815677855","0.8175430197929463","0.5205764546947804","false","60000.0","true","3","29","938435.4746133495","Positive","Undetermined",,"false"
+"74","G2","Spike-In DC",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","39.861447039794335","39.861447039794335","0.9451913602628248","","false","13336.662","true","3","30","61012.99823555949","Negative","Undetermined",,"false"
+"74","G2","Spike-In DC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","35.737295542789425","35.38814815677855","0.6851892588061105","0.5205764546947804","false","60000.0","true","3","30","905788.2927271484","Positive","Undetermined",,"false"
+"75","G3","Spike-In DC",,"IEC","UNKNOWN","VIC","NFQ-MGB","No Amp","Undetermined","","0.0","","false","13336.662","true","3","49","-1754.9777567790245","Negative","Undetermined",,"false"
+"75","G3","Spike-In DC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","35.63733373778855","35.38814815677855","0.7926518549488033","0.5205764546947804","false","60000.0","true","3","29","814016.8121693123","Positive","Undetermined",,"false"
+"76","G4","Spike-In DC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.42207735347015","22.11805247777356","0.9907555081789496","0.28235370431161466","false","30000.0","true","3","13","637560.5411931818","Positive","Positive",,"false"
+"77","G5","Spike-In DC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.068021756701405","22.11805247777356","0.9817342542619475","0.28235370431161466","false","30000.0","true","3","14","638046.7817143793","Positive","Positive",,"false"
+"78","G6","Spike-In DC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","21.864058323149123","22.11805247777356","0.9900945277666472","0.28235370431161466","false","30000.0","true","3","14","673455.6133540937","Positive","Positive",,"false"
+"85","H1","Spike-In CC",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","39.30043649139163","36.93368012923113","0.9830358076494065","3.3198217115485495","false","13336.662","true","3","31","91292.34833118458","Negative","Undetermined",,"false"
+"85","H1","Spike-In CC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.073702022030204","35.068627718688745","0.8488437593310542","1.608331227036924","false","60000.0","true","3","25","1004827.8468379446","Positive","Undetermined",,"false"
+"86","H2","Spike-In CC",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","33.13877663942836","36.93368012923113","0.9661211874303601","3.3198217115485495","false","13336.662","true","3","24","105288.65193128881","Positive","Undetermined",,"false"
+"86","H2","Spike-In CC",,"nCoV","UNKNOWN","FAM","NFQ-MGB","Amp","34.38580552859064","35.068627718688745","0.7971335905794834","1.608331227036924","false","60000.0","true","3","27","950350.3479807691","Positive","Undetermined",,"false"
+"87","H3","No Spike-In",,"IEC","UNKNOWN","VIC","NFQ-MGB","Amp","32.877395712943496","34.924401145713745","0.9793930441451731","1.7667402105439853","false","13336.662","true","3","25","118629.9821593997","Positive","Undetermined",,"false"
+"87","H3","No Spike-In",,"nCoV","UNKNOWN","FAM","NFQ-MGB","No Amp","Undetermined","","0.0","","false","60000.0","true","3","49","-2395.6737974097286","Negative","Undetermined",,"false"
+"88","H4","Spike-In CC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","24.276801162783684","23.925524602624435","0.9857061692567592","0.8798303081077736","false","30000.0","true","3","14","632280.5267245774","Positive","Positive",,"false"
+"89","H5","Spike-In CC",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.61025035874374","23.925524602624435","0.9845470145156544","0.8798303081077736","false","30000.0","true","3","14","734633.6166502768","Positive","Positive",,"false"
+"90","H6","No Spike-In",,"Endo","UNKNOWN","FAM","NFQ-MGB","Amp","22.72478721304742","23.117292101250353","0.9853112075483292","0.4352826417368713","false","30000.0","true","3","16","735605.130099588","Positive","Positive",,"false"
