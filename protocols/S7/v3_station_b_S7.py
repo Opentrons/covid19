@@ -27,7 +27,7 @@ def run(ctx):
     magdeck = ctx.load_module('magdeck', '4')
     magheight = 13.7
     magplate = magdeck.load_labware('nest_96_deepwell_2ml')
-    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    # magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
