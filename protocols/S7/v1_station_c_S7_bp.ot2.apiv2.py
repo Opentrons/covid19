@@ -13,7 +13,7 @@ metadata = {
 NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 PREPARE_MASTERMIX = True
 TIP_TRACK = False
-SAMPLE_VOL = 5
+SAMPLE_VOL = 8
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -86,10 +86,10 @@ resuming.')
     """ mastermix component maps """
     mm_tube = tube_block.wells()[0]
     mm_dict = {
-        'volume': 15,
+        'volume': 12,
         'components': {
             tube: vol
-            for tube, vol in zip(tube_block.columns()[1], [10, 1, 1, 3])
+            for tube, vol in zip(tube_block.columns()[1][:2], [10, 2])
         }
     }
 
@@ -106,8 +106,10 @@ resuming.')
 
     # transfer mastermix
     mm_vol = mm_dict['volume']
-    mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]
-    p20.transfer(mm_vol, mm_tube, mm_dests)
+    mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]]
+    pick_up(p20)
+    p20.transfer(mm_vol, mm_tube, mm_dests, new_tip='never')
+    p20.drop_tip()
 
     # transfer samples to corresponding locations
     for s, d in zip(sources, sample_dests):
