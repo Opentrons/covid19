@@ -27,7 +27,7 @@ def run(ctx):
     magdeck = ctx.load_module('magdeck', '4')
     magheight = 13.7
     magplate = magdeck.load_labware('nest_96_deepwell_2ml')
-    # magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
@@ -111,6 +111,7 @@ resuming.')
             pick_up(m300)
         well_mix(8, well, 140)
         m300.blow_out(well.top())
+        m300.air_gap(20)
         m300.drop_tip(spot)
 
     ctx.comment('Incubating at room temp for 5 minutes. With mixing.')
@@ -119,7 +120,8 @@ resuming.')
             pick_up(m300, tip)
             well_mix(15, well, 120)
             m300.blow_out(well.top(-10))
-            m300.drop_tip(tip)
+            m300.air_gap(20)
+            m300.drop_tip()
 
     # Step 4 - engage magdeck for 7 minutes
     magdeck.engage(height=magheight)
@@ -128,9 +130,13 @@ resuming.')
     # Step 5 - Remove supernatant
     def supernatant_removal(vol, src, dest):
         m300.flow_rate.aspirate = 25
-        m300.transfer(
-            vol, src.bottom().move(types.Point(x=-1, y=0, z=0.5)),
-            dest, air_gap=20, new_tip='never')
+        num_trans = math.ceil(vol/200)
+        vol_per_trans = vol/num_trans
+        for _ in range(num_trans):
+            m300.transfer(
+                vol_per_trans, src.bottom().move(types.Point(x=-1, y=0, z=0.5)),
+                dest, air_gap=20, new_tip='never')
+            m300.blow_out(dest)
         m300.flow_rate.aspirate = 50
 
     for well in mag_samples_m:
@@ -154,6 +160,7 @@ resuming.')
                 pick_up(m300)
             well_mix(mtimes, well, 180)
             m300.blow_out(well.top(-3))
+            m300.air_gap(20)
             m300.drop_tip(spot)
 
         magdeck.engage(height=magheight)
@@ -190,7 +197,7 @@ resuming.')
                 pick_up(m300)
             m300.transfer(
                 200, well.bottom().move(types.Point(x=-1, y=0, z=0.5)),
-                waste, new_tip='never')
+                waste, air_gap=20, new_tip='never')
             m300.drop_tip()
 
     magdeck.engage(height=magheight)
@@ -231,6 +238,7 @@ resuming.')
         m300.dispense(30, well)
         m300.dispense(30, well.top(-4))
         m300.blow_out(well.top(-4))
+        m300.air_gap(20)
         m300.drop_tip()
 
     ctx.delay(minutes=2, msg='Incubating at room temp for 2 minutes.')
@@ -245,8 +253,10 @@ resuming.')
         pick_up(m300)
         m300.aspirate(20, src.top())
         m300.aspirate(30, src.bottom().move(types.Point(x=-0.8, y=0, z=0.6)))
-        m300.dispense(50, dest)
+        m300.air_gap(20)
+        m300.dispense(70, dest)
         m300.blow_out(dest.top(-2))
+        m300.air_gap(20)
         m300.drop_tip()
 
     magdeck.disengage()
