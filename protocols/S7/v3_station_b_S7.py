@@ -4,7 +4,7 @@ import os
 import math
 
 metadata = {
-    'protocolName': 'Version 2 S7 Station B (BP Genomics RNA Extraction)',
+    'protocolName': 'Version 3 S7 Station B (BP Genomics RNA Extraction)',
     'author': 'Nick <ndiehl@opentrons.com',
     'apiLevel': '2.3'
 }
@@ -16,8 +16,10 @@ TIP_TRACK = False
 def run(ctx):
 
     # load labware and pipettes
-    tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-               for slot in ['3', '6', '9', '10']]
+    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot, '200µl filtertiprack')
+               for slot in ['3', '6', '8', '9', '10']]
+    parkingrack = ctx.load_labware(
+        'opentrons_96_tiprack_300ul', '7', 'empty tiprack for parking')
 
     m300 = ctx.load_instrument(
         'p300_multi_gen2', 'left', tip_racks=tips300)
@@ -25,6 +27,7 @@ def run(ctx):
     magdeck = ctx.load_module('magdeck', '4')
     magheight = 13.7
     magplate = magdeck.load_labware('nest_96_deepwell_2ml')
+    # magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
@@ -40,14 +43,9 @@ def run(ctx):
     water = trough2.wells()[-1]
 
     num_cols = math.ceil(NUM_SAMPLES/8)
-    mag_samples_m = [
-        well for set in [magplate.rows()[0][i::2] for i in range(2)]
-        for well in set
-    ][:num_cols]
-    elution_samples_m = [
-        well for set in [flatplate.rows()[0][i::2] for i in range(2)]
-        for well in set
-    ][:num_cols]
+    mag_samples_m = magplate.rows()[0][:NUM_SAMPLES]
+    elution_samples_m = flatplate.rows()[0][:num_cols]
+    parking_spots = parkingrack.rows()[0][:num_cols]
 
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(4)
@@ -108,22 +106,20 @@ resuming.')
         m300.transfer(200, source, well.top(-3), new_tip='never')
         m300.blow_out(well.top())
 
-    tip_block = []
-    for well in mag_samples_m:
+    for well, spot in zip(mag_samples_m, parking_spots):
         if not m300.hw_pipette['has_tip']:
             pick_up(m300)
-        tip_block.append(m300._last_tip_picked_up_from)
         well_mix(8, well, 140)
         m300.blow_out(well.top())
-        m300.return_tip()
+        m300.drop_tip(spot)
 
     ctx.comment('Incubating at room temp for 5 minutes. With mixing.')
     for _ in range(2):
-        for well, tip in zip(mag_samples_m, tip_block):
+        for well, tip in zip(mag_samples_m, parking_spots):
             pick_up(m300, tip)
             well_mix(15, well, 120)
             m300.blow_out(well.top(-10))
-            m300.return_tip()
+            m300.drop_tip(tip)
 
     # Step 4 - engage magdeck for 7 minutes
     magdeck.engage(height=magheight)
@@ -153,19 +149,17 @@ resuming.')
             for well in mag_samples_m:
                 m300.transfer(200, src, well.top(-3), new_tip='never')
 
-        wash_tip_block = []
-        for well in mag_samples_m:
+        for well, spot in zip(mag_samples_m, parking_spots):
             if not m300.hw_pipette['has_tip']:
                 pick_up(m300)
-            wash_tip_block.append(m300._last_tip_picked_up_from)
             well_mix(mtimes, well, 180)
             m300.blow_out(well.top(-3))
-            m300.return_tip()
+            m300.drop_tip(spot)
 
         magdeck.engage(height=magheight)
         ctx.delay(minutes=6, msg='Incubating on MagDeck for 6 minutes.')
 
-        for well, tip in zip(mag_samples_m, wash_tip_block):
+        for well, tip in zip(mag_samples_m, parking_spots):
             pick_up(m300, tip)
             supernatant_removal(200, well, wasteman)
             m300.drop_tip()
@@ -176,7 +170,7 @@ resuming.')
 
     wash_step(etoh, 15, waste2)
 
-    def eth_wash(src, waste, keeptips):
+    def eth_wash(src, waste):
         pick_up(m300)
         m300.flow_rate.aspirate = 50
         m300.flow_rate.dispense = 30
@@ -197,15 +191,12 @@ resuming.')
             m300.transfer(
                 200, well.bottom().move(types.Point(x=-1, y=0, z=0.5)),
                 waste, new_tip='never')
-            if not keeptips:
-                m300.drop_tip()
-            else:
-                m300.return_tip()
+            m300.drop_tip()
 
     magdeck.engage(height=magheight)
-    eth_wash(etoh, waste2, False)
+    eth_wash(etoh, waste2)
 
-    eth_wash(etoh, waste2, False)
+    eth_wash(etoh, waste2)
 
     # ctx.comment('Allowing beads to air dry for 2 minutes.')
     # ctx.delay(minutes=2)
