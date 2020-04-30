@@ -100,7 +100,7 @@ resuming.')
             pip = p300 if comp_vol > 20 else p20
             pick_up(pip)
             pip.transfer(comp_vol, tube.bottom(1), disp_loc, new_tip='never')
-            if i < len(mm_dict['components'].items()) - 1 or pip == p20:  # keep tip if last component
+            if i < len(mm_dict['components'].items()) - 1 or pip == p20:  # keep tip if last component and p300 in use
                 pip.drop_tip()
         mm_total_vol = mm_dict['volume']*(NUM_SAMPLES+2)*1.1
         if not p300.hw_pipette['has_tip']:  # pickup tip with P300 if necessary for mixing
@@ -113,7 +113,9 @@ resuming.')
     # transfer mastermix
     mm_vol = mm_dict['volume']
     mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]]
-    p20.transfer(mm_vol, mm_tube, mm_dests)
+    pick_up(p20)
+    p20.transfer(mm_vol, mm_tube, mm_dests, new_tip='never')
+    p20.drop_tip()
 
     # transfer samples to corresponding locations
     sample_vol = 25 - mm_vol
