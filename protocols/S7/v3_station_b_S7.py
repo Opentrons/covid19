@@ -115,13 +115,16 @@ resuming.')
         m300.drop_tip(spot)
 
     ctx.comment('Incubating at room temp for 5 minutes. With mixing.')
-    for _ in range(2):
+    for mix in range(2):
         for well, tip in zip(mag_samples_m, parking_spots):
             pick_up(m300, tip)
             well_mix(15, well, 120)
             m300.blow_out(well.top(-10))
             m300.air_gap(20)
+        if mix == 0:
             m300.drop_tip(tip)
+        else:
+            m300.drop_tip()
 
     # Step 4 - engage magdeck for 7 minutes
     magdeck.engage(height=magheight)
