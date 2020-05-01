@@ -121,7 +121,7 @@ resuming.')
             well_mix(15, well, 120)
             m300.blow_out(well.top(-10))
             m300.air_gap(20)
-            m300.drop_tip()
+            m300.drop_tip(tip)
 
     # Step 4 - engage magdeck for 7 minutes
     magdeck.engage(height=magheight)
