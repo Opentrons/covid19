@@ -87,6 +87,23 @@ resuming.')
             pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
             tip_log['count'][pip] += 1
 
+    switch = True
+    drop_count = 0
+    drop_threshold = 192  # number of tips trash will accommodate before prompting user to empty
+
+    def drop(pip):
+        nonlocal switch
+        nonlocal drop_count
+        side = 1 if switch else -1
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            types.Point(x=40*side))
+        pip.drop_tip(drop_loc)
+        switch = not switch
+        drop_count += 1
+        if drop_count == drop_threshold:
+            ctx.pause('Please empty tips from waste before resuming.')
+            drop_count = 0
+
     def well_mix(reps, loc, vol):
         loc1 = loc.bottom().move(types.Point(x=1, y=0, z=0.5))
         loc2 = loc.bottom().move(types.Point(x=1, y=0, z=3.5))
@@ -124,7 +141,7 @@ resuming.')
         if mix == 0:
             m300.drop_tip(tip)
         else:
-            m300.drop_tip()
+            drop(m300)
 
     # Step 4 - engage magdeck for 7 minutes
     magdeck.engage(height=magheight)
@@ -146,7 +163,7 @@ resuming.')
         pick_up(m300)
         side = -1 if i % 2 == 0 else 1
         supernatant_removal(1160, well, waste2, side)
-        m300.drop_tip()
+        drop(m300)
 
     magdeck.disengage()
 
@@ -174,7 +191,7 @@ resuming.')
             pick_up(m300, tip)
             side = -1 if i % 2 == 0 else 1
             supernatant_removal(200, well, wasteman, side)
-            m300.drop_tip()
+            drop(m300)
 
         magdeck.disengage()
 
@@ -204,7 +221,7 @@ resuming.')
             m300.transfer(
                 200, well.bottom().move(types.Point(x=side, y=0, z=0.5)),
                 waste, air_gap=20, new_tip='never')
-            m300.drop_tip()
+            drop(m300)
 
     magdeck.engage(height=magheight)
     eth_wash(etoh, waste2)
@@ -219,7 +236,7 @@ resuming.')
     #     m300.transfer(
     #         200, well.bottom().move(types.Point(x=-0.4, y=0, z=0.3)),
     #         waste2, new_tip='never')
-    #     m300.drop_tip()
+    #     drop(m300)
     m300.flow_rate.aspirate = 50
 
     ctx.delay(minutes=10, msg='Allowing beads to air dry for 10 minutes.')
@@ -245,7 +262,7 @@ resuming.')
         m300.dispense(30, well.top(-4))
         m300.blow_out(well.top(-4))
         m300.air_gap(20)
-        m300.drop_tip()
+        drop(m300)
 
     ctx.delay(minutes=2, msg='Incubating at room temp for 2 minutes.')
 
@@ -265,6 +282,6 @@ resuming.')
         m300.dispense(70, dest)
         m300.blow_out(dest.top(-2))
         m300.air_gap(20)
-        m300.drop_tip()
+        drop(m300)
 
     magdeck.disengage()
