@@ -107,7 +107,7 @@ resuming.')
         if not p300.hw_pipette['has_tip']:  # pickup tip with P300 if necessary for mixing
             pick_up(p300)
         mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200  # mix volume is 1/2 MM total, maxing at 200µl
-        p300.mix(15, mix_vol, mm_tube)
+        p300.mix(7, mix_vol, mm_tube)
         # pip.blow_out(mm_tube.top(-2))
         p300.drop_tip()
 
@@ -128,7 +128,9 @@ resuming.')
         p20.drop_tip()
 
     # transfer positive and negative controls
-    for s, d in zip(tube_block.columns()[0][1:3],
+    # positive control is slot 5 location B1, negative control is water in slot 5 location B3
+    control_locations = [tube_block.wells()[1], tube_block.wells()[9]]
+    for s, d in zip(control_locations,
                     pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]):
         pick_up(p20)
         p20.transfer(SAMPLE_VOL, s.bottom(2), d.bottom(2), new_tip='never')
