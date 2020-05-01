@@ -5,7 +5,7 @@ import math
 
 # metadata
 metadata = {
-    'protocolName': 'Version 1 S7 Station C BP Genomics',
+    'protocolName': 'Version 3 S7 Station C Seegene P20MULTI',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'
@@ -14,7 +14,6 @@ metadata = {
 NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 PREPARE_MASTERMIX = True
 TIP_TRACK = False
-SAMPLE_VOL = 5
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -91,10 +90,10 @@ resuming.')
     """ mastermix component maps """
     mm_tube = tube_block.wells()[0]
     mm_dict = {
-        'volume': 15,
+        'volume': 17,
         'components': {
             tube: vol
-            for tube, vol in zip(tube_block.columns()[1], [10, 1, 1, 3])
+            for tube, vol in zip(tube_block.wells()[8:12], [5, 5, 5, 2])
         }
     }
 
@@ -131,9 +130,10 @@ resuming.')
     m20.drop_tip()
 
     # transfer samples to corresponding locations
+    sample_vol = 25 - mm_vol
     for s, d in zip(sources, sample_dests):
         pick_up(m20)
-        m20.transfer(SAMPLE_VOL, s.bottom(2), d.bottom(2), new_tip='never')
+        m20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
         m20.mix(1, 10, d.bottom(2))
         m20.blow_out(d.top(-2))
         m20.aspirate(5, d.top(2))  # suck in any remaining droplets on way to trash
