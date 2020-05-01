@@ -100,7 +100,7 @@ resuming.')
     if PREPARE_MASTERMIX:
 
         for i, (tube, vol) in enumerate(mm_dict['components'].items()):
-            comp_vol = vol*(NUM_SAMPLES+2)*1.1  # 10% volume overage for samples + controls
+            comp_vol = vol*(NUM_SAMPLES+2)*1.3  # 10% volume overage for samples + controls
             disp_loc = mm_tube.bottom(5) if comp_vol < 50 else mm_tube.top(-5)
             pick_up(p300)
             p300.transfer(comp_vol, tube.bottom(1), disp_loc, new_tip='never')
