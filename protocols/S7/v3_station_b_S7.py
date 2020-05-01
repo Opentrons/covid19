@@ -128,20 +128,21 @@ resuming.')
     ctx.delay(minutes=7, msg='Incubating on MagDeck for 7 minutes.')
 
     # Step 5 - Remove supernatant
-    def supernatant_removal(vol, src, dest):
+    def supernatant_removal(vol, src, dest, side):
         m300.flow_rate.aspirate = 25
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for _ in range(num_trans):
             m300.transfer(
-                vol_per_trans, src.bottom().move(types.Point(x=-1, y=0, z=0.5)),
+                vol_per_trans, src.bottom().move(types.Point(x=side, y=0, z=0.5)),
                 dest, air_gap=20, new_tip='never')
             m300.blow_out(dest)
         m300.flow_rate.aspirate = 50
 
-    for well in mag_samples_m:
+    for i, well in enumerate(mag_samples_m):
         pick_up(m300)
-        supernatant_removal(1160, well, waste2)
+        side = -1 if i % 2 == 0 else 1
+        supernatant_removal(1160, well, waste2, side)
         m300.drop_tip()
 
     magdeck.disengage()
@@ -166,9 +167,10 @@ resuming.')
         magdeck.engage(height=magheight)
         ctx.delay(minutes=6, msg='Incubating on MagDeck for 6 minutes.')
 
-        for well, tip in zip(mag_samples_m, parking_spots):
+        for i, (well, tip) in enumerate(zip(mag_samples_m, parking_spots)):
             pick_up(m300, tip)
-            supernatant_removal(200, well, wasteman)
+            side = -1 if i % 2 == 0 else 1
+            supernatant_removal(200, well, wasteman, side)
             m300.drop_tip()
 
         magdeck.disengage()
@@ -192,11 +194,12 @@ resuming.')
         # pick_up(m300, tips200[tips])
         m300.flow_rate.aspirate = 30
         m300.flow_rate.dispense = 150
-        for well in mag_samples_m:
+        for i, well in enumerate(mag_samples_m):
             if not m300.hw_pipette['has_tip']:
                 pick_up(m300)
+            side = -1 if i % 2 == 0 else 1
             m300.transfer(
-                200, well.bottom().move(types.Point(x=-1, y=0, z=0.5)),
+                200, well.bottom().move(types.Point(x=side, y=0, z=0.5)),
                 waste, air_gap=20, new_tip='never')
             m300.drop_tip()
 
@@ -249,10 +252,12 @@ resuming.')
     ctx.delay(minutes=5)
 
     m300.flow_rate.aspirate = 10
-    for src, dest in zip(mag_samples_m, elution_samples_m):
+    for i, (src, dest) in enumerate(zip(mag_samples_m, elution_samples_m)):
         pick_up(m300)
+        side = -1 if i % 2 == 0 else 1
         m300.aspirate(20, src.top())
-        m300.aspirate(30, src.bottom().move(types.Point(x=-0.8, y=0, z=0.6)))
+        m300.aspirate(
+            30, src.bottom().move(types.Point(x=0.8*side, y=0, z=0.6)))
         m300.air_gap(20)
         m300.dispense(70, dest)
         m300.blow_out(dest.top(-2))
