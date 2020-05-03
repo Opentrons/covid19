@@ -185,8 +185,8 @@ resuming.')
     magdeck.engage(height=magheight)
     ctx.delay(minutes=6, msg='Incubating on MagDeck for 6 minutes.')
 
-    # remove supernatant
-    remove_supernatant(200, parking_pickup=True, parking_drop=False)
+    # remove initial supernatant
+    remove_supernatant(600, parking_pickup=True, parking_drop=False)
 
     # washes
     wash(500, wash1, 20)
