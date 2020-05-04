@@ -95,14 +95,14 @@ resuming.')
     if PREPARE_MASTERMIX:
 
         for i, (tube, vol) in enumerate(mm_dict['components'].items()):
-            comp_vol = vol*(NUM_SAMPLES+2)*1.3  # 10% volume overage for samples + controls
+            comp_vol = vol*(NUM_SAMPLES+2)*1.2  # 10% volume overage for samples + controls
             disp_loc = mm_tube.bottom(5) if comp_vol < 50 else mm_tube.top(-5)
             pip = p300 if comp_vol > 20 else p20
             pick_up(pip)
             pip.transfer(comp_vol, tube.bottom(1), disp_loc, new_tip='never')
             if i < len(mm_dict['components'].items()) - 1 or pip == p20:  # keep tip if last component and p300 in use
                 pip.drop_tip()
-        mm_total_vol = mm_dict['volume']*(NUM_SAMPLES+2)*1.3
+        mm_total_vol = mm_dict['volume']*(NUM_SAMPLES+2)*1.2
         if not p300.hw_pipette['has_tip']:  # pickup tip with P300 if necessary for mixing
             pick_up(p300)
         mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200  # mix volume is 1/2 MM total, maxing at 200µl
