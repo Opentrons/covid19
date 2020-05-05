@@ -144,7 +144,9 @@ resuming.')
     mm_dests = [d.bottom(1) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]]
     pick_up(p20)
     for d in mm_dests:
-        p20.transfer(mm_vol, h_track(mm_vol), d, new_tip='never')
+        p20.air_gap(20-mm_vol)
+        p20.aspirate(mm_vol, h_track(mm_vol))
+        p20.dispense(20, d)
     p20.drop_tip()
 
     # transfer samples to corresponding locations
