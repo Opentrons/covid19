@@ -143,7 +143,8 @@ resuming.')
     mm_vol = mm_dict['volume']
     mm_dests = [d.bottom(1) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]]
     pick_up(p20)
-    p20.transfer(mm_vol, h_track(mm_vol), mm_dests, new_tip='never')
+    for d in mm_dests:
+        p20.transfer(mm_vol, h_track(mm_vol), d, new_tip='never')
     p20.drop_tip()
 
     # transfer samples to corresponding locations
