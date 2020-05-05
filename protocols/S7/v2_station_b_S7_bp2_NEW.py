@@ -55,8 +55,8 @@ def run(ctx):
     magdeck = ctx.load_module('magdeck', '4')
     magdeck.disengage()
     magheight = 13.7
-    # magplate = magdeck.load_labware('nest_96_deepwell_2ml')
-    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    magplate = magdeck.load_labware('nest_96_deepwell_2ml')
+    # magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
@@ -125,10 +125,10 @@ resuming.')
         nonlocal drop_count
         side = 1 if switch else -1
         drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
-            Point(x=40*side))
+            Point(x=35*side))
         pip.drop_tip(drop_loc)
         switch = not switch
-        drop_count += 1
+        drop_count += 8
         if drop_count == drop_threshold:
             # Setup for flashing lights notification to empty trash
             if not ctx._hw_manager.hardware.is_simulator:
