@@ -4,7 +4,7 @@ import os
 import math
 
 metadata = {
-    'protocolName': 'Version 1 S7 Station B (NEW BP Genomics RNA Extraction)',
+    'protocolName': 'Version 2 S7 Station B (NEW BP Genomics RNA Extraction)',
     'author': 'Nick <ndiehl@opentrons.com',
     'apiLevel': '2.3'
 }
@@ -126,10 +126,13 @@ resuming.')
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0.5).move(Point(x=side*2))
             for _ in range(num_trans):
+                if m300.current_volume > 0:
+                    m300.dispense(m300.current_volume, m.top())  # void air gap if necessary
                 m300.move_to(m.center())
                 m300.transfer(vol_per_trans, loc, waste, new_tip='never',
                               air_gap=20)
                 m300.blow_out(waste)
+                m300.air_gap(20)
             if parking_drop:
                 m300.drop_tip(spot)
             else:
@@ -146,10 +149,13 @@ resuming.')
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom(0.5).move(Point(x=side*2))
             src = source if source == etoh else source[i//3]
-            for _ in range(num_trans):
-                m300.move_to(m.center())
+            for n in range(num_trans):
+                if m300.current_volume > 0:
+                    m300.dispense(m300.current_volume, src.top())
                 m300.transfer(vol_per_trans, src, m.top(), air_gap=20,
                               new_tip='never')
+                if n < num_trans - 1:  # only air_gap if going back to source
+                    m300.air_gap(20)
             m300.mix(mix_reps, 150, loc)
             m300.blow_out(m.top())
             m300.air_gap(20)
@@ -168,7 +174,8 @@ resuming.')
             for _ in range(5):
                 m300.aspirate(180, source.bottom(0.5))
                 m300.dispense(180, source.bottom(5))
-        m300.transfer(210, source, well, mix_after=(5, 200), new_tip='never')
+        m300.transfer(
+            210, source, well, mix_after=(5, 200), air_gap=20, new_tip='never')
         m300.blow_out(well.top(-2))
         m300.air_gap(20)
         m300.drop_tip(spot)
