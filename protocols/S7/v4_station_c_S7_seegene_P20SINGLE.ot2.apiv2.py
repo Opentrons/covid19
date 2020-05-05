@@ -1,10 +1,12 @@
 from opentrons import protocol_api
+from opentrons.types import Point
 import json
 import os
+import math
 
 # metadata
 metadata = {
-    'protocolName': 'Version 3 S7 Station C',
+    'protocolName': 'Version 4 S7 Station C',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'
@@ -38,6 +40,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # pipette
     p20 = ctx.load_instrument('p20_single_gen2', 'right', tip_racks=tips20)
     p300 = ctx.load_instrument('p300_single_gen2', 'left', tip_racks=tips300)
+    p300.flow_rate.aspirate = 20
 
     # setup up sample sources and destinations
     sources = source_plate.wells()[:NUM_SAMPLES]
@@ -92,6 +95,17 @@ resuming.')
         }
     }
 
+    total_mm_vol = mm_dict['volume']*(NUM_SAMPLES+2)*1.15
+    # translate total mastermix volume to starting height
+    r = mm_tube.diameter/2
+    mm_height = total_mm_vol/(math.pi*(r**2)) - 5
+
+    def h_track(vol):
+        nonlocal mm_height
+        dh = 1.1*vol/(math.pi*(r**2))  # compensate for 10% theoretical volume loss
+        mm_height = mm_height - dh if mm_height - dh > 2 else 2  # stop at 2mm above mm tube bottom
+        return mm_tube.bottom(mm_height)
+
     if PREPARE_MASTERMIX:
         vol_overage = 1.2  # 20% volume overage for samples + controls
         if NUM_SAMPLES > 48:
@@ -99,32 +113,48 @@ resuming.')
 
         for i, (tube, vol) in enumerate(mm_dict['components'].items()):
             comp_vol = vol*(NUM_SAMPLES+2)*vol_overage
-            disp_loc = mm_tube.bottom(5) if comp_vol < 50 else mm_tube.top(-5)
             pip = p300 if comp_vol > 20 else p20
             pick_up(pip)
-            pip.transfer(comp_vol, tube.bottom(1), disp_loc, new_tip='never')
-            if i < len(mm_dict['components'].items()) - 1 or pip == p20:  # keep tip if last component and p300 in use
+            num_trans = math.ceil(comp_vol/160)
+            vol_per_trans = comp_vol/num_trans
+            for _ in range(num_trans):
+                pip.air_gap(20)
+                pip.aspirate(vol_per_trans, tube)
+                ctx.delay(seconds=3)
+                pip.touch_tip(tube)
+                pip.air_gap(20)
+                pip.dispense(20, mm_tube.top())  # void air gap
+                pip.dispense(vol_per_trans, mm_tube.bottom(2))
+                pip.dispense(20, mm_tube.top())  # void pre-loaded air gap
+                pip.blow_out(mm_tube.top())
+                pip.touch_tip(mm_tube)
+            if i < len(mm_dict['components'].items()) - 1 or pip == p20:  # only keep tip if last component and p300 in use
                 pip.drop_tip()
         mm_total_vol = mm_dict['volume']*(NUM_SAMPLES+2)*vol_overage
         if not p300.hw_pipette['has_tip']:  # pickup tip with P300 if necessary for mixing
             pick_up(p300)
         mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200  # mix volume is 1/2 MM total, maxing at 200µl
         p300.mix(7, mix_vol, mm_tube)
-        # pip.blow_out(mm_tube.top(-2))
+        p300.blow_out(mm_tube.top())
+        p300.touch_tip()
         p300.drop_tip()
 
-    # transfer mastermix
+    # transfer mastermix to TD plate
     mm_vol = mm_dict['volume']
-    mm_dests = [d.bottom(2) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]]
+    mm_dests = [d.bottom(1) for d in sample_dests + pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]]
     pick_up(p20)
-    p20.transfer(mm_vol, mm_tube, mm_dests, new_tip='never')
+    p20.transfer(mm_vol, h_track(mm_vol), mm_dests, new_tip='never')
     p20.drop_tip()
 
     # transfer samples to corresponding locations
     sample_vol = 25 - mm_vol
     for s, d in zip(sources, sample_dests):
         pick_up(p20)
-        p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
+        p20.air_gap(10)
+        p20.aspirate(sample_vol, s.bottom(2))
+        p20.air_gap(2)
+        p20.dispense(2, d.top())  # void air gap
+        p20.dispense(10+sample_vol, d.bottom(2))
         p20.mix(1, 10, d.bottom(2))
         p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))  # suck in any remaining droplets on way to trash
@@ -136,7 +166,11 @@ resuming.')
     for s, d in zip(control_locations,
                     pcr_plate.wells()[NUM_SAMPLES:NUM_SAMPLES+2]):
         pick_up(p20)
-        p20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
+        p20.air_gap(10)
+        p20.aspirate(sample_vol, s.bottom(2))
+        p20.air_gap(2)
+        p20.dispense(2, d.top())  # void air gap
+        p20.dispense(10+sample_vol, d.bottom(2))
         p20.mix(1, 10, d.bottom(2))
         p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))  # suck in any remaining droplets on way to trash
