@@ -2,6 +2,8 @@ from opentrons.types import Point
 import json
 import os
 import math
+import threading
+from time import sleep
 
 metadata = {
     'protocolName': 'Version 2 S7 Station B (NEW BP Genomics RNA Extraction)',
@@ -12,8 +14,34 @@ metadata = {
 NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 TIP_TRACK = False
 
+# Definitions for deck light flashing
+class CancellationToken:
+    def __init__(self):
+       self.is_continued = False
 
+    def set_true(self):
+       self.is_continued = True
+
+    def set_false(self):
+       self.is_continued = False
+
+
+def turn_on_blinking_notification(hardware, pause):
+    while pause.is_continued:
+        hardware.set_lights(rails=True)
+        sleep(1)
+        hardware.set_lights(rails=False)
+        sleep(1)
+
+def create_thread(ctx, cancel_token):
+    t1 = threading.Thread(target=turn_on_blinking_notification, args=(ctx._hw_manager.hardware, cancel_token))
+    t1.start()
+    return t1
+
+# Start protocol
 def run(ctx):
+    # Setup for flashing lights notification to empty trash
+    cancellationToken = CancellationToken()
 
     # load labware and pipettes
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot, '200µl filtertiprack')
@@ -27,8 +55,8 @@ def run(ctx):
     magdeck = ctx.load_module('magdeck', '4')
     magdeck.disengage()
     magheight = 13.7
-    magplate = magdeck.load_labware('nest_96_deepwell_2ml')
-    # magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    # magplate = magdeck.load_labware('nest_96_deepwell_2ml')
+    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
@@ -102,7 +130,15 @@ resuming.')
         switch = not switch
         drop_count += 1
         if drop_count == drop_threshold:
+            # Setup for flashing lights notification to empty trash
+            if not ctx._hw_manager.hardware.is_simulator:
+                cancellationToken.set_true()
+            thread = create_thread(ctx, cancellationToken)
             ctx.pause('Please empty tips from waste before resuming.')
+
+            ctx.home()  # home before continuing with protocol
+            cancellationToken.set_false() # stop light flashing after home
+            thread.join()
             drop_count = 0
 
     def well_mix(reps, loc, vol):
