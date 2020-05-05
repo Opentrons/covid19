@@ -173,8 +173,8 @@ resuming.')
         p20.aspirate(sample_vol, s.bottom(2))
         p20.air_gap(2)
         p20.dispense(2, d.top())  # void air gap
-        p20.dispense(10+sample_vol, d.bottom(2))
-        p20.mix(1, 10, d.bottom(2))
+        p20.dispense(10+sample_vol, d.bottom(1))
+        p20.mix(1, 10, d.bottom(1))
         p20.blow_out(d.top(-2))
         p20.aspirate(5, d.top(2))  # suck in any remaining droplets on way to trash
         p20.drop_tip()
