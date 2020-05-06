@@ -211,7 +211,7 @@ resuming.')
                 m300.aspirate(180, source.bottom(0.5))
                 m300.dispense(180, source.bottom(5))
         m300.transfer(
-            210, source, well, mix_after=(5, 200), air_gap=20, new_tip='never')
+            420, source, well, mix_after=(5, 200), air_gap=20, new_tip='never')
         m300.blow_out(well.top(-2))
         m300.air_gap(20)
         m300.drop_tip(spot)
@@ -229,7 +229,7 @@ resuming.')
     ctx.delay(minutes=6, msg='Incubating on MagDeck for 6 minutes.')
 
     # remove initial supernatant
-    remove_supernatant(600, parking_pickup=True, parking_drop=False)
+    remove_supernatant(800, parking_pickup=True, parking_drop=False)
 
     # washes
     wash(500, wash1, 20)
