@@ -204,9 +204,9 @@ resuming.')
 
     # add bead binding buffer and mix samples
     for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-        source = bind1[i//5]
+        source = bind1[i//4]
         pick_up(m300)
-        if i % 5 == 0:  # mix beads if accessing new column
+        if i % 4 == 0:  # mix beads if accessing new column
             for _ in range(5):
                 m300.aspirate(180, source.bottom(0.5))
                 m300.dispense(180, source.bottom(5))
