@@ -123,9 +123,9 @@ resuming.')
     def drop(pip):
         nonlocal switch
         nonlocal drop_count
-        side = 1 if switch else -1
+        side = 30 if switch else -18
         drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
-            Point(x=25*side, y=20))
+            Point(x=side))
         pip.drop_tip(drop_loc)
         switch = not switch
         drop_count += 8
