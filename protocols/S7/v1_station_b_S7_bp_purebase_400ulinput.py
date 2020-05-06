@@ -6,7 +6,7 @@ import threading
 from time import sleep
 
 metadata = {
-    'protocolName': 'Version 2 S7 Station B (NEW BP Genomics RNA Extraction)',
+    'protocolName': 'Version 1 S7 Station B BP Purebase (400µl sample input)',
     'author': 'Nick <ndiehl@opentrons.com',
     'apiLevel': '2.3'
 }
@@ -210,8 +210,10 @@ resuming.')
             for _ in range(5):
                 m300.aspirate(180, source.bottom(0.5))
                 m300.dispense(180, source.bottom(5))
-        m300.transfer(
-            420, source, well, mix_after=(5, 200), air_gap=20, new_tip='never')
+        for _ in range(2):
+            m300.transfer(210, source, well.top(), air_gap=20,
+                          new_tip='never')
+        m300.mix(5, 200, well)
         m300.blow_out(well.top(-2))
         m300.air_gap(20)
         m300.drop_tip(spot)
@@ -229,7 +231,7 @@ resuming.')
     ctx.delay(minutes=6, msg='Incubating on MagDeck for 6 minutes.')
 
     # remove initial supernatant
-    remove_supernatant(800, parking_pickup=True, parking_drop=False)
+    remove_supernatant(1200, parking_pickup=True, parking_drop=False)
 
     # washes
     wash(500, wash1, 20)
