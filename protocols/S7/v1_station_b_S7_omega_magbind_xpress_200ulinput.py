@@ -105,7 +105,7 @@ def run(ctx):
 
     def pick_up(pip, loc=None):
         nonlocal tip_log
-        if tip_log['count'][pip] == tip_log['max'][pip]:
+        if tip_log['count'][pip] == tip_log['max'][pip] and not loc:
             ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
 resuming.')
             pip.reset_tipracks()

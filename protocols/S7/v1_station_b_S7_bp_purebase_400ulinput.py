@@ -11,7 +11,7 @@ metadata = {
     'apiLevel': '2.3'
 }
 
-NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
+NUM_SAMPLES = 94  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 TIP_TRACK = False
 
 # Definitions for deck light flashing
@@ -105,7 +105,7 @@ def run(ctx):
 
     def pick_up(pip, loc=None):
         nonlocal tip_log
-        if tip_log['count'][pip] == tip_log['max'][pip]:
+        if tip_log['count'][pip] == tip_log['max'][pip] and not loc:
             ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
 resuming.')
             pip.reset_tipracks()
