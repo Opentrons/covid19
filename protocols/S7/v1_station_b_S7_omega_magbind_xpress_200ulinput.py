@@ -227,7 +227,7 @@ resuming.')
             m300.drop_tip(spot)
 
     magdeck.engage(height=magheight)
-    ctx.delay(minutes=6, msg='Incubating on MagDeck for 6 minutes.')
+    ctx.delay(minutes=3, msg='Incubating on MagDeck for 6 minutes.')
 
     # remove initial supernatant
     remove_supernatant(800, parking_pickup=True, parking_drop=False)
@@ -237,7 +237,7 @@ resuming.')
     for _ in range(2):
         wash(350, etoh, 20)
 
-    ctx.delay(minutes=10, msg='Airdrying beads at room temperature for 5 \
+    ctx.delay(minutes=5, msg='Airdrying beads at room temperature for 5 \
 minutes.')
     magdeck.disengage()
 
