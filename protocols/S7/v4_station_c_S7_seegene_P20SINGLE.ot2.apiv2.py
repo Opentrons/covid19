@@ -109,7 +109,7 @@ resuming.')
     if PREPARE_MASTERMIX:
         vol_overage = 1.2  # 20% volume overage for samples + controls
         if NUM_SAMPLES > 48:
-            vol_overage = 1.15  # reduce overage to 15% volume if more than 48 samples
+            vol_overage = 1.1  # reduce overage to 10% volume if more than 48 samples
 
         for i, (tube, vol) in enumerate(mm_dict['components'].items()):
             comp_vol = vol*(NUM_SAMPLES+2)*vol_overage
