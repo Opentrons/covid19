@@ -11,7 +11,7 @@ metadata = {
     'apiLevel': '2.3'
 }
 
-NUM_SAMPLES = 94  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
+NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 TIP_TRACK = False
 
 # Definitions for deck light flashing
