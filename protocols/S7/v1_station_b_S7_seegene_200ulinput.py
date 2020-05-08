@@ -229,9 +229,13 @@ resuming.')
             for _ in range(5):
                 m300.aspirate(180, source.bottom(0.5))
                 m300.dispense(180, source.bottom(5))
-        for _ in range(3):
+        for t in range(3):
+            if m300.current_volume > 0:
+                m300.dispense(m300.current_volume, source.top())  # void air gap if necessary
             m300.transfer(200, source, well.top(), air_gap=20,  # total 600µl binding buffer
                           new_tip='never')
+            if t < 2:
+                m300.air_gap(20)
         m300.mix(5, 200, well)
         m300.blow_out(well.top(-2))
         m300.air_gap(20)
