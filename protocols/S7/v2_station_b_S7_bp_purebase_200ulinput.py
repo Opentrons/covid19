@@ -217,13 +217,20 @@ resuming.')
         m300.drop_tip(spot)
 
     ctx.comment('Incubating at room temp for ~5 minutes with mixing.')
+    park = True if num_cols > 1 else False  # don't go back and forth to parking rack if 1 column
+    if not park:
+        m300.pick_up(m300, parking_spots[0])
     for mix in range(2):
         for well, spot in zip(mag_samples_m, parking_spots):
-            pick_up(m300, spot)
+            if park:
+                pick_up(m300, spot)
             m300.mix(10, 200, well)
             m300.blow_out(well.top(-2))
             m300.air_gap(20)
-            m300.drop_tip(spot)
+            if park:
+                m300.drop_tip(spot)
+    if not park:
+        m300.pick_up(m300, parking_spots[0])
 
     magdeck.engage(height=magheight)
     ctx.delay(minutes=6, msg='Incubating on MagDeck for 6 minutes.')
