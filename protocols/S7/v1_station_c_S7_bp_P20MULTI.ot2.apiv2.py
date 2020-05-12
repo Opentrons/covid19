@@ -91,7 +91,7 @@ resuming.')
     """ mastermix component maps """
     mm_tube = tube_block.wells()[0]
     mm_dict = {
-        'volume': 15,
+        'volume': 12,
         'components': {
             tube: vol
             for tube, vol in zip(tube_block.columns()[1][:2], [10, 2])
