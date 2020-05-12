@@ -14,7 +14,7 @@ metadata = {
 NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 PREPARE_MASTERMIX = True
 TIP_TRACK = False
-SAMPLE_VOL = 5
+SAMPLE_VOL = 8
 
 
 def run(ctx: protocol_api.ProtocolContext):
