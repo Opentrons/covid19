@@ -6,12 +6,13 @@ import threading
 from time import sleep
 
 metadata = {
-    'protocolName': 'Version 2 S7 Station B Seegene (200µl sample input)',
+    'protocolName': 'Version 3 S7 Station B Seegene (200µl sample input)',
     'author': 'Nick <ndiehl@opentrons.com',
     'apiLevel': '2.3'
 }
 
 NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
+ELUTION_VOLUME = 40
 TIP_TRACK = False
 
 # Definitions for deck light flashing
@@ -142,15 +143,6 @@ resuming.')
             thread.join()
             drop_count = 0
 
-    def well_mix(reps, loc, vol):
-        loc1 = loc.bottom().move(Point(x=1, y=0, z=0.5))
-        loc2 = loc.bottom().move(Point(x=1, y=0, z=3.5))
-        m300.aspirate(20, loc1)
-        for _ in range(reps-1):
-            m300.aspirate(vol, loc1)
-            m300.dispense(vol, loc2)
-        m300.dispense(20, loc2)
-
     def remove_supernatant(vol, parking_pickup=False, parking_drop=False):
         m300.flow_rate.aspirate = 30
         num_trans = math.ceil(vol/200)
@@ -176,50 +168,68 @@ resuming.')
                 drop(m300)
         m300.flow_rate.aspirate = 150
 
-    def wash(wash_vol, source, mix_time_minutes):
-        magdeck.disengage()
-
+    def wash(wash_vol, source, mix_time_minutes=0, resuspend=True):
         num_trans = math.ceil(wash_vol/200)
         vol_per_trans = wash_vol/num_trans
-        for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            pick_up(m300)
-            side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(0.5).move(Point(x=side*2))
-            src = source[i//4]
-            for n in range(num_trans):
-                if m300.current_volume > 0:
-                    m300.dispense(m300.current_volume, src.top())
-                m300.transfer(vol_per_trans, src, m.top(), air_gap=20,
-                              new_tip='never')
-                if n < num_trans - 1:  # only air_gap if going back to source
-                    m300.air_gap(20)
-            m300.mix(10, 150, loc)  # resuspend
+
+        if resuspend:
+            magdeck.disengage()
+            for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
+                pick_up(m300)
+                side = 1 if i % 2 == 0 else -1
+                loc = m.bottom(0.5).move(Point(x=side*2))
+                src = source[i//4]
+                for n in range(num_trans):
+                    if m300.current_volume > 0:
+                        m300.dispense(m300.current_volume, src.top())
+                    m300.transfer(vol_per_trans, src, m.top(), air_gap=20,
+                                  new_tip='never')
+                    if n < num_trans - 1:  # only air_gap if going back to source
+                        m300.air_gap(20)
+                m300.mix(10, 150, loc)  # resuspend
+                m300.blow_out(m.top())
+                m300.air_gap(20)
+                m300.drop_tip(spot)
+
+                ctx.comment('Incubating at room temp for \
+    ~' + str(mix_time_minutes) + ' minutes with mixing.')
+                mix_sets = math.ceil(mix_time_minutes*2/num_cols)  # calculate number of mix sets
+                park = True if num_cols > 1 else False  # don't go back and forth to parking rack if 1 column
+                if not park:
+                    pick_up(m300, parking_spots[0])
+                for mix in range(mix_sets):
+                    for well, spot in zip(mag_samples_m, parking_spots):
+                        if park:
+                            pick_up(m300, spot)
+                        m300.mix(10, 200, well)
+                        m300.blow_out(well.top(-2))
+                        m300.air_gap(20)
+                        if park:
+                            m300.drop_tip(spot)
+                if not park:
+                    m300.drop_tip(parking_spots[0])
+
+            magdeck.engage(height=magheight)
+            ctx.delay(seconds=30, msg='Incubating on MagDeck for 30 seconds.')
+
+        else:
+            magdeck.engage(magheight)
+            for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
+                pick_up(m300)
+                src = source[i//4]
+                for n in range(num_trans):
+                    if m300.current_volume > 0:
+                        m300.dispense(m300.current_volume, src.top())
+                    m300.transfer(vol_per_trans, src, m.top(), air_gap=20,
+                                  new_tip='never')
+                    if n < num_trans - 1:  # only air_gap if going back to source
+                        m300.air_gap(20)
             m300.blow_out(m.top())
             m300.air_gap(20)
             m300.drop_tip(spot)
 
-            ctx.comment('Incubating at room temp for \
-~' + str(mix_time_minutes) + ' minutes with mixing.')
-            mix_sets = math.ceil(mix_time_minutes*2/num_cols)  # calculate number of mix sets
-            park = True if num_cols > 1 else False  # don't go back and forth to parking rack if 1 column
-            if not park:
-                pick_up(m300, parking_spots[0])
-            for mix in range(mix_sets):
-                for well, spot in zip(mag_samples_m, parking_spots):
-                    if park:
-                        pick_up(m300, spot)
-                    m300.mix(10, 200, well)
-                    m300.blow_out(well.top(-2))
-                    m300.air_gap(20)
-                    if park:
-                        m300.drop_tip(spot)
-            if not park:
-                m300.drop_tip(parking_spots[0])
-
-        magdeck.engage(height=magheight)
-        ctx.delay(minutes=5, msg='Incubating on MagDeck for 5 minutes.')
-
-        remove_supernatant(wash_vol, parking_pickup=True, parking_drop=False)
+        remove_supernatant(math.ceil(wash_vol/200)*200, parking_pickup=True,
+                           parking_drop=False)
 
     # add bead binding buffer and mix samples
     for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
@@ -258,37 +268,37 @@ resuming.')
         m300.drop_tip(parking_spots[0])
 
     magdeck.engage(height=magheight)
-    ctx.delay(minutes=6, msg='Incubating on MagDeck for 6 minutes.')
+    ctx.delay(minutes=2, msg='Incubating on MagDeck for 2 minutes.')
 
     # remove initial supernatant
-    remove_supernatant(1000, parking_pickup=True, parking_drop=False)
+    remove_supernatant(1200, parking_pickup=True, parking_drop=False)
 
     # washes
-    wash(500, wash1, 5)
-    wash(490, wash2, 10)
-    wash(500, wash3, 5)
+    wash(490, wash1, 1.5)
+    wash(490, wash2, 0.5)
+    ctx.delay(minutes=25, msg='Airdrying beads at room temperature for 25 \
+minutes.')
+    wash(500, wash3, resuspend=False)
 
     magdeck.disengage()
-    ctx.delay(minutes=5, msg='Airdrying beads at room temperature for 5 \
-minutes.')
 
     # resuspend beads in elution
     for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
         pick_up(m300)
         side = 1 if i % 2 == 0 else -1
         loc = m.bottom(0.5).move(Point(x=side*2))
-        m300.aspirate(100, water)
+        m300.aspirate(ELUTION_VOLUME*1.25, water)
         m300.move_to(m.center())
-        m300.dispense(100, loc)
-        m300.mix(10, 80, loc)
+        m300.dispense(ELUTION_VOLUME*1.25, loc)
+        m300.mix(10, ELUTION_VOLUME, loc)
         m300.blow_out(m.bottom(5))
         m300.air_gap(20)
         m300.drop_tip(spot)
 
-    ctx.delay(minutes=2, msg='Incubating off magnet at room temperature for 2 \
-minutes')
+#     ctx.delay(minutes=2, msg='Incubating off magnet at room temperature for 2 \
+# minutes')
     magdeck.engage(height=magheight)
-    ctx.delay(minutes=2, msg='Incubating on magnet at room temperature for 2 \
+    ctx.delay(minutes=5, msg='Incubating on magnet at room temperature for 5 \
 minutes')
 
     for i, (m, e, spot) in enumerate(
@@ -296,7 +306,8 @@ minutes')
         pick_up(m300, spot)
         side = -1 if i % 2 == 0 else 1
         loc = m.bottom(0.5).move(Point(x=side*2))
-        m300.transfer(100, loc, e.bottom(5), air_gap=20, new_tip='never')
+        m300.transfer(ELUTION_VOLUME, loc, e.bottom(5), air_gap=20,
+                      new_tip='never')
         m300.blow_out(e.top(-2))
         m300.air_gap(20)
         m300.drop_tip()
