@@ -224,9 +224,9 @@ resuming.')
                                   new_tip='never')
                     if n < num_trans - 1:  # only air_gap if going back to source
                         m300.air_gap(20)
-            m300.blow_out(m.top())
-            m300.air_gap(20)
-            m300.drop_tip(spot)
+                m300.blow_out(m.top())
+                m300.air_gap(20)
+                m300.drop_tip(spot)
 
         remove_supernatant(math.ceil(wash_vol/200)*200, parking_pickup=True,
                            parking_drop=False)
