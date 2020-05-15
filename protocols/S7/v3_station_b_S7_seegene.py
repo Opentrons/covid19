@@ -148,13 +148,13 @@ resuming.')
 
     def waste_track(vol):
         nonlocal waste_vol
-        print(waste_vol)
+        # print(waste_vol)
         if waste_vol + vol >= waste_threshold:
-            # Setup for flashing lights notification to empty trash
+            # Setup for flashing lights notification to empty liquid waste
             if not ctx._hw_manager.hardware.is_simulator:
                 cancellationToken.set_true()
             thread = create_thread(ctx, cancellationToken)
-            ctx.pause('Please liquid waste (slot 11) before resuming.')
+            ctx.pause('Please empty liquid waste (slot 11) before resuming.')
 
             ctx.home()  # home before continuing with protocol
             cancellationToken.set_false() # stop light flashing after home
@@ -331,3 +331,13 @@ minutes')
         m300.blow_out(e.top(-2))
         m300.air_gap(20)
         m300.drop_tip()
+
+    # Setup for flashing lights notification for protocol completion
+    if not ctx._hw_manager.hardware.is_simulator:
+        cancellationToken.set_true()
+    thread = create_thread(ctx, cancellationToken)
+    ctx.pause('Protocol complete! Please transfer the plate in slot 1.')
+
+    ctx.home()  # home before continuing with protocol
+    cancellationToken.set_false() # stop light flashing after home
+    thread.join()
