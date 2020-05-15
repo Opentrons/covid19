@@ -6,7 +6,7 @@ import threading
 from time import sleep
 
 metadata = {
-    'protocolName': 'Version 3 S7 Station B Seegene (200µl sample input)',
+    'protocolName': 'Version 4 S7 Station B Seegene (200µl sample input)',
     'author': 'Nick <ndiehl@opentrons.com',
     'apiLevel': '2.3'
 }
