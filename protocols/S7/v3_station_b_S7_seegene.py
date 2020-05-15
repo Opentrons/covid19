@@ -255,10 +255,9 @@ resuming.')
     for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
         source = bind_buffer[i//2]
         pick_up(m300)
-        if i % 2 == 0:  # mix beads if accessing new column
-            for _ in range(5):
-                m300.aspirate(180, source.bottom(0.5))
-                m300.dispense(180, source.bottom(5))
+        for _ in range(5):
+            m300.aspirate(180, source.bottom(0.5))
+            m300.dispense(180, source.bottom(5))
         for t in range(3):
             if m300.current_volume > 0:
                 m300.dispense(m300.current_volume, source.top())  # void air gap if necessary
