@@ -198,7 +198,7 @@ resuming.')
                 pick_up(m300)
                 side = 1 if i % 2 == 0 else -1
                 loc = m.bottom(0.5).move(Point(x=side*2))
-                src = source[i//4]
+                src = source[i//3]
                 for n in range(num_trans):
                     if m300.current_volume > 0:
                         m300.dispense(m300.current_volume, src.top())
