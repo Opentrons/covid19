@@ -72,7 +72,7 @@ def run(ctx):
     water = res12.wells()[11]
 
     num_cols = math.ceil(NUM_SAMPLES/8)
-    mag_samples_m = magplate.rows()[0][:NUM_SAMPLES]
+    mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = flatplate.rows()[0][:num_cols]
     parking_spots = parkingrack.rows()[0][:num_cols]
 

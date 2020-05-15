@@ -11,7 +11,7 @@ metadata = {
     'apiLevel': '2.3'
 }
 
-NUM_SAMPLES = 8  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
+NUM_SAMPLES = 94  # start with 8 samples, slowly increase to 48, then 94 (max is 94)
 ELUTION_VOLUME = 40
 TIP_TRACK = False
 
@@ -56,8 +56,8 @@ def run(ctx):
     magdeck = ctx.load_module('magdeck', '4')
     magdeck.disengage()
     magheight = 13.7
-    magplate = magdeck.load_labware('nest_96_deepwell_2ml')
-    # magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    # magplate = magdeck.load_labware('nest_96_deepwell_2ml')
+    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     flatplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',)
@@ -74,7 +74,7 @@ def run(ctx):
     water = res2.wells()[8]
 
     num_cols = math.ceil(NUM_SAMPLES/8)
-    mag_samples_m = magplate.rows()[0][:NUM_SAMPLES]
+    mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = flatplate.rows()[0][:num_cols]
     parking_spots = parkingrack.rows()[0][:num_cols]
 
@@ -191,23 +191,23 @@ resuming.')
                 m300.air_gap(20)
                 m300.drop_tip(spot)
 
-                ctx.comment('Incubating at room temp for \
-    ~' + str(mix_time_minutes) + ' minutes with mixing.')
-                mix_sets = math.ceil(mix_time_minutes*2/num_cols)  # calculate number of mix sets
-                park = True if num_cols > 1 else False  # don't go back and forth to parking rack if 1 column
-                if not park:
-                    pick_up(m300, parking_spots[0])
-                for mix in range(mix_sets):
-                    for well, spot in zip(mag_samples_m, parking_spots):
-                        if park:
-                            pick_up(m300, spot)
-                        m300.mix(10, 200, well)
-                        m300.blow_out(well.top(-2))
-                        m300.air_gap(20)
-                        if park:
-                            m300.drop_tip(spot)
-                if not park:
-                    m300.drop_tip(parking_spots[0])
+            ctx.comment('Incubating at room temp for \
+~' + str(mix_time_minutes) + ' minutes with mixing.')
+            mix_sets = math.ceil(mix_time_minutes*2/num_cols)  # calculate number of mix sets
+            park = True if num_cols > 1 else False  # don't go back and forth to parking rack if 1 column
+            if not park:
+                pick_up(m300, parking_spots[0])
+            for mix in range(mix_sets):
+                for well, spot in zip(mag_samples_m, parking_spots):
+                    if park:
+                        pick_up(m300, spot)
+                    m300.mix(10, 200, well)
+                    m300.blow_out(well.top(-2))
+                    m300.air_gap(20)
+                    if park:
+                        m300.drop_tip(spot)
+            if not park:
+                m300.drop_tip(parking_spots[0])
 
             magdeck.engage(height=magheight)
             ctx.delay(seconds=30, msg='Incubating on MagDeck for 30 seconds.')
