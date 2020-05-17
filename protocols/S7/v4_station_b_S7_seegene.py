@@ -236,7 +236,7 @@ resuming.')
             magdeck.engage(magheight)
             for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
                 pick_up(m300)
-                src = source[i//4]
+                src = source[i//3]
                 for n in range(num_trans):
                     if m300.current_volume > 0:
                         m300.dispense(m300.current_volume, src.top())
@@ -314,8 +314,8 @@ minutes.')
         m300.air_gap(20)
         m300.drop_tip(spot)
 
-#     ctx.delay(minutes=2, msg='Incubating off magnet at room temperature for 2 \
-# minutes')
+    ctx.delay(minutes=5, msg='Incubating off magnet at room temperature for 5 \
+minutes')
     magdeck.engage(height=magheight)
     ctx.delay(minutes=5, msg='Incubating on magnet at room temperature for 5 \
 minutes')
