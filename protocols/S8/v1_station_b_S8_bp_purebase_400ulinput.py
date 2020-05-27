@@ -6,7 +6,7 @@ import threading
 from time import sleep
 
 metadata = {
-    'protocolName': 'Version 1 S7 Station B BP Purebase (400µl sample input)',
+    'protocolName': 'Version 1 S8 Station B BP Purebase (400µl sample input)',
     'author': 'Nick <ndiehl@opentrons.com',
     'apiLevel': '2.3'
 }
@@ -150,6 +150,25 @@ resuming.')
             m300.dispense(vol, loc2)
         m300.dispense(20, loc2)
 
+    waste_vol = 0
+    waste_threshold = 185000
+
+    def waste_track(vol):
+        nonlocal waste_vol
+        # print(waste_vol)
+        if waste_vol + vol >= waste_threshold:
+            # Setup for flashing lights notification to empty liquid waste
+            if not ctx._hw_manager.hardware.is_simulator:
+                cancellationToken.set_true()
+            thread = create_thread(ctx, cancellationToken)
+            ctx.pause('Please empty liquid waste (slot 11) before resuming.')
+
+            ctx.home()  # home before continuing with protocol
+            cancellationToken.set_false() # stop light flashing after home
+            thread.join()
+            waste_vol = 0
+        waste_vol += vol
+
     def remove_supernatant(vol, parking_pickup=False, parking_drop=False):
         m300.flow_rate.aspirate = 30
         num_trans = math.ceil(vol/200)
@@ -162,6 +181,7 @@ resuming.')
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0.5).move(Point(x=side*2))
             for _ in range(num_trans):
+                waste_track(vol_per_trans*8)  # track liquid in waste reservoir
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, m.top())  # void air gap if necessary
                 m300.move_to(m.center())
